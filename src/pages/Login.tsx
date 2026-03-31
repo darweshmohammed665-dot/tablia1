@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
 import { auth, googleProvider, appleProvider } from '../firebase';
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 import { Mail, Lock, ArrowRight, Chrome, Apple } from 'lucide-react';
+import { toast } from 'sonner';
 
 const GoogleIcon = () => (
   <svg viewBox="0 0 24 24" width="20" height="20" xmlns="http://www.w3.org/2000/svg">
@@ -33,6 +34,7 @@ export default function Login() {
     setError('');
     try {
       await signInWithEmailAndPassword(auth, email, password);
+      toast.success('تم تسجيل الدخول بنجاح!');
       navigate('/');
     } catch (err: any) {
       console.error('Login error:', err);
@@ -53,6 +55,7 @@ export default function Login() {
   const handleGoogleLogin = async () => {
     try {
       await signInWithPopup(auth, googleProvider);
+      toast.success('تم تسجيل الدخول بنجاح!');
       navigate('/');
     } catch (err: any) {
       setError('فشل تسجيل الدخول باستخدام جوجل.');
@@ -62,6 +65,7 @@ export default function Login() {
   const handleAppleLogin = async () => {
     try {
       await signInWithPopup(auth, appleProvider);
+      toast.success('تم تسجيل الدخول بنجاح!');
       navigate('/');
     } catch (err: any) {
       setError('فشل تسجيل الدخول باستخدام أبل.');
@@ -69,7 +73,7 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col md:flex-row bg-white">
+    <div className="min-h-screen flex flex-col md:flex-row bg-brand-cream">
       {/* Left Side: Image & Branding (Hidden on mobile) */}
       <div className="hidden md:flex md:w-1/2 relative bg-stone-900 overflow-hidden">
         <img 
@@ -90,9 +94,9 @@ export default function Login() {
             <motion.h2 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="text-5xl font-bold mb-6 leading-tight"
+              className="text-[56px] font-bold mb-6 leading-tight"
             >
-              طعم البيط الأصيل، <br /> يوصلك لحد باب البيت.
+              طعم البيت الأصيل، <br /> يوصلك لحد باب البيت.
             </motion.h2>
             <p className="text-xl text-stone-200 max-w-md">
               انضم لآلاف العائلات في طنطا التي تستمتع يومياً بأشهى الوجبات المنزلية المحضرة بكل حب.
@@ -106,15 +110,15 @@ export default function Login() {
       </div>
 
       {/* Right Side: Login Form */}
-      <div className="flex-1 flex items-center justify-center p-8 md:p-16 bg-stone-50/50">
+      <div className="flex-1 flex items-center justify-center p-8 md:p-16 bg-brand-cream">
         <motion.div 
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
           className="max-w-md w-full"
         >
           <div className="mb-12">
-            <h1 className="text-4xl font-bold text-stone-900 mb-4">مرحباً بعودتك</h1>
-            <p className="text-stone-500 text-lg">أدخل بياناتك للمتابعة والاستمتاع بأشهى الوجبات.</p>
+            <h1 className="text-[56px] font-bold text-brand-accent mb-4">مرحباً بعودتك</h1>
+            <p className="text-stone-500 text-xl">أدخل بياناتك للمتابعة والاستمتاع بأشهى الوجبات.</p>
           </div>
 
           {error && (
@@ -165,7 +169,7 @@ export default function Login() {
             <button 
               type="submit" 
               disabled={loading}
-              className="w-full bg-brand-secondary text-white py-4 rounded-2xl text-lg font-bold hover:shadow-lg hover:shadow-brand-secondary/20 active:scale-[0.98] transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+              className="w-full btn-primary py-4 rounded-2xl text-lg font-bold flex items-center justify-center gap-2"
             >
               {loading ? (
                 <div className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
@@ -183,7 +187,7 @@ export default function Login() {
               <div className="w-full border-t border-stone-200"></div>
             </div>
             <div className="relative flex justify-center text-sm">
-              <span className="px-4 bg-stone-50 text-stone-400 font-medium">أو سجل عبر</span>
+              <span className="px-4 bg-brand-cream text-stone-400 font-medium">أو سجل عبر</span>
             </div>
           </div>
 

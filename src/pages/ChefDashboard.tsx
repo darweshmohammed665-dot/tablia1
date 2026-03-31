@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { collection, query, getDocs, where, addDoc, deleteDoc, doc, onSnapshot, updateDoc } from 'firebase/firestore';
 import { db, auth } from '../firebase';
 import { Meal, UserProfile, Order } from '../types';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'motion/react';
 import { Plus, Trash2, Package, DollarSign, Star, Utensils, Settings, Clock, ChevronDown, UserCheck, MapPin, Phone } from 'lucide-react';
 import OrderStatusTracker from '../components/OrderStatusTracker';
 import ChefProfileForm from '../components/ChefProfileForm';
@@ -124,7 +124,7 @@ export default function ChefDashboard({ profile }: ChefDashboardProps) {
 
   if (!isProfileComplete) {
     return (
-      <div className="bg-stone-50 min-h-screen pt-10 pb-20 px-4">
+      <div className="bg-brand-cream min-h-screen py-[100px] px-4">
         <div className="max-w-7xl mx-auto">
           <div className="mb-12 text-center">
             <div className="w-20 h-20 bg-brand-secondary/10 text-brand-secondary rounded-full flex items-center justify-center mx-auto mb-6">
@@ -140,12 +140,12 @@ export default function ChefDashboard({ profile }: ChefDashboardProps) {
   }
 
   return (
-    <div className="bg-stone-50 min-h-screen pt-10 pb-20">
+    <div className="bg-brand-cream min-h-screen py-[100px]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-12">
           <div>
-            <h1 className="text-4xl font-bold text-stone-900 mb-2">لوحة التحكم</h1>
-            <p className="text-stone-500">أهلاً بك يا شيف، إليك ملخص نشاطك اليوم</p>
+            <h1 className="text-[56px] font-bold text-brand-accent mb-2">لوحة التحكم</h1>
+            <p className="text-stone-500 text-xl">أهلاً بك يا شيف، إليك ملخص نشاطك اليوم</p>
           </div>
           <button 
             onClick={() => setShowAddModal(true)}
@@ -158,7 +158,7 @@ export default function ChefDashboard({ profile }: ChefDashboardProps) {
         {/* Stats Grid */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12">
           {stats.map((stat, i) => (
-            <div key={i} className="bg-white p-6 rounded-3xl shadow-sm border border-stone-100">
+            <div key={i} className="food-card p-[20px]">
               <div className={`w-12 h-12 rounded-2xl ${stat.color} flex items-center justify-center mb-4`}>
                 <stat.icon size={24} />
               </div>
@@ -171,14 +171,14 @@ export default function ChefDashboard({ profile }: ChefDashboardProps) {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Menu Management */}
           <div className="lg:col-span-2">
-            <div className="bg-white rounded-3xl shadow-sm border border-stone-100 p-8 mb-8">
-              <h2 className="text-2xl font-bold text-stone-900 mb-8 flex items-center gap-2">
+            <div className="food-card p-[20px] mb-8">
+              <h2 className="text-2xl font-bold text-brand-accent mb-8 flex items-center gap-2">
                 <Utensils size={24} className="text-brand-primary" /> قائمة أكلاتك
               </h2>
               
               <div className="space-y-6">
                 {meals.length > 0 ? meals.map((meal) => (
-                  <div key={meal.id} className="flex items-center gap-6 p-4 rounded-2xl hover:bg-stone-50 transition-colors border border-transparent hover:border-stone-100">
+                  <div key={meal.id} className="flex items-center gap-6 p-4 rounded-2xl hover:bg-brand-cream transition-colors border border-transparent hover:border-stone-100">
                     <img src={meal.image} alt={meal.title} className="w-24 h-24 rounded-xl object-cover shadow-sm" />
                     <div className="flex-grow">
                       <div className="flex items-center gap-2">
@@ -216,12 +216,12 @@ export default function ChefDashboard({ profile }: ChefDashboardProps) {
             </div>
 
             {/* Active Orders with Tracking */}
-            <div className="bg-white rounded-3xl shadow-sm border border-stone-100 p-8">
+            <div className="food-card p-[20px]">
               <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
-                <h2 className="text-2xl font-bold text-stone-900 flex items-center gap-2">
+                <h2 className="text-2xl font-bold text-brand-accent flex items-center gap-2">
                   <Package size={24} className="text-brand-secondary" /> إدارة الطلبات النشطة
                 </h2>
-                <div className="flex items-center gap-2 bg-stone-50 p-1 rounded-full border border-stone-100">
+                <div className="flex items-center gap-2 bg-brand-cream p-1 rounded-full border border-stone-100">
                   {['all', 'pending', 'preparing', 'out_for_delivery'].map((s) => (
                     <button
                       key={s}
@@ -249,7 +249,7 @@ export default function ChefDashboard({ profile }: ChefDashboardProps) {
                     o.status !== 'cancelled' && 
                     (orderFilter === 'all' || o.status === orderFilter)
                   ).map((order) => (
-                  <div key={order.id} className="p-6 rounded-[2rem] bg-stone-50 border border-stone-100">
+                  <div key={order.id} className="p-6 rounded-[2rem] bg-brand-cream border border-stone-100">
                     <div className="flex justify-between items-start mb-6">
                       <div>
                         <span className="text-xs font-bold text-stone-400 block mb-1">رقم الطلب: #{order.id.slice(-6)}</span>
@@ -315,15 +315,15 @@ export default function ChefDashboard({ profile }: ChefDashboardProps) {
 
           {/* Recent History */}
           <div className="lg:col-span-1">
-            <div className="bg-white rounded-3xl shadow-sm border border-stone-100 p-8">
-              <h2 className="text-2xl font-bold text-stone-900 mb-8 flex items-center gap-2">
+            <div className="food-card p-[20px]">
+              <h2 className="text-2xl font-bold text-brand-accent mb-8 flex items-center gap-2">
                 <Clock size={24} className="text-stone-400" /> سجل الطلبات المكتملة
               </h2>
               
               <div className="space-y-6">
                 {orders.filter(o => o.status === 'delivered' || o.status === 'cancelled').length > 0 ? 
                   orders.filter(o => o.status === 'delivered' || o.status === 'cancelled').map((order) => (
-                  <div key={order.id} className="p-4 rounded-2xl bg-stone-50 border border-stone-100 opacity-75">
+                  <div key={order.id} className="p-4 rounded-2xl bg-brand-cream border border-stone-100 opacity-75">
                     <div className="flex justify-between items-start mb-3">
                       <span className="text-xs font-bold text-stone-400">#{order.id.slice(-6)}</span>
                       <span className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase ${

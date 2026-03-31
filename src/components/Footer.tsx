@@ -3,7 +3,7 @@ import { Facebook, Instagram, Twitter, Heart, Utensils } from 'lucide-react';
 
 export default function Footer() {
   return (
-    <footer className="bg-stone-950 text-stone-400 pt-16 md:pt-32 pb-12 relative overflow-hidden text-right">
+    <footer className="bg-brand-primary text-brand-beige pt-16 md:pt-32 pb-12 relative overflow-hidden text-right">
       {/* Decorative Background Elements */}
       <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-brand-primary to-transparent opacity-30"></div>
       <div className="absolute -top-24 -right-24 w-96 h-96 bg-brand-primary/5 rounded-full blur-3xl"></div>
@@ -21,7 +21,7 @@ export default function Footer() {
                 <span className="text-xs font-bold text-brand-primary">طعم ملوش كتالوج</span>
               </div>
             </Link>
-            <p className="text-xl text-stone-500 leading-relaxed max-w-md mb-10">
+            <p className="text-xl text-brand-beige/80 leading-relaxed max-w-md mb-10">
               طنطا كلها بتطلب من طبلية.. دوقي النفس الفلاحي اللي بيعدل المزاج وبيخلص الكلام. اطلبي دلوقتي قبل ما الكمية تخلص!
             </p>
             <div className="flex gap-4">
@@ -34,29 +34,29 @@ export default function Footer() {
           </div>
 
           <div className="md:col-span-2">
-            <h4 className="text-white font-black text-lg mb-8 uppercase tracking-widest">المنصة</h4>
+            <h4 className="text-brand-cream font-black text-lg mb-8 uppercase tracking-widest">المنصة</h4>
             <ul className="space-y-5">
-              <li><Link to="/" className="hover:text-brand-accent transition-colors font-bold">الرئيسية</Link></li>
-              <li><Link to="/about" className="hover:text-brand-accent transition-colors font-bold">من نحن</Link></li>
-              <li><Link to="/meals" className="hover:text-brand-accent transition-colors font-bold">تصفح الأكلات</Link></li>
-              <li><Link to="/chefs" className="hover:text-brand-accent transition-colors font-bold">سوق الطهاة</Link></li>
-              <li><Link to="/register?role=chef" className="hover:text-brand-accent transition-colors font-bold">انضم كطباخ</Link></li>
+              <li><Link to="/" className="hover:text-brand-primary transition-colors font-bold">الرئيسية</Link></li>
+              <li><Link to="/about" className="hover:text-brand-primary transition-colors font-bold">من نحن</Link></li>
+              <li><Link to="/meals" className="hover:text-brand-primary transition-colors font-bold">تصفح الأكلات</Link></li>
+              <li><Link to="/chefs" className="hover:text-brand-primary transition-colors font-bold">سوق الطهاة</Link></li>
+              <li><Link to="/register?role=chef" className="hover:text-brand-primary transition-colors font-bold">انضم كطباخ</Link></li>
             </ul>
           </div>
 
           <div className="md:col-span-2">
-            <h4 className="text-white font-black text-lg mb-8 uppercase tracking-widest">المساعدة</h4>
+            <h4 className="text-brand-cream font-black text-lg mb-8 uppercase tracking-widest">المساعدة</h4>
             <ul className="space-y-5">
-              <li><Link to="/faq" className="hover:text-brand-accent transition-colors font-bold">الأسئلة الشائعة</Link></li>
-              <li><Link to="/contact" className="hover:text-brand-accent transition-colors font-bold">اتصل بنا</Link></li>
-              <li><Link to="/terms" className="hover:text-brand-accent transition-colors font-bold">الشروط</Link></li>
-              <li><Link to="/privacy" className="hover:text-brand-accent transition-colors font-bold">الخصوصية</Link></li>
+              <li><Link to="/faq" className="hover:text-brand-primary transition-colors font-bold">الأسئلة الشائعة</Link></li>
+              <li><Link to="/contact" className="hover:text-brand-primary transition-colors font-bold">اتصل بنا</Link></li>
+              <li><Link to="/terms" className="hover:text-brand-primary transition-colors font-bold">الشروط</Link></li>
+              <li><Link to="/privacy" className="hover:text-brand-primary transition-colors font-bold">الخصوصية</Link></li>
             </ul>
           </div>
 
           <div className="md:col-span-3">
-            <h4 className="text-white font-black text-lg mb-8 uppercase tracking-widest">النشرة الإخبارية</h4>
-            <p className="text-stone-500 mb-6 font-bold">اشترك لتعرف أحدث العروض والخصومات الحصرية.</p>
+            <h4 className="text-brand-cream font-black text-lg mb-8 uppercase tracking-widest">النشرة الإخبارية</h4>
+            <p className="text-brand-beige/80 mb-6 font-bold">اشترك لتعرف أحدث العروض والخصومات الحصرية.</p>
             <div className="relative">
               <input 
                 type="email" 
@@ -71,11 +71,11 @@ export default function Footer() {
         </div>
 
         <div className="pt-12 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-8">
-          <p className="text-sm font-bold text-stone-600">
+          <p className="text-sm font-bold text-brand-beige/60">
             © {new Date().getFullYear()} طبلية طنطا. جميع الحقوق محفوظة.
           </p>
           <div className="flex items-center gap-8">
-            <p className="text-sm font-bold text-stone-600 flex items-center gap-2">
+            <p className="text-sm font-bold text-brand-beige/60 flex items-center gap-2">
               صُنع بكل <Heart size={16} className="text-brand-primary fill-brand-primary" /> في طنطا - مصر
             </p>
             <div className="flex gap-4">

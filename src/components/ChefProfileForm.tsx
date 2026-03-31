@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { doc, updateDoc } from 'firebase/firestore';
 import { db } from '../firebase';
 import { UserProfile } from '../types';
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 import { Camera, MapPin, AlignLeft, Save, X } from 'lucide-react';
 
 interface ChefProfileFormProps {

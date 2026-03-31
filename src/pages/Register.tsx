@@ -3,9 +3,10 @@ import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { createUserWithEmailAndPassword, updateProfile, signInWithPopup } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
 import { auth, db, googleProvider, appleProvider } from '../firebase';
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 import { Mail, Lock, User, ChefHat, ArrowRight, Chrome, CheckCircle2, Apple } from 'lucide-react';
 import { UserRole } from '../types';
+import { toast } from 'sonner';
 
 const GoogleIcon = () => (
   <svg viewBox="0 0 24 24" width="20" height="20" xmlns="http://www.w3.org/2000/svg">
@@ -49,6 +50,7 @@ export default function Register() {
         createdAt: Date.now(),
       });
 
+      toast.success('تم إنشاء الحساب بنجاح!');
       navigate(role === 'chef' ? '/dashboard' : '/');
     } catch (err: any) {
       console.error('Registration error:', err);
@@ -103,7 +105,7 @@ export default function Register() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col md:flex-row bg-white">
+    <div className="min-h-screen flex flex-col md:flex-row bg-brand-cream">
       {/* Left Side: Branding & Info (Hidden on mobile) */}
       <div className="hidden md:flex md:w-1/2 relative bg-stone-900 overflow-hidden">
         <img 
@@ -124,7 +126,7 @@ export default function Register() {
             <motion.h2 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="text-5xl font-bold leading-tight"
+              className="text-[56px] font-bold leading-tight"
             >
               ابدأ رحلتك مع <br /> مذاق لا يُنسى.
             </motion.h2>
@@ -157,15 +159,15 @@ export default function Register() {
       </div>
 
       {/* Right Side: Register Form */}
-      <div className="flex-1 flex items-center justify-center p-8 md:p-16 bg-stone-50/50 overflow-y-auto">
+      <div className="flex-1 flex items-center justify-center p-8 md:p-16 bg-brand-cream overflow-y-auto">
         <motion.div 
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           className="max-w-md w-full py-12"
         >
           <div className="mb-10">
-            <h1 className="text-4xl font-bold text-stone-900 mb-4">إنشاء حساب جديد</h1>
-            <p className="text-stone-500 text-lg">انضم لأكبر مجتمع للطعام البيتي في طنطا.</p>
+            <h1 className="text-[56px] font-bold text-brand-accent mb-4">إنشاء حساب جديد</h1>
+            <p className="text-stone-500 text-xl">انضم لأكبر مجتمع للطعام البيتي في طنطا.</p>
           </div>
 
           {/* Role Selector */}
@@ -253,7 +255,7 @@ export default function Register() {
             <button 
               type="submit" 
               disabled={loading}
-              className={`w-full py-4 rounded-2xl text-lg font-bold text-white shadow-lg transition-all active:scale-[0.98] disabled:opacity-50 flex items-center justify-center gap-2 ${role === 'chef' ? 'bg-brand-secondary shadow-brand-secondary/20 hover:bg-brand-secondary/90' : 'bg-brand-primary shadow-brand-primary/20 hover:bg-brand-primary/90'}`}
+              className={`w-full py-4 rounded-2xl text-lg font-bold flex items-center justify-center gap-2 ${role === 'chef' ? 'btn-secondary' : 'btn-primary'}`}
             >
               {loading ? (
                 <div className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
@@ -271,7 +273,7 @@ export default function Register() {
               <div className="w-full border-t border-stone-200"></div>
             </div>
             <div className="relative flex justify-center text-sm">
-              <span className="px-4 bg-stone-50 text-stone-400 font-medium">أو سجل عبر</span>
+              <span className="px-4 bg-brand-cream text-stone-400 font-medium">أو سجل عبر</span>
             </div>
           </div>
 

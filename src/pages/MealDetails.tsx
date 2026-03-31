@@ -3,7 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../firebase';
 import { Meal } from '../types';
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 import { Star, Clock, ChefHat, ShoppingCart, ArrowRight, ShieldCheck, Truck } from 'lucide-react';
 
 export default function MealDetails() {
@@ -34,8 +34,8 @@ export default function MealDetails() {
   if (!meal) return <div className="min-h-screen flex flex-col items-center justify-center"><h2 className="text-2xl font-bold mb-4">الوجبة غير موجودة</h2><Link to="/meals" className="btn-primary">العودة للأكلات</Link></div>;
 
   return (
-    <div className="bg-stone-50 min-h-screen pb-20">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10">
+    <div className="bg-brand-cream min-h-screen py-[100px]">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <Link to="/meals" className="inline-flex items-center gap-2 text-stone-500 hover:text-brand-primary mb-8 transition-colors">
           <ArrowRight size={20} /> العودة للأكلات
         </Link>
@@ -63,7 +63,7 @@ export default function MealDetails() {
               <span className="bg-brand-primary/10 text-brand-primary px-4 py-1 rounded-full text-sm font-bold mb-4 inline-block">
                 {meal.category}
               </span>
-              <h1 className="text-4xl md:text-5xl font-bold text-stone-900 mb-4">{meal.title}</h1>
+              <h1 className="text-[56px] font-bold text-brand-accent mb-4 leading-tight">{meal.title}</h1>
               
               <div className="flex items-center gap-6 text-stone-500">
                 <div className="flex items-center gap-1 text-brand-accent">
@@ -78,8 +78,8 @@ export default function MealDetails() {
               </div>
             </div>
 
-            <div className="bg-white rounded-3xl p-8 shadow-sm border border-stone-100 mb-8">
-              <h3 className="font-bold text-stone-900 mb-4">وصف الوجبة</h3>
+            <div className="food-card p-[20px] mb-8">
+              <h3 className="font-bold text-brand-accent mb-4">وصف الوجبة</h3>
               <p className="text-stone-600 leading-relaxed">
                 {meal.description || "هذه الوجبة محضرة من أجود المكونات الطازجة على الطريقة المنزلية التقليدية. وجبة متكاملة تشبع حواسك وتذكرك بطعم أكل البيت الأصيل."}
               </p>
@@ -102,14 +102,14 @@ export default function MealDetails() {
                 <div className="flex items-center bg-white rounded-full border border-stone-200 p-1 shadow-sm w-full sm:w-auto justify-between sm:justify-start">
                   <button 
                     onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                    className="w-12 h-12 rounded-full flex items-center justify-center hover:bg-stone-50 text-stone-600 text-2xl"
+                    className="w-12 h-12 rounded-full flex items-center justify-center hover:bg-brand-cream text-stone-600 text-2xl"
                   >
                     -
                   </button>
                   <span className="w-12 text-center font-bold text-xl">{quantity}</span>
                   <button 
                     onClick={() => setQuantity(quantity + 1)}
-                    className="w-12 h-12 rounded-full flex items-center justify-center hover:bg-stone-50 text-stone-600 text-2xl"
+                    className="w-12 h-12 rounded-full flex items-center justify-center hover:bg-brand-cream text-stone-600 text-2xl"
                   >
                     +
                   </button>

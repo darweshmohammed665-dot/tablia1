@@ -4,7 +4,7 @@ import { ShoppingCart, User as UserIcon, LogOut, Menu, X, Utensils } from 'lucid
 import { useState } from 'react';
 import { auth } from '../firebase';
 import { UserProfile } from '../types';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'motion/react';
 
 interface NavbarProps {
   user: User | null;
@@ -21,7 +21,7 @@ export default function Navbar({ user, profile }: NavbarProps) {
   };
 
   return (
-    <nav className="bg-white/70 backdrop-blur-xl sticky top-0 z-50 border-b border-white/20 shadow-sm">
+    <nav className="bg-brand-cream/90 backdrop-blur-xl sticky top-0 z-50 border-b border-stone-200/50 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-24 items-center">
           {/* Logo */}
@@ -38,10 +38,22 @@ export default function Navbar({ user, profile }: NavbarProps) {
           {/* Desktop Nav */}
           <div className="hidden md:flex items-center gap-10">
             <div className="flex items-center gap-8">
-              <Link to="/" className="text-stone-600 hover:text-brand-primary transition-colors font-bold text-sm uppercase tracking-wider">الرئيسية</Link>
-              <Link to="/meals" className="text-stone-600 hover:text-brand-primary transition-colors font-bold text-sm uppercase tracking-wider">الأكلات</Link>
-              <Link to="/chefs" className="text-stone-600 hover:text-brand-primary transition-colors font-bold text-sm uppercase tracking-wider">الطهاة</Link>
-              <Link to="/about" className="text-stone-600 hover:text-brand-primary transition-colors font-bold text-sm uppercase tracking-wider">من نحن</Link>
+              <Link to="/" className="relative text-stone-600 hover:text-brand-primary transition-colors font-bold text-sm uppercase tracking-wider group">
+                الرئيسية
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-brand-primary transition-all duration-300 group-hover:w-full"></span>
+              </Link>
+              <Link to="/meals" className="relative text-stone-600 hover:text-brand-primary transition-colors font-bold text-sm uppercase tracking-wider group">
+                الأكلات
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-brand-primary transition-all duration-300 group-hover:w-full"></span>
+              </Link>
+              <Link to="/chefs" className="relative text-stone-600 hover:text-brand-primary transition-colors font-bold text-sm uppercase tracking-wider group">
+                الطهاة
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-brand-primary transition-all duration-300 group-hover:w-full"></span>
+              </Link>
+              <Link to="/about" className="relative text-stone-600 hover:text-brand-primary transition-colors font-bold text-sm uppercase tracking-wider group">
+                من نحن
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-brand-primary transition-all duration-300 group-hover:w-full"></span>
+              </Link>
             </div>
             
             <div className="flex items-center gap-6 mr-6 border-r border-stone-200 pr-6">
@@ -93,7 +105,7 @@ export default function Navbar({ user, profile }: NavbarProps) {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden bg-white border-t border-stone-100 overflow-hidden"
+            className="md:hidden bg-brand-cream border-t border-stone-200/50 overflow-hidden"
           >
             <div className="px-4 py-6 space-y-4">
               <Link to="/" className="block text-lg text-stone-600 font-bold" onClick={() => setIsOpen(false)}>الرئيسية</Link>

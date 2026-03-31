@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { collection, query, getDocs, where } from 'firebase/firestore';
 import { db } from '../firebase';
 import { UserProfile } from '../types';
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 import { Search, MapPin, Star, ChefHat } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
@@ -33,11 +33,11 @@ export default function Chefs() {
   );
 
   return (
-    <div className="bg-stone-50 min-h-screen pt-10 pb-20">
+    <div className="bg-brand-cream min-h-screen py-[100px]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="mb-8 md:mb-12">
-          <h1 className="text-3xl md:text-4xl font-bold text-stone-900 mb-2 md:mb-4">حريفة طنطا</h1>
-          <p className="text-stone-500 text-sm md:text-base">قابلوا ملوك النفس الفلاحي والأكل البيتي اللي ملوش زي في طنطا.</p>
+        <div className="mb-12 text-center">
+          <h1 className="text-[56px] font-bold text-brand-accent mb-4">حريفة طنطا</h1>
+          <p className="text-stone-500 text-xl">قابلوا ملوك النفس الفلاحي والأكل البيتي اللي ملوش زي في طنطا.</p>
         </div>
 
         {/* Search */}
@@ -55,7 +55,7 @@ export default function Chefs() {
         {loading ? (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[1, 2, 3].map(i => (
-              <div key={i} className="bg-white rounded-3xl h-80 animate-pulse"></div>
+              <div key={i} className="bg-white rounded-[18px] h-80 animate-pulse shadow-[0_8px_20px_rgba(0,0,0,0.08)]"></div>
             ))}
           </div>
         ) : filteredChefs.length > 0 ? (
@@ -66,7 +66,7 @@ export default function Chefs() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.05 }}
-                className="card group p-8 text-center"
+                className="food-card p-[20px] text-center flex flex-col"
               >
                 <div className="relative w-32 h-32 mx-auto mb-6">
                   <div className="absolute inset-0 bg-brand-primary/10 rounded-full animate-pulse"></div>
@@ -81,25 +81,25 @@ export default function Chefs() {
                   </div>
                 </div>
                 
-                <h3 className="text-2xl font-bold text-stone-900 mb-2">{chef.displayName}</h3>
-                <div className="flex items-center justify-center gap-1 text-brand-accent mb-4">
-                  <Star size={16} className="fill-brand-accent" />
-                  <Star size={16} className="fill-brand-accent" />
-                  <Star size={16} className="fill-brand-accent" />
-                  <Star size={16} className="fill-brand-accent" />
-                  <Star size={16} className="fill-brand-accent" />
+                <h3 className="text-2xl font-bold text-brand-accent mb-2">{chef.displayName}</h3>
+                <div className="flex items-center justify-center gap-1 text-brand-primary mb-4">
+                  <Star size={16} className="fill-brand-primary" />
+                  <Star size={16} className="fill-brand-primary" />
+                  <Star size={16} className="fill-brand-primary" />
+                  <Star size={16} className="fill-brand-primary" />
+                  <Star size={16} className="fill-brand-primary" />
                   <span className="text-stone-400 text-sm mr-2">(4.9)</span>
                 </div>
                 
-                <p className="text-stone-500 mb-8 line-clamp-2 text-sm">
+                <p className="text-stone-500 mb-8 line-clamp-2 text-sm flex-grow">
                   {chef.bio || "طاهٍ منزلي شغوف يقدم أشهى الوجبات التقليدية في مدينة طنطا."}
                 </p>
                 
-                <div className="flex items-center justify-center gap-4 text-stone-400 text-sm mb-8">
+                <div className="flex items-center justify-center gap-4 text-stone-400 text-sm mb-6">
                   <span className="flex items-center gap-1"><MapPin size={16} /> طنطا</span>
                 </div>
                 
-                <Link to={`/chef/${chef.uid}`} className="btn-secondary w-full py-3">
+                <Link to={`/chef/${chef.uid}`} className="btn-secondary w-full py-3 block mt-auto">
                   عرض المطبخ
                 </Link>
               </motion.div>

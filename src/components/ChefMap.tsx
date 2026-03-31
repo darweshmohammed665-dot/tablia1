@@ -6,7 +6,7 @@ import { db, auth } from '../firebase';
 import { UserProfile, Order } from '../types';
 import { ChefHat, ShoppingBag, MapPin, Navigation } from 'lucide-react';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 
 // Fix for default Leaflet marker icons
 delete (L.Icon.Default.prototype as any)._getIconUrl;
@@ -142,11 +142,11 @@ export default function ChefMap() {
             </p>
           </div>
           <div className="flex gap-4">
-            <div className="bg-stone-50 px-6 py-3 rounded-2xl border border-stone-100 text-center">
+            <div className="bg-brand-cream px-6 py-3 rounded-2xl border border-stone-100 text-center">
               <p className="text-2xl font-bold text-brand-primary">{chefs.length}</p>
               <p className="text-xs text-stone-500 font-bold">شيف نشط</p>
             </div>
-            <div className="bg-stone-50 px-6 py-3 rounded-2xl border border-stone-100 text-center">
+            <div className="bg-brand-cream px-6 py-3 rounded-2xl border border-stone-100 text-center">
               <p className="text-2xl font-bold text-brand-secondary">{recentOrders.length}+</p>
               <p className="text-xs text-stone-500 font-bold">طلب مؤخراً</p>
             </div>
@@ -189,7 +189,7 @@ export default function ChefMap() {
                               </p>
                             </div>
                           </div>
-                          <div className="flex items-center justify-between mb-4 bg-stone-50 p-2 rounded-xl">
+                          <div className="flex items-center justify-between mb-4 bg-brand-cream p-2 rounded-xl">
                             <div className="flex items-center gap-1 text-brand-accent">
                               <span className="text-sm font-bold">★ {chef.rating || '5.0'}</span>
                             </div>
@@ -245,7 +245,7 @@ export default function ChefMap() {
           </div>
 
           {/* Map Legend */}
-          <div className="absolute bottom-10 right-10 z-[1000] bg-white/95 backdrop-blur-md p-6 rounded-[2rem] shadow-2xl border border-stone-100 flex flex-col gap-4 min-w-[220px]">
+          <div className="absolute bottom-10 right-10 z-[1000] bg-brand-cream/95 backdrop-blur-md p-6 rounded-[2rem] shadow-2xl border border-stone-100 flex flex-col gap-4 min-w-[220px]">
             <h4 className="text-sm font-bold text-stone-900 border-b border-stone-100 pb-2 mb-1">دليل الخريطة</h4>
             <div className="flex items-center gap-4 text-sm font-bold text-stone-700">
               <div className="w-5 h-5 bg-brand-primary rounded-full border-2 border-white shadow-md flex items-center justify-center">

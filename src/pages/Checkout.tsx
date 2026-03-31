@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 import { MapPin, Phone, CreditCard, Truck, CheckCircle2, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { collection, addDoc } from 'firebase/firestore';
@@ -90,14 +90,14 @@ export default function Checkout() {
   }
 
   return (
-    <div className="bg-stone-50 min-h-screen pt-10 pb-20">
+    <div className="bg-brand-cream min-h-screen py-[100px]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h1 className="text-4xl font-bold text-stone-900 mb-12">إتمام الطلب</h1>
+        <h1 className="text-[56px] font-bold text-brand-accent mb-12">إتمام الطلب</h1>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
           <div className="lg:col-span-2 space-y-8">
             {/* Address Section */}
-            <div className="bg-white rounded-[2.5rem] p-8 shadow-sm border border-stone-100">
+            <div className="food-card p-[20px]">
               <div className="flex items-center gap-4 mb-8">
                 <div className="w-10 h-10 bg-brand-primary/10 text-brand-primary rounded-full flex items-center justify-center font-bold">1</div>
                 <h2 className="text-2xl font-bold">عنوان التوصيل</h2>
@@ -147,7 +147,7 @@ export default function Checkout() {
             </div>
 
             {/* Payment Section */}
-            <div className="bg-white rounded-[2.5rem] p-8 shadow-sm border border-stone-100 opacity-50 pointer-events-none">
+            <div className="food-card p-[20px] opacity-50 pointer-events-none">
               <div className="flex items-center gap-4 mb-8">
                 <div className="w-10 h-10 bg-stone-100 text-stone-400 rounded-full flex items-center justify-center font-bold">2</div>
                 <h2 className="text-2xl font-bold">طريقة الدفع</h2>
@@ -176,8 +176,8 @@ export default function Checkout() {
 
           {/* Order Summary */}
           <div className="lg:col-span-1">
-            <div className="bg-white rounded-[2.5rem] p-8 shadow-xl border border-stone-100 sticky top-24">
-              <h2 className="text-2xl font-bold text-stone-900 mb-8">تفاصيل الطلب</h2>
+            <div className="food-card p-[20px] sticky top-24">
+              <h2 className="text-2xl font-bold text-brand-accent mb-8">تفاصيل الطلب</h2>
               
               <div className="space-y-4 mb-8">
                 <div className="flex justify-between text-stone-700">

@@ -3,7 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { doc, getDoc, collection, query, where, getDocs } from 'firebase/firestore';
 import { db, auth } from '../firebase';
 import { UserProfile, Meal } from '../types';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'motion/react';
 import { MapPin, Star, ChefHat, Clock, Edit3, UtensilsCrossed, Share2, Users } from 'lucide-react';
 import ChefProfileForm from '../components/ChefProfileForm';
 
@@ -59,14 +59,14 @@ export default function ChefProfile() {
   if (!chef) return <div className="min-h-screen flex flex-col items-center justify-center"><h2 className="text-2xl font-bold mb-4">الشيف غير موجود</h2><Link to="/chefs" className="btn-primary">العودة لسوق الطهاة</Link></div>;
 
   return (
-    <div className="bg-stone-50 min-h-screen pb-20">
+    <div className="bg-brand-cream min-h-screen pb-[80px]">
       {/* Header / Cover */}
       <div className="h-64 bg-brand-secondary relative">
         <div className="absolute inset-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/food.png')]"></div>
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-24 relative z-10">
-        <div className="bg-white rounded-[3rem] shadow-xl p-8 md:p-12 mb-12">
+        <div className="food-card p-8 md:p-12 mb-[80px]">
           <div className="flex flex-col md:flex-row gap-8 items-center md:items-end">
             <div className="relative w-40 h-40 -mt-20 md:-mt-32">
               <img 
@@ -82,7 +82,7 @@ export default function ChefProfile() {
             
             <div className="flex-grow text-center md:text-right">
               <div className="flex items-center justify-center md:justify-start gap-4 mb-2">
-                <h1 className="text-4xl font-bold text-stone-900">{chef.displayName}</h1>
+                <h1 className="text-[56px] font-bold text-brand-accent">{chef.displayName}</h1>
                 {isOwner && (
                   <button 
                     onClick={() => setShowEditModal(true)}
@@ -179,7 +179,7 @@ export default function ChefProfile() {
                   className="relative group"
                 >
                   <div className="absolute -inset-1 bg-gradient-to-r from-brand-accent to-brand-primary rounded-[2.5rem] blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
-                  <div className="relative bg-white rounded-[2.5rem] overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300">
+                  <div className="relative bg-brand-cream rounded-[2.5rem] overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300">
                     <Link to={`/meal/${meal.id}`} className="block relative h-64 overflow-hidden">
                       <img 
                         src={meal.image} 
@@ -249,26 +249,26 @@ export default function ChefProfile() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
-                className="card group"
+                className="food-card overflow-hidden flex flex-col"
               >
                 <Link to={`/meal/${meal.id}`} className="block relative h-56 overflow-hidden">
-                  <img src={meal.image} alt={meal.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" referrerPolicy="no-referrer" />
-                  <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-sm font-bold text-brand-primary">
+                  <img src={meal.image} alt={meal.title} className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" referrerPolicy="no-referrer" />
+                  <div className="absolute top-4 left-4 bg-brand-cream/90 backdrop-blur-sm px-3 py-1 rounded-full text-sm font-bold text-brand-primary">
                     {meal.price} ج.م
                   </div>
                   {meal.featured && (
-                    <div className="absolute top-4 right-4 bg-brand-accent text-stone-900 px-3 py-1 rounded-full text-[10px] font-black shadow-sm">
+                    <div className="absolute top-4 right-4 bg-brand-accent text-white px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest">
                       مميز
                     </div>
                   )}
                 </Link>
-                <div className="p-6">
-                  <Link to={`/meal/${meal.id}`} className="text-xl font-bold text-stone-900 mb-4 hover:text-brand-primary transition-colors block">{meal.title}</Link>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-4 text-stone-400 text-sm">
-                      <span className="flex items-center gap-1"><Clock size={16} /> 45 دقيقة</span>
+                <div className="p-[20px] flex flex-col flex-grow">
+                  <Link to={`/meal/${meal.id}`} className="text-xl font-bold text-brand-accent mb-4 hover:text-brand-primary transition-colors block">{meal.title}</Link>
+                  <div className="mt-auto flex items-center justify-between">
+                    <div className="flex items-center gap-2 text-stone-400 text-sm font-bold">
+                      <Clock size={16} /> 45 دقيقة
                     </div>
-                    <Link to="/checkout" className="btn-primary py-2 px-6 text-sm">اشتري الآن</Link>
+                    <Link to="/checkout" className="btn-primary py-2 px-6 text-sm">اطلب الآن</Link>
                   </div>
                 </div>
               </motion.div>

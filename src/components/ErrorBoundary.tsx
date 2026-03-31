@@ -34,12 +34,12 @@ export default class ErrorBoundary extends React.Component<Props, State> {
   render() {
     if (this.state.hasError) {
       return (
-        <div className="min-h-screen flex items-center justify-center bg-stone-50 p-4 text-center" dir="rtl">
-          <div className="max-w-md w-full bg-white rounded-[2.5rem] p-12 shadow-xl border border-stone-100">
+        <div className="min-h-screen flex items-center justify-center bg-brand-cream p-4 text-center" dir="rtl">
+          <div className="max-w-md w-full food-card p-[20px]">
             <div className="w-20 h-20 bg-red-50 text-red-500 rounded-full flex items-center justify-center mx-auto mb-8">
               <AlertTriangle size={40} />
             </div>
-            <h1 className="text-2xl font-bold text-stone-900 mb-4">عذراً، حدث خطأ ما</h1>
+            <h1 className="text-2xl font-bold text-brand-accent mb-4">عذراً، حدث خطأ ما</h1>
             <p className="text-stone-500 mb-8 leading-relaxed">
               نواجه مشكلة في تحميل هذه الصفحة. يرجى المحاولة مرة أخرى أو العودة للرئيسية.
             </p>

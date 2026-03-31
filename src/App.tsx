@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { onAuthStateChanged, User } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
 import { auth, db } from './firebase';
 import { UserProfile } from './types';
+import { AnimatePresence, motion } from 'motion/react';
+import { Toaster } from 'sonner';
 
 // Pages
 import Home from './pages/Home';
@@ -22,6 +24,50 @@ import About from './pages/About';
 // Components
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
+
+// Page Transition Wrapper
+const PageWrapper = ({ children }: { children: React.ReactNode }) => {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -20 }}
+      transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+    >
+      {children}
+    </motion.div>
+  );
+};
+
+const AnimatedRoutes = ({ profile }: { profile: UserProfile | null }) => {
+  const location = useLocation();
+  
+  return (
+    <AnimatePresence mode="wait">
+      <Routes location={location} key={location.pathname}>
+        <Route path="/" element={<PageWrapper><Home /></PageWrapper>} />
+        <Route path="/meals" element={<PageWrapper><Meals /></PageWrapper>} />
+        <Route path="/chefs" element={<PageWrapper><Chefs /></PageWrapper>} />
+        <Route path="/chef/:id" element={<PageWrapper><ChefProfile /></PageWrapper>} />
+        <Route path="/meal/:id" element={<PageWrapper><MealDetails /></PageWrapper>} />
+        <Route path="/cart" element={<PageWrapper><Cart /></PageWrapper>} />
+        <Route path="/checkout" element={<PageWrapper><Checkout /></PageWrapper>} />
+        <Route path="/login" element={<PageWrapper><Login /></PageWrapper>} />
+        <Route path="/register" element={<PageWrapper><Register /></PageWrapper>} />
+        <Route path="/orders" element={<PageWrapper><MyOrders /></PageWrapper>} />
+        <Route path="/about" element={<PageWrapper><About /></PageWrapper>} />
+        
+        {/* Protected Chef Route */}
+        <Route 
+          path="/dashboard" 
+          element={
+            profile?.role === 'chef' ? <PageWrapper><ChefDashboard profile={profile} /></PageWrapper> : <Navigate to="/" />
+          } 
+        />
+      </Routes>
+    </AnimatePresence>
+  );
+};
 
 export default function App() {
   const [user, setUser] = useState<User | null>(null);
@@ -48,7 +94,7 @@ export default function App() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-stone-50">
+      <div className="min-h-screen flex items-center justify-center bg-brand-cream">
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-brand-primary"></div>
       </div>
     );
@@ -57,29 +103,10 @@ export default function App() {
   return (
     <Router>
       <div className="min-h-screen flex flex-col font-sans" dir="rtl">
+        <Toaster position="top-center" richColors />
         <Navbar user={user} profile={profile} />
         <main className="flex-grow">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/meals" element={<Meals />} />
-            <Route path="/chefs" element={<Chefs />} />
-            <Route path="/chef/:id" element={<ChefProfile />} />
-            <Route path="/meal/:id" element={<MealDetails />} />
-            <Route path="/cart" element={<Cart />} />
-            <Route path="/checkout" element={<Checkout />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/orders" element={<MyOrders />} />
-            <Route path="/about" element={<About />} />
-            
-            {/* Protected Chef Route */}
-            <Route 
-              path="/dashboard" 
-              element={
-                profile?.role === 'chef' ? <ChefDashboard profile={profile} /> : <Navigate to="/" />
-              } 
-            />
-          </Routes>
+          <AnimatedRoutes profile={profile} />
         </main>
         <Footer />
       </div>

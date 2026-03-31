@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { collection, query, getDocs, where } from 'firebase/firestore';
 import { db } from '../firebase';
 import { Meal } from '../types';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'motion/react';
 import { Search, Filter, Star, Clock, X, ChevronDown, SlidersHorizontal, ArrowUpDown } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
@@ -87,11 +87,11 @@ export default function Meals() {
   };
 
   return (
-    <div className="bg-stone-50 min-h-screen pt-10 pb-20">
+    <div className="bg-brand-cream min-h-screen py-[100px]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="mb-8 md:mb-12">
-          <h1 className="text-3xl md:text-4xl font-bold text-stone-900 mb-2 md:mb-4">منيو طبلية</h1>
-          <p className="text-stone-500 text-sm md:text-base">كل اللي نفسك فيه وأكتر.. أكل بيتي سخن وطازة بيوصلك لحد الباب.</p>
+        <div className="mb-12 text-center">
+          <h1 className="text-[56px] font-bold text-brand-accent mb-4">منيو طبلية</h1>
+          <p className="text-stone-500 text-xl">كل اللي نفسك فيه وأكتر.. أكل بيتي سخن وطازة بيوصلك لحد الباب.</p>
         </div>
 
         {/* Filters & Search */}
@@ -142,7 +142,7 @@ export default function Meals() {
               <button
                 key={cat}
                 onClick={() => setCategory(cat)}
-                className={`px-6 py-3 rounded-xl font-bold whitespace-nowrap transition-all text-sm ${category === cat ? 'bg-brand-primary text-white shadow-lg shadow-brand-primary/20' : 'bg-white text-stone-600 border border-stone-200 hover:border-brand-primary'}`}
+                className={`px-6 py-3 rounded-xl font-bold whitespace-nowrap transition-all text-sm ${category === cat ? 'bg-brand-primary text-white shadow-lg shadow-brand-primary/20' : 'bg-brand-cream text-stone-600 border border-stone-200 hover:border-brand-primary'}`}
               >
                 {cat}
               </button>
@@ -236,7 +236,7 @@ export default function Meals() {
                 <div className="p-6 border-t border-stone-100 grid grid-cols-2 gap-4">
                   <button 
                     onClick={resetFilters}
-                    className="py-4 rounded-2xl border border-stone-200 font-bold text-stone-600 hover:bg-stone-50 transition-colors"
+                    className="py-4 rounded-2xl border border-stone-200 font-bold text-stone-600 hover:bg-brand-cream transition-colors"
                   >
                     إعادة ضبط
                   </button>
@@ -255,7 +255,7 @@ export default function Meals() {
         {loading ? (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[1, 2, 3, 4, 5, 6].map(i => (
-              <div key={i} className="bg-white rounded-3xl h-96 animate-pulse"></div>
+              <div key={i} className="bg-white rounded-[18px] h-96 animate-pulse shadow-[0_8px_20px_rgba(0,0,0,0.08)]"></div>
             ))}
           </div>
         ) : filteredAndSortedMeals.length > 0 ? (
@@ -266,35 +266,35 @@ export default function Meals() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.05 }}
-                className="card group"
+                className="food-card overflow-hidden flex flex-col"
               >
                 <Link to={`/meal/${meal.id}`} className="block relative h-64 overflow-hidden">
-                  <img src={meal.image} alt={meal.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" referrerPolicy="no-referrer" />
-                  <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-sm font-bold text-brand-primary">
+                  <img src={meal.image} alt={meal.title} className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" referrerPolicy="no-referrer" />
+                  <div className="absolute top-4 left-4 bg-brand-cream/90 backdrop-blur-sm px-3 py-1 rounded-full text-sm font-bold text-brand-primary">
                     {meal.price} ج.م
                   </div>
                   {meal.featured && (
-                    <div className="absolute top-4 right-4 bg-brand-accent text-white px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest">
+                    <div className="absolute top-4 right-4 bg-brand-accent text-white px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest">
                       مميز
                     </div>
                   )}
                 </Link>
-                <div className="p-6">
+                <div className="p-[20px] flex flex-col flex-grow">
                   <div className="flex justify-between items-start mb-2">
-                    <Link to={`/meal/${meal.id}`} className="text-xl font-black text-stone-900 hover:text-brand-primary transition-colors leading-tight">{meal.title}</Link>
-                    <div className="flex items-center gap-1 text-brand-accent">
-                      <Star size={16} className="fill-brand-accent" />
+                    <Link to={`/meal/${meal.id}`} className="text-xl font-bold text-brand-accent hover:text-brand-primary transition-colors leading-tight">{meal.title}</Link>
+                    <div className="flex items-center gap-1 text-brand-primary">
+                      <Star size={16} className="fill-brand-primary" />
                       <span className="text-sm font-bold">{meal.rating}</span>
                     </div>
                   </div>
-                  <p className="text-stone-500 mb-6 flex items-center gap-2 text-sm">
-                    بواسطة <Link to={`/chef/${meal.chefId}`} className="text-brand-secondary font-bold hover:underline">{meal.chefName}</Link>
+                  <p className="text-stone-500 mb-4 flex items-center gap-2 text-sm">
+                    بواسطة <Link to={`/chef/${meal.chefId}`} className="text-brand-accent font-bold hover:underline">{meal.chefName}</Link>
                   </p>
-                  <div className="flex items-center justify-between pt-4 border-t border-stone-50">
-                    <div className="flex items-center gap-4 text-stone-400 text-xs font-bold">
-                      <span className="flex items-center gap-1"><Clock size={14} /> {meal.deliveryTime || 45} دقيقة</span>
+                  <div className="mt-auto flex items-center justify-between pt-4 border-t border-stone-100">
+                    <div className="flex items-center gap-2 text-stone-400 text-sm font-bold">
+                      <Clock size={16} /> {meal.deliveryTime || 45} دقيقة
                     </div>
-                    <Link to="/checkout" className="btn-primary py-2 px-6 text-xs font-black uppercase tracking-wider">اشتري الآن</Link>
+                    <Link to="/checkout" className="btn-primary py-2 px-6 text-sm">اطلب الآن</Link>
                   </div>
                 </div>
               </motion.div>

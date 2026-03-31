@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 import { ShoppingCart, Trash2, ArrowRight, ShoppingBag, ChevronLeft } from 'lucide-react';
 
 export default function Cart() {
@@ -27,9 +27,9 @@ export default function Cart() {
   }
 
   return (
-    <div className="bg-stone-50 min-h-screen pt-10 pb-20">
+    <div className="bg-brand-cream min-h-screen py-[100px]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h1 className="text-4xl font-bold text-stone-900 mb-12 flex items-center gap-4">
+        <h1 className="text-[56px] font-bold text-brand-accent mb-12 flex items-center gap-4">
           <ShoppingCart size={36} className="text-brand-primary" /> سلة التسوق
         </h1>
 
@@ -42,15 +42,15 @@ export default function Cart() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.1 }}
-                className="bg-white rounded-3xl p-6 shadow-sm border border-stone-100 flex flex-col sm:flex-row items-center gap-6"
+                className="food-card p-[20px] flex flex-col sm:flex-row items-center gap-6"
               >
-                <img src={item.image} alt={item.title} className="w-32 h-32 rounded-2xl object-cover shadow-sm" />
+                <img src={item.image} alt={item.title} className="w-32 h-32 rounded-[18px] object-cover shadow-sm" />
                 <div className="flex-grow text-center sm:text-right">
-                  <h3 className="text-xl font-bold text-stone-900 mb-1">{item.title}</h3>
+                  <h3 className="text-xl font-bold text-brand-accent mb-1">{item.title}</h3>
                   <p className="text-brand-primary font-bold mb-4">{item.price} ج.م</p>
                   
                   <div className="flex items-center justify-center sm:justify-start gap-4">
-                    <div className="flex items-center bg-stone-50 rounded-full border border-stone-200 p-1">
+                    <div className="flex items-center bg-brand-cream rounded-full border border-stone-200 p-1">
                       <button className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-white text-stone-600">-</button>
                       <span className="w-8 text-center font-bold">{item.quantity}</span>
                       <button className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-white text-stone-600">+</button>
@@ -60,7 +60,7 @@ export default function Cart() {
                     </button>
                   </div>
                 </div>
-                <div className="text-xl font-bold text-stone-900 sm:mr-auto">
+                <div className="text-xl font-bold text-brand-accent sm:mr-auto">
                   {(item.price * item.quantity).toFixed(0)} ج.م
                 </div>
               </motion.div>
@@ -73,8 +73,8 @@ export default function Cart() {
 
           {/* Summary */}
           <div className="lg:col-span-1">
-            <div className="bg-white rounded-[2.5rem] p-8 shadow-xl border border-stone-100 sticky top-24">
-              <h2 className="text-2xl font-bold text-stone-900 mb-8">ملخص الطلب</h2>
+            <div className="food-card p-[20px] sticky top-24">
+              <h2 className="text-2xl font-bold text-brand-accent mb-8">ملخص الطلب</h2>
               
               <div className="space-y-4 mb-8">
                 <div className="flex justify-between text-stone-500">
