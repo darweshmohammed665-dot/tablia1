@@ -45,10 +45,10 @@ export default function MealDetails() {
           <motion.div 
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
-            className="relative rounded-[3rem] overflow-hidden shadow-2xl h-[500px]"
+            className="relative rounded-[2rem] md:rounded-[3rem] overflow-hidden shadow-2xl h-[300px] md:h-[500px]"
           >
             <img src={meal.image} alt={meal.title} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
-            <div className="absolute top-6 left-6 bg-white/90 backdrop-blur-md px-6 py-2 rounded-full text-xl font-bold text-brand-primary shadow-lg">
+            <div className="absolute top-4 left-4 md:top-6 md:left-6 bg-white/90 backdrop-blur-md px-4 md:px-6 py-1 md:py-2 rounded-full text-lg md:text-xl font-bold text-brand-primary shadow-lg">
               {meal.price} ج.م
             </div>
           </motion.div>
@@ -98,23 +98,23 @@ export default function MealDetails() {
             </div>
 
             <div className="mt-auto space-y-6">
-              <div className="flex items-center gap-6">
-                <div className="flex items-center bg-white rounded-full border border-stone-200 p-1 shadow-sm">
+              <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6">
+                <div className="flex items-center bg-white rounded-full border border-stone-200 p-1 shadow-sm w-full sm:w-auto justify-between sm:justify-start">
                   <button 
                     onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                    className="w-10 h-10 rounded-full flex items-center justify-center hover:bg-stone-50 text-stone-600"
+                    className="w-12 h-12 rounded-full flex items-center justify-center hover:bg-stone-50 text-stone-600 text-2xl"
                   >
                     -
                   </button>
-                  <span className="w-12 text-center font-bold text-lg">{quantity}</span>
+                  <span className="w-12 text-center font-bold text-xl">{quantity}</span>
                   <button 
                     onClick={() => setQuantity(quantity + 1)}
-                    className="w-10 h-10 rounded-full flex items-center justify-center hover:bg-stone-50 text-stone-600"
+                    className="w-12 h-12 rounded-full flex items-center justify-center hover:bg-stone-50 text-stone-600 text-2xl"
                   >
                     +
                   </button>
                 </div>
-                <Link to="/checkout" className="btn-primary flex-grow py-4 flex items-center justify-center gap-3 text-lg">
+                <Link to="/checkout" className="btn-primary w-full sm:flex-grow py-4 flex items-center justify-center gap-3 text-lg">
                   <ShoppingCart size={24} /> اشتري الآن - {(meal.price * quantity).toFixed(0)} ج.م
                 </Link>
               </div>

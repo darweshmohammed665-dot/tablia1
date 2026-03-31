@@ -89,9 +89,9 @@ export default function Meals() {
   return (
     <div className="bg-stone-50 min-h-screen pt-10 pb-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="mb-12">
-          <h1 className="text-4xl font-bold text-stone-900 mb-4">الأكلات</h1>
-          <p className="text-stone-500">أفضل الأطباق المنزلية المحضرة طازجة في طنطا</p>
+        <div className="mb-8 md:mb-12">
+          <h1 className="text-3xl md:text-4xl font-bold text-stone-900 mb-2 md:mb-4">الأكلات</h1>
+          <p className="text-stone-500 text-sm md:text-base">أفضل الأطباق المنزلية المحضرة طازجة في طنطا</p>
         </div>
 
         {/* Filters & Search */}
@@ -166,7 +166,7 @@ export default function Meals() {
                 animate={{ x: 0 }}
                 exit={{ x: '100%' }}
                 transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-                className="fixed right-0 top-0 h-full w-full max-w-md bg-white z-[101] shadow-2xl flex flex-col"
+                className="fixed right-0 top-0 h-full w-full sm:max-w-md bg-white z-[101] shadow-2xl flex flex-col"
               >
                 <div className="p-6 border-b border-stone-100 flex items-center justify-between">
                   <h2 className="text-2xl font-black text-stone-900">تصفية النتائج</h2>
@@ -175,7 +175,7 @@ export default function Meals() {
                   </button>
                 </div>
 
-                <div className="flex-grow overflow-y-auto p-8 space-y-10">
+                <div className="flex-grow overflow-y-auto p-6 md:p-8 space-y-8 md:space-y-10">
                   {/* Price Range */}
                   <div className="space-y-4">
                     <h3 className="font-bold text-stone-900 flex items-center justify-between">
@@ -189,7 +189,7 @@ export default function Meals() {
                       step="10"
                       value={priceRange[1]}
                       onChange={(e) => setPriceRange([priceRange[0], parseInt(e.target.value)])}
-                      className="w-full accent-brand-primary"
+                      className="w-full accent-brand-primary h-2 bg-stone-100 rounded-lg appearance-none cursor-pointer"
                     />
                     <div className="flex justify-between text-xs text-stone-400 font-medium">
                       <span>0 ج.م</span>

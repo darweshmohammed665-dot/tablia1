@@ -3,7 +3,7 @@ import { Facebook, Instagram, Twitter, Heart, Utensils } from 'lucide-react';
 
 export default function Footer() {
   return (
-    <footer className="bg-stone-950 text-stone-400 pt-32 pb-12 relative overflow-hidden text-right">
+    <footer className="bg-stone-950 text-stone-400 pt-16 md:pt-32 pb-12 relative overflow-hidden text-right">
       {/* Decorative Background Elements */}
       <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-brand-primary to-transparent opacity-30"></div>
       <div className="absolute -top-24 -right-24 w-96 h-96 bg-brand-primary/5 rounded-full blur-3xl"></div>
@@ -18,11 +18,11 @@ export default function Footer() {
               </div>
               <div className="flex flex-col">
                 <span className="text-3xl font-black text-white tracking-tighter leading-none font-serif">طبلية</span>
-                <span className="text-[10px] font-bold text-brand-primary tracking-[0.2em] uppercase">Authentic Cuisine</span>
+                <span className="text-xs font-bold text-brand-primary">طعم ملوش كتالوج</span>
               </div>
             </Link>
             <p className="text-xl text-stone-500 leading-relaxed max-w-md mb-10">
-              نحن نعيد تعريف مفهوم الأكل البيتي في مصر. نجمع بين أصالة الطعم ورفاهية التجربة الأصيلة.
+              طنطا كلها بتطلب من طبلية.. دوقي النفس الفلاحي اللي بيعدل المزاج وبيخلص الكلام. اطلبي دلوقتي قبل ما الكمية تخلص!
             </p>
             <div className="flex gap-4">
               {[Facebook, Instagram, Twitter].map((Icon, i) => (

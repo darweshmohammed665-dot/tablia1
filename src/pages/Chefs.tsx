@@ -35,20 +35,20 @@ export default function Chefs() {
   return (
     <div className="bg-stone-50 min-h-screen pt-10 pb-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="mb-12">
-          <h1 className="text-4xl font-bold text-stone-900 mb-4">سوق الطهاة</h1>
-          <p className="text-stone-500">تعرف على أمهر الطهاة المنزليين في طنطا واطلب منهم مباشرة</p>
+        <div className="mb-8 md:mb-12">
+          <h1 className="text-3xl md:text-4xl font-bold text-stone-900 mb-2 md:mb-4">سوق الطهاة</h1>
+          <p className="text-stone-500 text-sm md:text-base">تعرف على أمهر الطهاة المنزليين في طنطا واطلب منهم مباشرة</p>
         </div>
 
         {/* Search */}
-        <div className="max-w-2xl mb-12 relative">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-stone-400" size={20} />
+        <div className="max-w-2xl mb-8 md:mb-12 relative group">
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-stone-400 group-focus-within:text-brand-primary transition-colors" size={20} />
           <input 
             type="text" 
             placeholder="ابحث عن شيف بالاسم..." 
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-12 pr-4 py-4 rounded-2xl border border-stone-200 focus:ring-2 focus:ring-brand-primary focus:border-transparent outline-none transition-all bg-white"
+            className="w-full pl-12 pr-4 py-4 rounded-2xl border border-stone-200 focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary outline-none transition-all bg-white shadow-sm"
           />
         </div>
 

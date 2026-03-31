@@ -25,13 +25,13 @@ export default function Navbar({ user, profile }: NavbarProps) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-24 items-center">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-3 group">
-            <div className="w-12 h-12 bg-brand-primary rounded-2xl flex items-center justify-center text-white shadow-lg group-hover:rotate-12 transition-transform duration-500">
-              <Utensils size={24} />
+          <Link to="/" className="flex items-center gap-2 md:gap-3 group">
+            <div className="w-10 h-10 md:w-12 md:h-12 bg-brand-primary rounded-xl md:rounded-2xl flex items-center justify-center text-white shadow-lg group-hover:rotate-12 transition-transform duration-500">
+              <Utensils size={20} className="md:w-6 md:h-6" />
             </div>
             <div className="flex flex-col">
-              <span className="text-3xl font-black text-stone-900 tracking-tighter leading-none font-serif">طبلية</span>
-              <span className="text-[10px] font-bold text-brand-primary tracking-[0.2em] uppercase">Authentic Cuisine</span>
+              <span className="text-2xl md:text-3xl font-black text-stone-900 tracking-tighter leading-none font-serif">طبلية</span>
+              <span className="text-[10px] md:text-[12px] font-bold text-brand-primary tracking-normal">طعم ملوش كتالوج</span>
             </div>
           </Link>
 
