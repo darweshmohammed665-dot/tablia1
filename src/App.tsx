@@ -17,6 +17,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import ChefDashboard from './pages/ChefDashboard';
 import MyOrders from './pages/MyOrders';
+import About from './pages/About';
 
 // Components
 import Navbar from './components/Navbar';
@@ -69,6 +70,7 @@ export default function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/orders" element={<MyOrders />} />
+            <Route path="/about" element={<About />} />
             
             {/* Protected Chef Route */}
             <Route 

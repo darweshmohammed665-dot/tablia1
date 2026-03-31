@@ -90,8 +90,8 @@ export default function Meals() {
     <div className="bg-stone-50 min-h-screen pt-10 pb-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-8 md:mb-12">
-          <h1 className="text-3xl md:text-4xl font-bold text-stone-900 mb-2 md:mb-4">الأكلات</h1>
-          <p className="text-stone-500 text-sm md:text-base">أفضل الأطباق المنزلية المحضرة طازجة في طنطا</p>
+          <h1 className="text-3xl md:text-4xl font-bold text-stone-900 mb-2 md:mb-4">منيو طبلية</h1>
+          <p className="text-stone-500 text-sm md:text-base">كل اللي نفسك فيه وأكتر.. أكل بيتي سخن وطازة بيوصلك لحد الباب.</p>
         </div>
 
         {/* Filters & Search */}

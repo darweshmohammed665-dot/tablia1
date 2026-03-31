@@ -41,6 +41,7 @@ export default function Navbar({ user, profile }: NavbarProps) {
               <Link to="/" className="text-stone-600 hover:text-brand-primary transition-colors font-bold text-sm uppercase tracking-wider">الرئيسية</Link>
               <Link to="/meals" className="text-stone-600 hover:text-brand-primary transition-colors font-bold text-sm uppercase tracking-wider">الأكلات</Link>
               <Link to="/chefs" className="text-stone-600 hover:text-brand-primary transition-colors font-bold text-sm uppercase tracking-wider">الطهاة</Link>
+              <Link to="/about" className="text-stone-600 hover:text-brand-primary transition-colors font-bold text-sm uppercase tracking-wider">من نحن</Link>
             </div>
             
             <div className="flex items-center gap-6 mr-6 border-r border-stone-200 pr-6">
@@ -98,6 +99,7 @@ export default function Navbar({ user, profile }: NavbarProps) {
               <Link to="/" className="block text-lg text-stone-600 font-bold" onClick={() => setIsOpen(false)}>الرئيسية</Link>
               <Link to="/meals" className="block text-lg text-stone-600 font-bold" onClick={() => setIsOpen(false)}>الأكلات</Link>
               <Link to="/chefs" className="block text-lg text-stone-600 font-bold" onClick={() => setIsOpen(false)}>الطهاة</Link>
+              <Link to="/about" className="block text-lg text-stone-600 font-bold" onClick={() => setIsOpen(false)}>من نحن</Link>
               <Link to="/cart" className="block text-lg text-stone-600" onClick={() => setIsOpen(false)}>السلة (0)</Link>
               <hr className="border-stone-100" />
               {user ? (

@@ -36,8 +36,8 @@ export default function Chefs() {
     <div className="bg-stone-50 min-h-screen pt-10 pb-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-8 md:mb-12">
-          <h1 className="text-3xl md:text-4xl font-bold text-stone-900 mb-2 md:mb-4">سوق الطهاة</h1>
-          <p className="text-stone-500 text-sm md:text-base">تعرف على أمهر الطهاة المنزليين في طنطا واطلب منهم مباشرة</p>
+          <h1 className="text-3xl md:text-4xl font-bold text-stone-900 mb-2 md:mb-4">حريفة طنطا</h1>
+          <p className="text-stone-500 text-sm md:text-base">قابلوا ملوك النفس الفلاحي والأكل البيتي اللي ملوش زي في طنطا.</p>
         </div>
 
         {/* Search */}

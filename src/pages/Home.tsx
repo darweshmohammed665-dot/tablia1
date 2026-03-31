@@ -122,8 +122,8 @@ export default function Home() {
       <section className="py-24 bg-stone-900 text-white overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-5xl font-black mb-4">كل اللي <span className="text-brand-accent italic">تتمناه</span></h2>
-            <p className="text-stone-400 text-xl">أقسامنا المختارة بعناية لتناسب كل الأذواق</p>
+            <h2 className="text-5xl font-black mb-4">نفسك في <span className="text-brand-accent italic">إيه؟</span></h2>
+            <p className="text-stone-400 text-xl">من المحشي للفطير.. كل اللي قلبك يحبه موجود هنا.</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-4 md:grid-rows-2 gap-6 h-auto md:h-[800px]">
@@ -181,8 +181,8 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row justify-between items-start mb-16 gap-6">
             <div className="text-right">
-              <h2 className="text-5xl font-black text-stone-900 mb-4">تريند <span className="text-brand-primary">الأسبوع</span></h2>
-              <p className="text-stone-500 text-xl">الأكلات اللي قالبة طنطا اليومين دول</p>
+              <h2 className="text-5xl font-black text-stone-900 mb-4">الأكثر <span className="text-brand-primary">طلباً</span></h2>
+              <p className="text-stone-500 text-xl">الأكلات اللي عاملة قلبان في طنطا اليومين دول</p>
             </div>
             <Link to="/meals" className="btn-secondary py-3 px-8 flex items-center gap-2">
               تصفح المنيو كامل <ChevronLeft size={20} />
@@ -249,11 +249,11 @@ export default function Home() {
             
             <div className="relative z-10 p-8 md:p-24 text-right text-white max-w-3xl ml-auto">
               <h2 className="text-4xl md:text-8xl font-black mb-6 md:mb-8 leading-tight">
-                عندك <span className="text-brand-accent italic">نفس</span> فلاحي؟ <br />
-                افتحي مطبخك النهاردة
+                عندك <span className="text-brand-accent italic">نفس</span> حريف؟ <br />
+                افتحي مطبخك وورينا الشطارة
               </h2>
               <p className="text-lg md:text-2xl text-stone-100 mb-8 md:mb-12 leading-relaxed font-medium">
-                انضمي لأكبر مجتمع للطهاة البيتيين في طنطا. وصلي طعم الريف لكل بيت وانتي في مكانك.
+                انضمي لأكبر مجتمع حريفة في طنطا. وصلي طعمك لكل بيت وانتي في مكانك.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-end">
                 <Link to="/register?role=chef" className="btn-primary bg-brand-accent text-stone-900 py-4 md:py-5 px-10 md:px-12 text-lg md:text-xl shadow-2xl text-center">

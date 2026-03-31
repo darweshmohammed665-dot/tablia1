@@ -37,6 +37,7 @@ export default function Footer() {
             <h4 className="text-white font-black text-lg mb-8 uppercase tracking-widest">المنصة</h4>
             <ul className="space-y-5">
               <li><Link to="/" className="hover:text-brand-accent transition-colors font-bold">الرئيسية</Link></li>
+              <li><Link to="/about" className="hover:text-brand-accent transition-colors font-bold">من نحن</Link></li>
               <li><Link to="/meals" className="hover:text-brand-accent transition-colors font-bold">تصفح الأكلات</Link></li>
               <li><Link to="/chefs" className="hover:text-brand-accent transition-colors font-bold">سوق الطهاة</Link></li>
               <li><Link to="/register?role=chef" className="hover:text-brand-accent transition-colors font-bold">انضم كطباخ</Link></li>
