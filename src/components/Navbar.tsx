@@ -1,0 +1,126 @@
+import { Link, useNavigate } from 'react-router-dom';
+import { User } from 'firebase/auth';
+import { ShoppingCart, User as UserIcon, LogOut, Menu, X, Utensils } from 'lucide-react';
+import { useState } from 'react';
+import { auth } from '../firebase';
+import { UserProfile } from '../types';
+import { motion, AnimatePresence } from 'framer-motion';
+
+interface NavbarProps {
+  user: User | null;
+  profile: UserProfile | null;
+}
+
+export default function Navbar({ user, profile }: NavbarProps) {
+  const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    await auth.signOut();
+    navigate('/');
+  };
+
+  return (
+    <nav className="bg-white/70 backdrop-blur-xl sticky top-0 z-50 border-b border-white/20 shadow-sm">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between h-24 items-center">
+          {/* Logo */}
+          <Link to="/" className="flex items-center gap-3 group">
+            <div className="w-12 h-12 bg-brand-primary rounded-2xl flex items-center justify-center text-white shadow-lg group-hover:rotate-12 transition-transform duration-500">
+              <Utensils size={24} />
+            </div>
+            <div className="flex flex-col">
+              <span className="text-3xl font-black text-stone-900 tracking-tighter leading-none font-serif">طبلية</span>
+              <span className="text-[10px] font-bold text-brand-primary tracking-[0.2em] uppercase">Authentic Cuisine</span>
+            </div>
+          </Link>
+
+          {/* Desktop Nav */}
+          <div className="hidden md:flex items-center gap-10">
+            <div className="flex items-center gap-8">
+              <Link to="/" className="text-stone-600 hover:text-brand-primary transition-colors font-bold text-sm uppercase tracking-wider">الرئيسية</Link>
+              <Link to="/meals" className="text-stone-600 hover:text-brand-primary transition-colors font-bold text-sm uppercase tracking-wider">الأكلات</Link>
+              <Link to="/chefs" className="text-stone-600 hover:text-brand-primary transition-colors font-bold text-sm uppercase tracking-wider">الطهاة</Link>
+            </div>
+            
+            <div className="flex items-center gap-6 mr-6 border-r border-stone-200 pr-6">
+              <Link to="/cart" className="p-3 text-stone-600 hover:text-brand-primary relative bg-stone-50 rounded-2xl transition-colors">
+                <ShoppingCart size={22} />
+                <span className="absolute -top-1 -right-1 bg-brand-primary text-white text-[10px] w-5 h-5 flex items-center justify-center rounded-full font-bold shadow-md">0</span>
+              </Link>
+
+              {user ? (
+                <div className="flex items-center gap-4">
+                  {profile?.role === 'chef' && (
+                    <Link to="/dashboard" className="bg-brand-secondary/10 text-brand-secondary px-4 py-2 rounded-xl font-bold text-sm hover:bg-brand-secondary hover:text-white transition-all">لوحة التحكم</Link>
+                  )}
+                  {profile?.role === 'customer' && (
+                    <Link to="/orders" className="text-stone-600 hover:text-brand-primary transition-colors font-bold text-sm">طلباتي</Link>
+                  )}
+                  <div className="h-8 w-[1px] bg-stone-200 mx-2"></div>
+                  <Link to="/profile" className="w-12 h-12 rounded-2xl bg-stone-100 flex items-center justify-center text-stone-400 overflow-hidden border-2 border-white shadow-sm hover:border-brand-primary transition-all">
+                    {profile?.photoURL ? (
+                      <img src={profile.photoURL} alt={profile.displayName} className="w-full h-full object-cover" />
+                    ) : (
+                      <UserIcon size={24} />
+                    )}
+                  </Link>
+                  <button onClick={handleLogout} className="p-2 text-stone-400 hover:text-red-500 transition-colors">
+                    <LogOut size={20} />
+                  </button>
+                </div>
+              ) : (
+                <div className="flex items-center gap-4">
+                  <Link to="/login" className="text-stone-600 hover:text-brand-primary font-bold text-sm">دخول</Link>
+                  <Link to="/register" className="btn-primary py-3 px-8 text-sm">سجل الآن</Link>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Mobile Menu Toggle */}
+          <button className="md:hidden p-2 text-stone-600" onClick={() => setIsOpen(!isOpen)}>
+            {isOpen ? <X size={28} /> : <Menu size={28} />}
+          </button>
+        </div>
+      </div>
+
+      {/* Mobile Nav */}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            className="md:hidden bg-white border-t border-stone-100 overflow-hidden"
+          >
+            <div className="px-4 py-6 space-y-4">
+              <Link to="/" className="block text-lg text-stone-600 font-bold" onClick={() => setIsOpen(false)}>الرئيسية</Link>
+              <Link to="/meals" className="block text-lg text-stone-600 font-bold" onClick={() => setIsOpen(false)}>الأكلات</Link>
+              <Link to="/chefs" className="block text-lg text-stone-600 font-bold" onClick={() => setIsOpen(false)}>الطهاة</Link>
+              <Link to="/cart" className="block text-lg text-stone-600" onClick={() => setIsOpen(false)}>السلة (0)</Link>
+              <hr className="border-stone-100" />
+              {user ? (
+                <>
+                  {profile?.role === 'chef' && (
+                    <Link to="/dashboard" className="block text-lg text-brand-secondary" onClick={() => setIsOpen(false)}>لوحة التحكم</Link>
+                  )}
+                  {profile?.role === 'customer' && (
+                    <Link to="/orders" className="block text-lg text-stone-600" onClick={() => setIsOpen(false)}>طلباتي</Link>
+                  )}
+                  <Link to="/profile" className="block text-lg text-stone-600" onClick={() => setIsOpen(false)}>الملف الشخصي</Link>
+                  <button onClick={handleLogout} className="block text-lg text-red-500">تسجيل الخروج</button>
+                </>
+              ) : (
+                <div className="flex flex-col gap-3">
+                  <Link to="/login" className="btn-secondary text-center" onClick={() => setIsOpen(false)}>تسجيل الدخول</Link>
+                  <Link to="/register" className="btn-primary text-center" onClick={() => setIsOpen(false)}>إنشاء حساب</Link>
+                </div>
+              )}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </nav>
+  );
+}

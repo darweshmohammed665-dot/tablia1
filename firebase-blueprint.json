@@ -1,0 +1,78 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "User Profile",
+      "description": "Stores user information and roles (customer or chef).",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "description": "Firebase Auth UID" },
+        "email": { "type": "string", "format": "email" },
+        "displayName": { "type": "string" },
+        "role": { "type": "string", "enum": ["customer", "chef"] },
+        "photoURL": { "type": "string", "format": "url" },
+        "bio": { "type": "string" },
+        "location": { "type": "string" },
+        "createdAt": { "type": "number" }
+      },
+      "required": ["uid", "email", "displayName", "role"]
+    },
+    "Meal": {
+      "title": "Meal",
+      "description": "Represents a food item offered by a chef.",
+      "type": "object",
+      "properties": {
+        "chefId": { "type": "string" },
+        "chefName": { "type": "string" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "price": { "type": "number" },
+        "image": { "type": "string", "format": "url" },
+        "category": { "type": "string" },
+        "rating": { "type": "number" },
+        "reviewsCount": { "type": "number" },
+        "available": { "type": "boolean" },
+        "createdAt": { "type": "number" }
+      },
+      "required": ["chefId", "title", "price", "image", "category"]
+    },
+    "Order": {
+      "title": "Order",
+      "description": "Represents a food order placed by a customer.",
+      "type": "object",
+      "properties": {
+        "customerId": { "type": "string" },
+        "chefId": { "type": "string" },
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "mealId": { "type": "string" },
+              "title": { "type": "string" },
+              "quantity": { "type": "number" },
+              "price": { "type": "number" }
+            }
+          }
+        },
+        "total": { "type": "number" },
+        "status": { "type": "string", "enum": ["pending", "preparing", "delivered", "cancelled"] },
+        "createdAt": { "type": "number" }
+      },
+      "required": ["customerId", "chefId", "items", "total", "status"]
+    }
+  },
+  "firestore": {
+    "/users/{uid}": {
+      "schema": "UserProfile",
+      "description": "User profiles for customers and chefs."
+    },
+    "/meals/{mealId}": {
+      "schema": "Meal",
+      "description": "Available meals in the marketplace."
+    },
+    "/orders/{orderId}": {
+      "schema": "Order",
+      "description": "Customer orders."
+    }
+  }
+}

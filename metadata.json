@@ -1,0 +1,7 @@
+{
+  "name": "طبلية - Tabliya",
+  "description": "منصة لربط الطهاة المنزليين في طنطا بالعملاء الباحثين عن أكل بيتي أصيل.",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}
