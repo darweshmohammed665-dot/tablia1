@@ -2,10 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { collection, query, getDocs, where, addDoc, deleteDoc, doc, onSnapshot, updateDoc } from 'firebase/firestore';
 import { db, auth } from '../firebase';
 import { Meal, UserProfile, Order } from '../types';
+import { handleFirestoreError, OperationType } from '../lib/firestore-errors';
 import { motion, AnimatePresence } from 'motion/react';
-import { Plus, Trash2, Package, DollarSign, Star, Utensils, Settings, Clock, ChevronDown, UserCheck, MapPin, Phone } from 'lucide-react';
+import { Plus, Trash2, Package, DollarSign, Star, Utensils, Settings, Clock, ChevronDown, UserCheck, MapPin, Phone, Map } from 'lucide-react';
 import OrderStatusTracker from '../components/OrderStatusTracker';
 import ChefProfileForm from '../components/ChefProfileForm';
+import OrderTrackingMap from '../components/OrderTrackingMap';
 
 interface ChefDashboardProps {
   profile: UserProfile;
@@ -17,7 +19,9 @@ export default function ChefDashboard({ profile }: ChefDashboardProps) {
   const [loading, setLoading] = useState(true);
   const [showAddModal, setShowAddModal] = useState(false);
   const [updatingOrderId, setUpdatingOrderId] = useState<string | null>(null);
+  const [trackingOrderId, setTrackingOrderId] = useState<string | null>(null);
   const [orderFilter, setOrderFilter] = useState<'all' | 'pending' | 'preparing' | 'out_for_delivery'>('all');
+  const [categoryFilter, setCategoryFilter] = useState('الكل');
   const [isProfileComplete, setIsProfileComplete] = useState(!!(profile.bio && profile.location && profile.photoURL));
   
   // New Meal Form
@@ -34,17 +38,25 @@ export default function ChefDashboard({ profile }: ChefDashboardProps) {
     if (!auth.currentUser) return;
 
     // Real-time Orders Listener
-    const ordersQ = query(collection(db, 'orders'), where('chefId', '==', auth.currentUser.uid));
+    const ordersPath = 'orders';
+    const ordersQ = query(collection(db, ordersPath), where('chefId', '==', auth.currentUser.uid));
     const unsubscribeOrders = onSnapshot(ordersQ, (snapshot) => {
       setOrders(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Order)));
       setLoading(false);
+    }, (error) => {
+      handleFirestoreError(error, OperationType.LIST, ordersPath);
     });
 
     // Fetch Chef's Meals (one-time is fine, or could be snapshot too)
     const fetchMeals = async () => {
-      const mealsQ = query(collection(db, 'meals'), where('chefId', '==', auth.currentUser!.uid));
-      const mealsSnap = await getDocs(mealsQ);
-      setMeals(mealsSnap.docs.map(doc => ({ id: doc.id, ...doc.data() } as Meal)));
+      const mealsPath = 'meals';
+      try {
+        const mealsQ = query(collection(db, mealsPath), where('chefId', '==', auth.currentUser!.uid));
+        const mealsSnap = await getDocs(mealsQ);
+        setMeals(mealsSnap.docs.map(doc => ({ id: doc.id, ...doc.data() } as Meal)));
+      } catch (error) {
+        handleFirestoreError(error, OperationType.GET, mealsPath);
+      }
     };
 
     fetchMeals();
@@ -54,10 +66,11 @@ export default function ChefDashboard({ profile }: ChefDashboardProps) {
 
   const handleUpdateStatus = async (orderId: string, newStatus: Order['status']) => {
     setUpdatingOrderId(orderId);
+    const path = `orders/${orderId}`;
     try {
       await updateDoc(doc(db, 'orders', orderId), { status: newStatus });
     } catch (error) {
-      console.error("Error updating order status:", error);
+      handleFirestoreError(error, OperationType.UPDATE, path);
     } finally {
       setUpdatingOrderId(null);
     }
@@ -79,31 +92,34 @@ export default function ChefDashboard({ profile }: ChefDashboardProps) {
         createdAt: Date.now()
       };
 
-      const docRef = await addDoc(collection(db, 'meals'), mealData);
+      const path = 'meals';
+      const docRef = await addDoc(collection(db, path), mealData);
       setMeals([...meals, { id: docRef.id, ...mealData } as Meal]);
       setShowAddModal(false);
       setNewMeal({ title: '', description: '', price: 0, category: 'محاشي', image: '', featured: false });
     } catch (error) {
-      console.error("Error adding meal:", error);
+      handleFirestoreError(error, OperationType.CREATE, 'meals');
     }
   };
 
   const handleDeleteMeal = async (id: string) => {
     if (!window.confirm('هل أنت متأكد من حذف هذه الوجبة؟')) return;
+    const path = `meals/${id}`;
     try {
       await deleteDoc(doc(db, 'meals', id));
       setMeals(meals.filter(m => m.id !== id));
     } catch (error) {
-      console.error("Error deleting meal:", error);
+      handleFirestoreError(error, OperationType.DELETE, path);
     }
   };
 
   const handleToggleFeatured = async (meal: Meal) => {
+    const path = `meals/${meal.id}`;
     try {
       await updateDoc(doc(db, 'meals', meal.id), { featured: !meal.featured });
       setMeals(meals.map(m => m.id === meal.id ? { ...m, featured: !m.featured } : m));
     } catch (error) {
-      console.error("Error toggling featured status:", error);
+      handleFirestoreError(error, OperationType.UPDATE, path);
     }
   };
 
@@ -172,12 +188,24 @@ export default function ChefDashboard({ profile }: ChefDashboardProps) {
           {/* Menu Management */}
           <div className="lg:col-span-2">
             <div className="food-card p-[20px] mb-8">
-              <h2 className="text-2xl font-bold text-brand-accent mb-8 flex items-center gap-2">
-                <Utensils size={24} className="text-brand-primary" /> قائمة أكلاتك
-              </h2>
+              <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-8">
+                <h2 className="text-2xl font-bold text-brand-accent flex items-center gap-2">
+                  <Utensils size={24} className="text-brand-primary" /> قائمة أكلاتك
+                </h2>
+                <select 
+                  value={categoryFilter}
+                  onChange={(e) => setCategoryFilter(e.target.value)}
+                  className="bg-brand-cream border border-stone-100 rounded-full px-4 py-2 text-sm font-bold text-stone-700 outline-none"
+                >
+                  <option value="الكل">الكل</option>
+                  {['محاشي', 'مشويات', 'مكرونات', 'حلويات', 'مخبوزات', 'أكل صحي'].map(c => (
+                    <option key={c} value={c}>{c}</option>
+                  ))}
+                </select>
+              </div>
               
               <div className="space-y-6">
-                {meals.length > 0 ? meals.map((meal) => (
+                {meals.filter(m => categoryFilter === 'الكل' || m.category === categoryFilter).length > 0 ? meals.filter(m => categoryFilter === 'الكل' || m.category === categoryFilter).map((meal) => (
                   <div key={meal.id} className="flex items-center gap-6 p-4 rounded-2xl hover:bg-brand-cream transition-colors border border-transparent hover:border-stone-100">
                     <img src={meal.image} alt={meal.title} className="w-24 h-24 rounded-xl object-cover shadow-sm" />
                     <div className="flex-grow">
@@ -209,7 +237,7 @@ export default function ChefDashboard({ profile }: ChefDashboardProps) {
                   </div>
                 )) : (
                   <div className="text-center py-12 text-stone-400">
-                    لا توجد وجبات في قائمتك بعد. ابدأ بإضافة أول وجبة!
+                    لا توجد وجبات في هذا القسم.
                   </div>
                 )}
               </div>
@@ -276,6 +304,12 @@ export default function ChefDashboard({ profile }: ChefDashboardProps) {
                             <a href={`tel:${order.customerPhone}`} className="text-sm text-brand-secondary hover:underline flex items-center gap-2 w-fit">
                               <Phone size={14} /> {order.customerPhone}
                             </a>
+                            <button 
+                              onClick={() => setTrackingOrderId(trackingOrderId === order.id ? null : order.id)}
+                              className="text-sm text-brand-primary hover:underline flex items-center gap-2 w-fit mt-2"
+                            >
+                              <Map size={14} /> {trackingOrderId === order.id ? 'إخفاء الموقع' : 'تتبع السائق'}
+                            </button>
                           </div>
                         </div>
                       </div>
@@ -293,6 +327,12 @@ export default function ChefDashboard({ profile }: ChefDashboardProps) {
                         <ChevronDown size={16} className="absolute right-4 top-1/2 -translate-y-1/2 text-brand-secondary pointer-events-none" />
                       </div>
                     </div>
+
+                    {trackingOrderId === order.id && (
+                      <div className="mb-6">
+                        <OrderTrackingMap orderId={order.id} />
+                      </div>
+                    )}
 
                     <OrderStatusTracker status={order.status} />
 

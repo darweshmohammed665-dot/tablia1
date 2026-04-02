@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { collection, query, getDocs, where } from 'firebase/firestore';
 import { db } from '../firebase';
 import { Meal } from '../types';
+import { handleFirestoreError, OperationType } from '../lib/firestore-errors';
 import { motion, AnimatePresence } from 'motion/react';
 import { Search, Filter, Star, Clock, X, ChevronDown, SlidersHorizontal, ArrowUpDown } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -10,8 +11,20 @@ export default function Meals() {
   const [meals, setMeals] = useState<Meal[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
-  const [category, setCategory] = useState('الكل');
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
+  
+  // Debounce search term
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm);
+    }, 300);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [searchTerm]);
   
   // Advanced Filter States
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 1000]);
@@ -21,8 +34,9 @@ export default function Meals() {
 
   useEffect(() => {
     const fetchMeals = async () => {
+      const path = 'meals';
       try {
-        const q = query(collection(db, 'meals'), where('available', '==', true));
+        const q = query(collection(db, path), where('available', '==', true));
         const querySnapshot = await getDocs(q);
         const mealsData = querySnapshot.docs.map(doc => {
           const data = doc.data();
@@ -34,7 +48,7 @@ export default function Meals() {
         });
         setMeals(mealsData);
       } catch (error) {
-        console.error("Error fetching meals:", error);
+        handleFirestoreError(error, OperationType.GET, path);
       } finally {
         setLoading(false);
       }
@@ -45,9 +59,9 @@ export default function Meals() {
 
   const filteredAndSortedMeals = useMemo(() => {
     let result = meals.filter(meal => {
-      const matchesSearch = meal.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                           meal.chefName.toLowerCase().includes(searchTerm.toLowerCase());
-      const matchesCategory = category === 'الكل' || meal.category === category;
+      const matchesSearch = meal.title.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) || 
+                           meal.chefName.toLowerCase().includes(debouncedSearchTerm.toLowerCase());
+      const matchesCategory = selectedCategories.length === 0 || selectedCategories.includes(meal.category);
       const matchesPrice = meal.price >= priceRange[0] && meal.price <= priceRange[1];
       const matchesRating = meal.rating >= minRating;
       const matchesDelivery = (meal.deliveryTime || 45) <= maxDeliveryTime;
@@ -75,7 +89,7 @@ export default function Meals() {
     }
 
     return result;
-  }, [meals, searchTerm, category, priceRange, minRating, maxDeliveryTime, sortBy]);
+  }, [meals, searchTerm, selectedCategories, priceRange, minRating, maxDeliveryTime, sortBy]);
 
   const categories = ['الكل', 'محاشي', 'مشويات', 'مكرونات', 'حلويات', 'مخبوزات', 'أكل صحي'];
 
@@ -83,7 +97,7 @@ export default function Meals() {
     setPriceRange([0, 1000]);
     setMinRating(0);
     setMaxDeliveryTime(120);
-    setCategory('الكل');
+    setSelectedCategories([]);
   };
 
   return (
@@ -115,7 +129,7 @@ export default function Meals() {
               >
                 <SlidersHorizontal size={20} />
                 <span>تصفية</span>
-                {(category !== 'الكل' || minRating > 0 || maxDeliveryTime < 120 || priceRange[0] > 0 || priceRange[1] < 1000) && (
+                {(selectedCategories.length > 0 || minRating > 0 || maxDeliveryTime < 120 || priceRange[0] > 0 || priceRange[1] < 1000) && (
                   <span className="w-2 h-2 bg-brand-primary rounded-full"></span>
                 )}
               </button>
@@ -135,18 +149,6 @@ export default function Meals() {
                 <ArrowUpDown className="absolute left-4 top-1/2 -translate-y-1/2 text-stone-400 pointer-events-none" size={18} />
               </div>
             </div>
-          </div>
-
-          <div className="flex gap-2 overflow-x-auto pb-2 no-scrollbar">
-            {categories.map((cat) => (
-              <button
-                key={cat}
-                onClick={() => setCategory(cat)}
-                className={`px-6 py-3 rounded-xl font-bold whitespace-nowrap transition-all text-sm ${category === cat ? 'bg-brand-primary text-white shadow-lg shadow-brand-primary/20' : 'bg-brand-cream text-stone-600 border border-stone-200 hover:border-brand-primary'}`}
-              >
-                {cat}
-              </button>
-            ))}
           </div>
         </div>
 
@@ -176,6 +178,30 @@ export default function Meals() {
                 </div>
 
                 <div className="flex-grow overflow-y-auto p-6 md:p-8 space-y-8 md:space-y-10">
+                  {/* Categories */}
+                  <div className="space-y-4">
+                    <h3 className="font-bold text-stone-900">الأقسام</h3>
+                    <div className="grid grid-cols-2 gap-3">
+                      {categories.filter(c => c !== 'الكل').map((cat) => (
+                        <label key={cat} className="flex items-center gap-3 cursor-pointer p-3 rounded-xl border border-stone-200 hover:border-brand-primary transition-colors">
+                          <input
+                            type="checkbox"
+                            checked={selectedCategories.includes(cat)}
+                            onChange={(e) => {
+                              if (e.target.checked) {
+                                setSelectedCategories([...selectedCategories, cat]);
+                              } else {
+                                setSelectedCategories(selectedCategories.filter(c => c !== cat));
+                              }
+                            }}
+                            className="accent-brand-primary w-5 h-5"
+                          />
+                          <span className="font-bold text-stone-700">{cat}</span>
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+
                   {/* Price Range */}
                   <div className="space-y-4">
                     <h3 className="font-bold text-stone-900 flex items-center justify-between">
@@ -191,23 +217,23 @@ export default function Meals() {
                       onChange={(e) => setPriceRange([priceRange[0], parseInt(e.target.value)])}
                       className="w-full accent-brand-primary h-2 bg-stone-100 rounded-lg appearance-none cursor-pointer"
                     />
-                    <div className="flex justify-between text-xs text-stone-400 font-medium">
-                      <span>0 ج.م</span>
-                      <span>1000+ ج.م</span>
-                    </div>
                   </div>
 
                   {/* Rating */}
                   <div className="space-y-4">
                     <h3 className="font-bold text-stone-900">الحد الأدنى للتقييم</h3>
                     <div className="flex gap-2">
-                      {[0, 3, 4, 4.5].map((r) => (
+                      {[0, 3, 4, 5].map((r) => (
                         <button
                           key={r}
                           onClick={() => setMinRating(r)}
-                          className={`flex-1 py-3 rounded-xl border font-bold transition-all ${minRating === r ? 'bg-brand-accent/10 border-brand-accent text-brand-accent' : 'bg-white border-stone-200 text-stone-500 hover:border-brand-accent'}`}
+                          className={`flex-1 py-3 rounded-xl border font-bold transition-all flex items-center justify-center gap-1 ${minRating === r ? 'bg-brand-accent/10 border-brand-accent text-brand-accent' : 'bg-white border-stone-200 text-stone-500 hover:border-brand-accent'}`}
                         >
-                          {r === 0 ? 'الكل' : `${r}+`}
+                          {r === 0 ? 'الكل' : (
+                            <>
+                              {r} <Star size={16} className="fill-current" />
+                            </>
+                          )}
                         </button>
                       ))}
                     </div>
@@ -219,16 +245,18 @@ export default function Meals() {
                       <span>أقصى وقت للتوصيل</span>
                       <span className="text-brand-primary text-sm">{maxDeliveryTime} دقيقة</span>
                     </h3>
-                    <div className="grid grid-cols-2 gap-3">
-                      {[30, 45, 60, 120].map((t) => (
-                        <button
-                          key={t}
-                          onClick={() => setMaxDeliveryTime(t)}
-                          className={`py-3 rounded-xl border font-bold transition-all ${maxDeliveryTime === t ? 'bg-brand-secondary/10 border-brand-secondary text-brand-secondary' : 'bg-white border-stone-200 text-stone-500 hover:border-brand-secondary'}`}
-                        >
-                          {t === 120 ? 'أي وقت' : `${t} دقيقة`}
-                        </button>
-                      ))}
+                    <input 
+                      type="range" 
+                      min="15" 
+                      max="120" 
+                      step="15"
+                      value={maxDeliveryTime}
+                      onChange={(e) => setMaxDeliveryTime(parseInt(e.target.value))}
+                      className="w-full accent-brand-secondary h-2 bg-stone-100 rounded-lg appearance-none cursor-pointer"
+                    />
+                    <div className="flex justify-between text-xs text-stone-400 font-medium">
+                      <span>15 دقيقة</span>
+                      <span>120+ دقيقة</span>
                     </div>
                   </div>
                 </div>
@@ -266,35 +294,38 @@ export default function Meals() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.05 }}
-                className="food-card overflow-hidden flex flex-col"
+                className="bg-white rounded-[2rem] overflow-hidden flex flex-col shadow-[0_8px_30px_rgba(0,0,0,0.05)] hover:shadow-[0_20px_40px_rgba(0,0,0,0.1)] transition-all duration-300 border border-stone-100"
               >
                 <Link to={`/meal/${meal.id}`} className="block relative h-64 overflow-hidden">
-                  <img src={meal.image} alt={meal.title} className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" referrerPolicy="no-referrer" />
-                  <div className="absolute top-4 left-4 bg-brand-cream/90 backdrop-blur-sm px-3 py-1 rounded-full text-sm font-bold text-brand-primary">
+                  <img src={meal.image} alt={meal.title} className="w-full h-full object-cover hover:scale-110 transition-transform duration-700" referrerPolicy="no-referrer" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+                  <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-4 py-1.5 rounded-full text-sm font-black text-brand-primary shadow-sm">
                     {meal.price} ج.م
                   </div>
                   {meal.featured && (
-                    <div className="absolute top-4 right-4 bg-brand-accent text-white px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest">
+                    <div className="absolute top-4 right-4 bg-brand-accent text-white px-3 py-1 rounded-full text-xs font-black uppercase tracking-widest shadow-sm">
                       مميز
                     </div>
                   )}
                 </Link>
-                <div className="p-[20px] flex flex-col flex-grow">
-                  <div className="flex justify-between items-start mb-2">
-                    <Link to={`/meal/${meal.id}`} className="text-xl font-bold text-brand-accent hover:text-brand-primary transition-colors leading-tight">{meal.title}</Link>
-                    <div className="flex items-center gap-1 text-brand-primary">
-                      <Star size={16} className="fill-brand-primary" />
-                      <span className="text-sm font-bold">{meal.rating}</span>
+                <div className="p-6 flex flex-col flex-grow">
+                  <div className="flex justify-between items-start mb-3">
+                    <Link to={`/meal/${meal.id}`} className="text-2xl font-black text-brand-accent hover:text-brand-primary transition-colors leading-tight">{meal.title}</Link>
+                    <div className="flex items-center gap-1 bg-brand-primary/10 px-2 py-1 rounded-lg text-brand-primary">
+                      <Star size={14} className="fill-brand-primary" />
+                      <span className="text-xs font-black">{meal.rating}</span>
                     </div>
                   </div>
-                  <p className="text-stone-500 mb-4 flex items-center gap-2 text-sm">
-                    بواسطة <Link to={`/chef/${meal.chefId}`} className="text-brand-accent font-bold hover:underline">{meal.chefName}</Link>
+                  <p className="text-stone-500 mb-6 flex items-center gap-2 text-sm font-bold">
+                    بواسطة <Link to={`/chef/${meal.chefId}`} className="text-brand-accent hover:underline">{meal.chefName}</Link>
                   </p>
-                  <div className="mt-auto flex items-center justify-between pt-4 border-t border-stone-100">
-                    <div className="flex items-center gap-2 text-stone-400 text-sm font-bold">
+                  <div className="mt-auto flex items-center justify-between pt-6 border-t border-stone-100">
+                    <div className="flex items-center gap-2 text-stone-400 text-sm font-black">
                       <Clock size={16} /> {meal.deliveryTime || 45} دقيقة
                     </div>
-                    <Link to="/checkout" className="btn-primary py-2 px-6 text-sm">اطلب الآن</Link>
+                    <Link to={`/meal/${meal.id}`} className="bg-brand-primary text-white py-3 px-8 rounded-2xl text-sm font-black hover:bg-brand-accent transition-colors shadow-lg shadow-brand-primary/20">
+                      عرض التفاصيل
+                    </Link>
                   </div>
                 </div>
               </motion.div>

@@ -1,7 +1,14 @@
 import { Link } from 'react-router-dom';
-import { Facebook, Instagram, Twitter, Heart, Utensils } from 'lucide-react';
+import { Facebook, Instagram, Twitter, Youtube, Heart, Utensils } from 'lucide-react';
 
 export default function Footer() {
+  const socialLinks = [
+    { Icon: Facebook, href: "#" },
+    { Icon: Instagram, href: "https://www.instagram.com/tablia_official?utm_source=qr&igsh=d3V1bjlzZzA5bXZ5" },
+    { Icon: Twitter, href: "#" },
+    { Icon: Youtube, href: "https://youtube.com/@tablia-official?si=7L6cxyaxz5gYyP3I" },
+  ];
+
   return (
     <footer className="bg-brand-primary text-brand-beige pt-16 md:pt-32 pb-12 relative overflow-hidden text-right">
       {/* Decorative Background Elements */}
@@ -13,20 +20,27 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-12 gap-16 mb-24">
           <div className="md:col-span-5">
             <Link to="/" className="flex items-center gap-3 mb-8 group">
-              <div className="w-12 h-12 bg-brand-primary rounded-2xl flex items-center justify-center text-white shadow-lg group-hover:rotate-12 transition-transform duration-500">
-                <Utensils size={24} />
-              </div>
-              <div className="flex flex-col">
-                <span className="text-3xl font-black text-white tracking-tighter leading-none font-serif">طبلية</span>
-                <span className="text-xs font-bold text-brand-primary">طعم ملوش كتالوج</span>
+              <div className="h-[90px] flex items-center justify-center group-hover:scale-110 transition-transform duration-500 overflow-hidden mix-blend-screen brightness-200 contrast-150">
+                <img 
+                  src="https://i.ibb.co/B2Fm90cV/Whats-Ap-Image-2026-04-02-at-13-09-41-1.jpg" 
+                  alt="طبلية" 
+                  className="h-full w-auto object-contain"
+                  referrerPolicy="no-referrer"
+                />
               </div>
             </Link>
             <p className="text-xl text-brand-beige/80 leading-relaxed max-w-md mb-10">
               طنطا كلها بتطلب من طبلية.. دوقي النفس الفلاحي اللي بيعدل المزاج وبيخلص الكلام. اطلبي دلوقتي قبل ما الكمية تخلص!
             </p>
             <div className="flex gap-4">
-              {[Facebook, Instagram, Twitter].map((Icon, i) => (
-                <a key={i} href="#" className="w-14 h-14 rounded-2xl bg-white/5 flex items-center justify-center hover:bg-brand-primary hover:text-white transition-all duration-300 border border-white/10">
+              {socialLinks.map(({ Icon, href }, i) => (
+                <a 
+                  key={i} 
+                  href={href} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="w-14 h-14 rounded-2xl bg-white/5 flex items-center justify-center hover:bg-brand-primary hover:text-white transition-all duration-300 border border-white/10"
+                >
                   <Icon size={24} />
                 </a>
               ))}

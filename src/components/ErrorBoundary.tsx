@@ -33,6 +33,17 @@ export default class ErrorBoundary extends React.Component<Props, State> {
 
   render() {
     if (this.state.hasError) {
+      let errorMessage = this.state.error?.message || '';
+      let structuredError = null;
+
+      try {
+        if (errorMessage.startsWith('{') && errorMessage.endsWith('}')) {
+          structuredError = JSON.parse(errorMessage);
+        }
+      } catch (e) {
+        // Not a JSON error
+      }
+
       return (
         <div className="min-h-screen flex items-center justify-center bg-brand-cream p-4 text-center" dir="rtl">
           <div className="max-w-md w-full food-card p-[20px]">
@@ -41,7 +52,9 @@ export default class ErrorBoundary extends React.Component<Props, State> {
             </div>
             <h1 className="text-2xl font-bold text-brand-accent mb-4">عذراً، حدث خطأ ما</h1>
             <p className="text-stone-500 mb-8 leading-relaxed">
-              نواجه مشكلة في تحميل هذه الصفحة. يرجى المحاولة مرة أخرى أو العودة للرئيسية.
+              {structuredError 
+                ? `حدث خطأ في قاعدة البيانات (${structuredError.operationType}): ${structuredError.error}`
+                : "نواجه مشكلة في تحميل هذه الصفحة. يرجى المحاولة مرة أخرى أو العودة للرئيسية."}
             </p>
             <div className="flex flex-col gap-3">
               <button 
@@ -57,9 +70,13 @@ export default class ErrorBoundary extends React.Component<Props, State> {
                 العودة للرئيسية
               </a>
             </div>
-            {process.env.NODE_ENV === 'development' && (
+            {(process.env.NODE_ENV === 'development' || structuredError) && (
               <div className="mt-8 p-4 bg-stone-50 rounded-xl text-left overflow-auto max-h-40">
-                <pre className="text-xs text-red-400">{this.state.error?.toString()}</pre>
+                <pre className="text-xs text-red-400">
+                  {structuredError 
+                    ? JSON.stringify(structuredError, null, 2) 
+                    : this.state.error?.toString()}
+                </pre>
               </div>
             )}
           </div>

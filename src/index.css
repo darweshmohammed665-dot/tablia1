@@ -1,16 +1,16 @@
 @import "tailwindcss";
 @import "leaflet/dist/leaflet.css";
-@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Aref+Ruqaa:wght@400;700&display=swap');
 
 @theme {
-  --color-brand-primary: #405c4e;    /* Mineral Green */
-  --color-brand-primary-hover: #2d4237; 
-  --color-brand-secondary: #c65d3a;  /* Pastel Rust */
-  --color-brand-accent: #FF3E00;     /* Electric Orange - High Energy */
-  --color-brand-cream: #ffffff;      
-  --color-brand-beige: #f5efe6;      
+  --color-brand-primary: #405c4e;    /* Mineral Green - Now Primary */
+  --color-brand-secondary: #c65d3a;  /* Pastel Rust - Now Secondary */
+  --color-brand-accent: #6b8e7d;     /* Light Green - Replacing Honey */
+  --color-brand-cream: #f9f7f2;      /* Soft off-white */
+  --color-brand-text: #374151;       /* Dark gray */
   
   --font-sans: "Cairo", ui-sans-serif, system-ui, sans-serif;
+  --font-brush: "Aref Ruqaa", serif;
 }
 
 @layer base {

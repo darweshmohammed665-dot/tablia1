@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { collection, query, getDocs, where } from 'firebase/firestore';
 import { db } from '../firebase';
 import { UserProfile } from '../types';
+import { handleFirestoreError, OperationType } from '../lib/firestore-errors';
 import { motion } from 'motion/react';
 import { Search, MapPin, Star, ChefHat } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -13,13 +14,14 @@ export default function Chefs() {
 
   useEffect(() => {
     const fetchChefs = async () => {
+      const path = 'users';
       try {
-        const q = query(collection(db, 'users'), where('role', '==', 'chef'));
+        const q = query(collection(db, path), where('role', '==', 'chef'));
         const querySnapshot = await getDocs(q);
         const chefsData = querySnapshot.docs.map(doc => ({ ...doc.data() } as UserProfile));
         setChefs(chefsData);
       } catch (error) {
-        console.error("Error fetching chefs:", error);
+        handleFirestoreError(error, OperationType.GET, path);
       } finally {
         setLoading(false);
       }

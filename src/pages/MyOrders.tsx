@@ -2,65 +2,19 @@ import React, { useState, useEffect } from 'react';
 import { collection, query, where, onSnapshot, orderBy } from 'firebase/firestore';
 import { db, auth } from '../firebase';
 import { Order } from '../types';
+import { handleFirestoreError, OperationType } from '../lib/firestore-errors';
 import { motion } from 'motion/react';
-import { Package, Clock, ShoppingBag, ChevronLeft } from 'lucide-react';
+import { Package, Clock, ShoppingBag, ChevronLeft, Map } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import OrderStatusTracker from '../components/OrderStatusTracker';
-
-enum OperationType {
-  CREATE = 'create',
-  UPDATE = 'update',
-  DELETE = 'delete',
-  LIST = 'list',
-  GET = 'get',
-  WRITE = 'write',
-}
-
-interface FirestoreErrorInfo {
-  error: string;
-  operationType: OperationType;
-  path: string | null;
-  authInfo: {
-    userId?: string;
-    email?: string | null;
-    emailVerified?: boolean;
-    isAnonymous?: boolean;
-    tenantId?: string | null;
-    providerInfo?: {
-      providerId: string;
-      displayName: string | null;
-      email: string | null;
-      photoUrl: string | null;
-    }[];
-  }
-}
-
-function handleFirestoreError(error: unknown, operationType: OperationType, path: string | null) {
-  const errInfo: FirestoreErrorInfo = {
-    error: error instanceof Error ? error.message : String(error),
-    authInfo: {
-      userId: auth.currentUser?.uid,
-      email: auth.currentUser?.email,
-      emailVerified: auth.currentUser?.emailVerified,
-      isAnonymous: auth.currentUser?.isAnonymous,
-      tenantId: auth.currentUser?.tenantId,
-      providerInfo: auth.currentUser?.providerData.map(provider => ({
-        providerId: provider.providerId,
-        displayName: provider.displayName,
-        email: provider.email,
-        photoUrl: provider.photoURL
-      })) || []
-    },
-    operationType,
-    path
-  }
-  console.error('Firestore Error: ', JSON.stringify(errInfo));
-  throw new Error(JSON.stringify(errInfo));
-}
+import OrderTrackingMap from '../components/OrderTrackingMap';
+import { onLocationUpdated } from '../services/socketService';
 
 export default function MyOrders() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
+  const [trackingOrderId, setTrackingOrderId] = useState<string | null>(null);
+  const [driverLocations, setDriverLocations] = useState<Record<string, { lat: number; lng: number }>>({});
 
   useEffect(() => {
     if (!auth.currentUser) return;
@@ -130,6 +84,14 @@ export default function MyOrders() {
                     <h3 className="text-2xl font-bold text-brand-accent leading-tight">
                       {order.items.map(item => item.title).join('، ')}
                     </h3>
+                    {order.status === 'out_for_delivery' && (
+                      <button 
+                        onClick={() => setTrackingOrderId(trackingOrderId === order.id ? null : order.id)}
+                        className="text-sm text-brand-primary hover:underline flex items-center gap-2 w-fit mt-2"
+                      >
+                        <Map size={14} /> {trackingOrderId === order.id ? 'إخفاء الموقع' : 'تتبع الطلب'}
+                      </button>
+                    )}
                   </div>
                   <div className="text-left md:text-right bg-brand-cream p-4 rounded-2xl border border-stone-100 w-full md:w-auto">
                     <p className="text-3xl font-bold text-brand-primary mb-1">{order.total} <span className="text-sm text-stone-500 font-bold">ج.م</span></p>

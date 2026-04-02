@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { onAuthStateChanged, User } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
@@ -20,6 +20,7 @@ import Register from './pages/Register';
 import ChefDashboard from './pages/ChefDashboard';
 import MyOrders from './pages/MyOrders';
 import About from './pages/About';
+import DriverTracking from './pages/DriverTracking';
 
 // Components
 import Navbar from './components/Navbar';
@@ -44,27 +45,30 @@ const AnimatedRoutes = ({ profile }: { profile: UserProfile | null }) => {
   
   return (
     <AnimatePresence mode="wait">
-      <Routes location={location} key={location.pathname}>
-        <Route path="/" element={<PageWrapper><Home /></PageWrapper>} />
-        <Route path="/meals" element={<PageWrapper><Meals /></PageWrapper>} />
-        <Route path="/chefs" element={<PageWrapper><Chefs /></PageWrapper>} />
-        <Route path="/chef/:id" element={<PageWrapper><ChefProfile /></PageWrapper>} />
-        <Route path="/meal/:id" element={<PageWrapper><MealDetails /></PageWrapper>} />
-        <Route path="/cart" element={<PageWrapper><Cart /></PageWrapper>} />
-        <Route path="/checkout" element={<PageWrapper><Checkout /></PageWrapper>} />
-        <Route path="/login" element={<PageWrapper><Login /></PageWrapper>} />
-        <Route path="/register" element={<PageWrapper><Register /></PageWrapper>} />
-        <Route path="/orders" element={<PageWrapper><MyOrders /></PageWrapper>} />
-        <Route path="/about" element={<PageWrapper><About /></PageWrapper>} />
-        
-        {/* Protected Chef Route */}
-        <Route 
-          path="/dashboard" 
-          element={
-            profile?.role === 'chef' ? <PageWrapper><ChefDashboard profile={profile} /></PageWrapper> : <Navigate to="/" />
-          } 
-        />
-      </Routes>
+      <div key={location.pathname}>
+        <Routes location={location}>
+          <Route path="/" element={<PageWrapper><Home /></PageWrapper>} />
+          <Route path="/meals" element={<PageWrapper><Meals /></PageWrapper>} />
+          <Route path="/chefs" element={<PageWrapper><Chefs /></PageWrapper>} />
+          <Route path="/chef/:id" element={<PageWrapper><ChefProfile /></PageWrapper>} />
+          <Route path="/meal/:id" element={<PageWrapper><MealDetails /></PageWrapper>} />
+          <Route path="/cart" element={<PageWrapper><Cart /></PageWrapper>} />
+          <Route path="/checkout" element={<PageWrapper><Checkout /></PageWrapper>} />
+          <Route path="/login" element={<PageWrapper><Login /></PageWrapper>} />
+          <Route path="/register" element={<PageWrapper><Register /></PageWrapper>} />
+          <Route path="/orders" element={<PageWrapper><MyOrders /></PageWrapper>} />
+          <Route path="/about" element={<PageWrapper><About /></PageWrapper>} />
+          <Route path="/driver-tracking" element={<PageWrapper><DriverTracking /></PageWrapper>} />
+          
+          {/* Protected Chef Route */}
+          <Route 
+            path="/dashboard" 
+            element={
+              profile?.role === 'chef' ? <PageWrapper><ChefDashboard profile={profile} /></PageWrapper> : <Navigate to="/" />
+            } 
+          />
+        </Routes>
+      </div>
     </AnimatePresence>
   );
 };

@@ -17,17 +17,17 @@ L.Icon.Default.mergeOptions({
 });
 
 // Custom Icon Creators
-const createChefIcon = () => {
+const createChefIcon = (isClosest: boolean = false) => {
   const iconHtml = renderToStaticMarkup(
-    <div className="bg-brand-primary p-2 rounded-full text-white shadow-lg border-2 border-white transform hover:scale-110 transition-transform">
-      <ChefHat size={20} />
+    <div className={`p-2 rounded-full text-white shadow-lg border-2 border-white transform hover:scale-110 transition-transform ${isClosest ? 'bg-brand-secondary animate-bounce' : 'bg-brand-primary'}`}>
+      <ChefHat size={isClosest ? 24 : 20} />
     </div>
   );
   return L.divIcon({
     html: iconHtml,
     className: 'custom-chef-icon',
-    iconSize: [40, 40],
-    iconAnchor: [20, 40],
+    iconSize: isClosest ? [48, 48] : [40, 40],
+    iconAnchor: isClosest ? [24, 48] : [20, 40],
   });
 };
 
@@ -49,9 +49,38 @@ export default function ChefMap() {
   const [chefs, setChefs] = useState<UserProfile[]>([]);
   const [recentOrders, setRecentOrders] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
   const center: [number, number] = [30.7865, 31.0004]; // Tanta, Egypt
 
+  // Haversine formula to calculate distance in km
+  const calculateDistance = (lat1: number, lng1: number, lat2: number, lng2: number) => {
+    const R = 6371; // Radius of the earth in km
+    const dLat = (lat2 - lat1) * (Math.PI / 180);
+    const dLng = (lng2 - lng1) * (Math.PI / 180);
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(lat1 * (Math.PI / 180)) * Math.cos(lat2 * (Math.PI / 180)) *
+      Math.sin(dLng / 2) * Math.sin(dLng / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c;
+  };
+
   useEffect(() => {
+    // Get user location
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setUserLocation({
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          });
+        },
+        (error) => {
+          console.warn("Could not get user location:", error);
+        }
+      );
+    }
+
     const fetchData = async () => {
       try {
         // Fetch Chefs
@@ -60,7 +89,7 @@ export default function ChefMap() {
         const chefsData = chefsSnap.docs.map(doc => ({ uid: doc.id, ...doc.data() } as UserProfile));
         
         // Add mock coordinates for Tanta area if missing
-        const chefsWithCoords = chefsData.map((chef, i) => {
+        let chefsWithCoords = chefsData.map((chef, i) => {
           if (!chef.coordinates) {
             return {
               ...chef,
@@ -72,6 +101,16 @@ export default function ChefMap() {
           }
           return chef;
         });
+
+        // Sort chefs by proximity if user location is available
+        if (userLocation) {
+          chefsWithCoords = chefsWithCoords.sort((a, b) => {
+            const distA = calculateDistance(userLocation.lat, userLocation.lng, a.coordinates!.lat, a.coordinates!.lng);
+            const distB = calculateDistance(userLocation.lat, userLocation.lng, b.coordinates!.lat, b.coordinates!.lng);
+            return distA - distB;
+          });
+        }
+
         setChefs(chefsWithCoords);
 
         // Fetch Recent Orders (to show active delivery zones)
@@ -105,7 +144,7 @@ export default function ChefMap() {
     };
 
     fetchData();
-  }, []);
+  }, [userLocation]);
 
   if (loading) {
     return (
@@ -166,59 +205,62 @@ export default function ChefMap() {
             />
             
             {/* Chef Markers & Coverage */}
-            {chefs.map((chef) => (
-              <React.Fragment key={chef.uid}>
-                {chef.coordinates && (
-                  <>
-                    <Marker 
-                      position={[chef.coordinates.lat, chef.coordinates.lng]} 
-                      icon={createChefIcon()}
-                    >
-                      <Popup className="custom-popup">
-                        <div className="p-3 text-right min-w-[200px]" dir="rtl">
-                          <div className="flex items-center gap-3 mb-3">
-                            <img 
-                              src={chef.photoURL || `https://picsum.photos/seed/${chef.uid}/100/100`} 
-                              alt={chef.displayName} 
-                              className="w-12 h-12 rounded-full object-cover border-2 border-brand-primary/20"
-                            />
-                            <div>
-                              <h3 className="font-bold text-stone-900 m-0 leading-tight">{chef.displayName}</h3>
-                              <p className="text-xs text-stone-500 m-0 flex items-center gap-1">
-                                <MapPin size={10} /> {chef.location || 'طنطا'}
-                              </p>
+            {chefs.map((chef, index) => {
+              const isClosest = index < 3;
+              return (
+                <React.Fragment key={chef.uid}>
+                  {chef.coordinates && (
+                    <>
+                      <Marker 
+                        position={[chef.coordinates.lat, chef.coordinates.lng]} 
+                        icon={createChefIcon(isClosest)}
+                      >
+                        <Popup className="custom-popup">
+                          <div className="p-3 text-right min-w-[200px]" dir="rtl">
+                            <div className="flex items-center gap-3 mb-3">
+                              <img 
+                                src={chef.photoURL || `https://picsum.photos/seed/${chef.uid}/100/100`} 
+                                alt={chef.displayName} 
+                                className="w-12 h-12 rounded-full object-cover border-2 border-brand-primary/20"
+                              />
+                              <div>
+                                <h3 className="font-bold text-stone-900 m-0 leading-tight">{chef.displayName}</h3>
+                                <p className="text-xs text-stone-500 m-0 flex items-center gap-1">
+                                  <MapPin size={10} /> {chef.location || 'طنطا'}
+                                </p>
+                              </div>
                             </div>
-                          </div>
-                          <div className="flex items-center justify-between mb-4 bg-brand-cream p-2 rounded-xl">
-                            <div className="flex items-center gap-1 text-brand-accent">
-                              <span className="text-sm font-bold">★ {chef.rating || '5.0'}</span>
+                            <div className="flex items-center justify-between mb-4 bg-brand-cream p-2 rounded-xl">
+                              <div className="flex items-center gap-1 text-brand-accent">
+                                <span className="text-sm font-bold">★ {chef.rating || '5.0'}</span>
+                              </div>
+                              <span className="text-[10px] font-bold text-stone-400">توصيل خلال 45 د</span>
                             </div>
-                            <span className="text-[10px] font-bold text-stone-400">توصيل خلال 45 د</span>
+                            <a 
+                              href={`/chef/${chef.uid}`} 
+                              className="block text-center bg-brand-primary text-white py-2 px-4 rounded-xl text-sm font-bold no-underline hover:bg-brand-primary/90 transition-colors shadow-md"
+                            >
+                              طلب أكل بيتي
+                            </a>
                           </div>
-                          <a 
-                            href={`/chef/${chef.uid}`} 
-                            className="block text-center bg-brand-primary text-white py-2 px-4 rounded-xl text-sm font-bold no-underline hover:bg-brand-primary/90 transition-colors shadow-md"
-                          >
-                            طلب أكل بيتي
-                          </a>
-                        </div>
-                      </Popup>
-                    </Marker>
-                    <Circle 
-                      center={[chef.coordinates.lat, chef.coordinates.lng]}
-                      radius={3500}
-                      pathOptions={{ 
-                        fillColor: '#c65d3a', 
-                        color: '#c65d3a', 
-                        fillOpacity: 0.05,
-                        weight: 1,
-                        dashArray: '8, 12'
-                      }}
-                    />
-                  </>
-                )}
-              </React.Fragment>
-            ))}
+                        </Popup>
+                      </Marker>
+                      <Circle 
+                        center={[chef.coordinates.lat, chef.coordinates.lng]}
+                        radius={3500}
+                        pathOptions={{ 
+                          fillColor: isClosest ? '#f27d26' : '#c65d3a', 
+                          color: isClosest ? '#f27d26' : '#c65d3a', 
+                          fillOpacity: isClosest ? 0.15 : 0.05,
+                          weight: isClosest ? 2 : 1,
+                          dashArray: '8, 12'
+                        }}
+                      />
+                    </>
+                  )}
+                </React.Fragment>
+              );
+            })}
 
             {/* Recent Orders Markers */}
             {recentOrders.map((order) => (
