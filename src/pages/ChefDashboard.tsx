@@ -18,6 +18,7 @@ export default function ChefDashboard({ profile }: ChefDashboardProps) {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [showAddModal, setShowAddModal] = useState(false);
+  const [mealToDelete, setMealToDelete] = useState<string | null>(null);
   const [updatingOrderId, setUpdatingOrderId] = useState<string | null>(null);
   const [trackingOrderId, setTrackingOrderId] = useState<string | null>(null);
   const [orderFilter, setOrderFilter] = useState<'all' | 'pending' | 'preparing' | 'out_for_delivery'>('all');
@@ -102,12 +103,17 @@ export default function ChefDashboard({ profile }: ChefDashboardProps) {
     }
   };
 
-  const handleDeleteMeal = async (id: string) => {
-    if (!window.confirm('هل أنت متأكد من حذف هذه الوجبة؟')) return;
-    const path = `meals/${id}`;
+  const handleDeleteMeal = (id: string) => {
+    setMealToDelete(id);
+  };
+
+  const confirmDelete = async () => {
+    if (!mealToDelete) return;
+    const path = `meals/${mealToDelete}`;
     try {
-      await deleteDoc(doc(db, 'meals', id));
-      setMeals(meals.filter(m => m.id !== id));
+      await deleteDoc(doc(db, 'meals', mealToDelete));
+      setMeals(meals.filter(m => m.id !== mealToDelete));
+      setMealToDelete(null);
     } catch (error) {
       handleFirestoreError(error, OperationType.DELETE, path);
     }
@@ -392,6 +398,42 @@ export default function ChefDashboard({ profile }: ChefDashboardProps) {
           </div>
         </div>
       </div>
+
+      {/* Delete Confirmation Modal */}
+      <AnimatePresence>
+        {mealToDelete && (
+          <div className="fixed inset-0 z-[70] flex items-center justify-center p-4 bg-black/60 backdrop-blur-md">
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              className="bg-white rounded-[2.5rem] p-10 max-w-md w-full shadow-2xl text-center"
+            >
+              <div className="w-20 h-20 bg-red-50 text-red-500 rounded-full flex items-center justify-center mx-auto mb-6">
+                <Trash2 size={40} />
+              </div>
+              <h2 className="text-3xl font-black text-stone-900 mb-4">حذف الوجبة؟</h2>
+              <p className="text-stone-500 text-lg mb-10 leading-relaxed">
+                هل أنت متأكد من رغبتك في حذف هذه الوجبة؟ لا يمكن التراجع عن هذا الإجراء بعد تنفيذه.
+              </p>
+              <div className="flex gap-4">
+                <button 
+                  onClick={confirmDelete}
+                  className="flex-grow bg-red-500 text-white py-4 rounded-2xl font-black text-lg hover:bg-red-600 transition-all shadow-lg shadow-red-200"
+                >
+                  نعم، احذفها
+                </button>
+                <button 
+                  onClick={() => setMealToDelete(null)}
+                  className="flex-grow bg-stone-100 text-stone-600 py-4 rounded-2xl font-black text-lg hover:bg-stone-200 transition-all"
+                >
+                  إلغاء
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
 
       {/* Add Meal Modal */}
       {showAddModal && (

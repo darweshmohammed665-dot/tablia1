@@ -25,15 +25,31 @@ export default function Navbar({ user, profile }: NavbarProps) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-24 items-center">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-2 md:gap-3 group">
-            <div className="h-[70px] flex items-center justify-center group-hover:scale-110 transition-transform duration-500 overflow-hidden mix-blend-multiply">
+          <Link to="/" className="flex items-center">
+            <motion.div 
+              whileHover={{ scale: 1.1 }}
+              animate={{ scale: [1, 1.03, 1] }}
+              transition={{ 
+                scale: {
+                  duration: 4,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                },
+                hover: {
+                  type: "spring",
+                  stiffness: 400,
+                  damping: 10
+                }
+              }}
+              className="w-[50px] h-[40px] flex items-center justify-center overflow-hidden mix-blend-multiply contrast-[1.1]"
+            >
               <img 
                 src="https://i.ibb.co/B2Fm90cV/Whats-Ap-Image-2026-04-02-at-13-09-41-1.jpg" 
                 alt="طبلية" 
-                className="h-full w-auto object-contain"
+                className="w-full h-auto object-contain scale-125"
                 referrerPolicy="no-referrer"
               />
-            </div>
+            </motion.div>
           </Link>
 
           {/* Desktop Nav */}

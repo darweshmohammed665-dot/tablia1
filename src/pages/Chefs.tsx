@@ -73,7 +73,7 @@ export default function Chefs() {
                 <div className="relative w-32 h-32 mx-auto mb-6">
                   <div className="absolute inset-0 bg-brand-primary/10 rounded-full animate-pulse"></div>
                   <img 
-                    src={chef.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(chef.displayName)}&background=c65d3a&color=fff&size=200`} 
+                    src={chef.photoURL || `https://images.unsplash.com/photo-1581299894007-aaa50297cf16?auto=format&fit=crop&q=80&w=200&h=200`} 
                     alt={chef.displayName} 
                     className="w-full h-full rounded-full object-cover relative z-10 border-4 border-white shadow-md"
                     referrerPolicy="no-referrer"

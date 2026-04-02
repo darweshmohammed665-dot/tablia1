@@ -19,12 +19,12 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-16 mb-24">
           <div className="md:col-span-5">
-            <Link to="/" className="flex items-center gap-3 mb-8 group">
-              <div className="h-[90px] flex items-center justify-center group-hover:scale-110 transition-transform duration-500 overflow-hidden mix-blend-screen brightness-200 contrast-150">
+            <Link to="/" className="flex items-center mb-8 group">
+              <div className="w-[50px] h-[40px] flex items-center justify-center group-hover:scale-105 transition-transform duration-500 overflow-hidden mix-blend-screen invert grayscale brightness-[2] contrast-[1.5]">
                 <img 
                   src="https://i.ibb.co/B2Fm90cV/Whats-Ap-Image-2026-04-02-at-13-09-41-1.jpg" 
                   alt="طبلية" 
-                  className="h-full w-auto object-contain"
+                  className="w-full h-auto object-contain scale-110"
                   referrerPolicy="no-referrer"
                 />
               </div>
