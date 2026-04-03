@@ -1,10 +1,27 @@
 import { Link } from 'react-router-dom';
 import { Facebook, Instagram, Twitter, Youtube, Heart, Utensils } from 'lucide-react';
 
+const TikTokIcon = ({ size = 24 }: { size?: number }) => (
+  <svg 
+    width={size} 
+    height={size} 
+    viewBox="0 0 24 24" 
+    fill="none" 
+    stroke="currentColor" 
+    strokeWidth="2" 
+    strokeLinecap="round" 
+    strokeLinejoin="round"
+  >
+    <path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5" />
+    <path d="M13 4a4 4 0 0 0 4 4" />
+  </svg>
+);
+
 export default function Footer() {
   const socialLinks = [
-    { Icon: Facebook, href: "#" },
+    { Icon: Facebook, href: "https://www.facebook.com/share/18XobVq5sr/" },
     { Icon: Instagram, href: "https://www.instagram.com/tablia_official?utm_source=qr&igsh=d3V1bjlzZzA5bXZ5" },
+    { Icon: TikTokIcon, href: "https://www.tiktok.com/@tablia_official?_r=1&_t=ZS-959vIXdCNuu" },
     { Icon: Twitter, href: "#" },
     { Icon: Youtube, href: "https://youtube.com/@tablia-official?si=7L6cxyaxz5gYyP3I" },
   ];

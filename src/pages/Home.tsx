@@ -288,6 +288,81 @@ export default function Home() {
         </div>
       </div>
 
+      {/* How it Works Section */}
+      <section className="py-24 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-20">
+            <h2 className="text-4xl md:text-6xl font-black text-stone-900 mb-4">
+              طاهٍ شخصي في <br className="md:hidden" />
+              <span className="text-brand-primary">4 خطوات بسيطة</span>
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {[
+              {
+                step: "1",
+                text: "يقوم فريق الطهاة لدينا بالعثور على أفضل الطهاة الشخصيين في منطقتك والتحقق من خلفياتهم.",
+                img: "https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&q=80&w=800"
+              },
+              {
+                step: "2",
+                text: "شاركنا تفضيلاتك وقم بمزج وتنسيق الوجبات من الطهاة المحليين كل أسبوع.",
+                img: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&q=80&w=800"
+              },
+              {
+                step: "3",
+                text: "يقوم طهاتكم بإعداد وجبات طازجة بكميات صغيرة لـ 5-10 أسر يومياً.",
+                img: "https://images.unsplash.com/photo-1594212699903-ec8a3eca50f5?auto=format&fit=crop&q=80&w=800"
+              },
+              {
+                step: "4",
+                text: "نحن نوصل إليك الطعام - ما عليك سوى تسخينه والاستمتاع بوجبات منزلية الصنع بدون أي عناء!",
+                img: "https://images.unsplash.com/photo-1547573854-74d2a71d0826?auto=format&fit=crop&q=80&w=800"
+              }
+            ].map((item, idx) => (
+              <motion.div
+                key={idx}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: idx * 0.1 }}
+                className="relative group"
+              >
+                <div className="aspect-[3/4] rounded-[2.5rem] overflow-hidden shadow-2xl mb-6">
+                  <img 
+                    src={item.img} 
+                    alt={`Step ${item.step}`} 
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                    referrerPolicy="no-referrer"
+                  />
+                </div>
+                <div className="absolute bottom-4 left-4 right-4 bg-white p-6 rounded-3xl shadow-xl border border-stone-100 translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+                  <div className="flex gap-4 items-start">
+                    <span className="text-5xl font-black text-brand-primary leading-none">{item.step}</span>
+                    <p className="text-stone-700 font-bold leading-relaxed text-sm md:text-base">
+                      {item.text}
+                    </p>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="mt-20 text-center"
+          >
+            <Link to="/meals" className="inline-flex items-center gap-3 bg-brand-primary text-white px-12 py-5 rounded-full font-black text-xl hover:scale-105 transition-transform shadow-xl">
+              استكشف خدمة التوصيل الأسبوعي
+              <ArrowRight size={24} />
+            </Link>
+          </motion.div>
+        </div>
+      </section>
+
       {/* Bento Grid Categories */}
       <section className="py-24 bg-brand-cream">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

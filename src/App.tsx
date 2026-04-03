@@ -25,6 +25,7 @@ import DriverTracking from './pages/DriverTracking';
 // Components
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
+import LoadingScreen from './components/LoadingScreen';
 
 // Page Transition Wrapper
 const PageWrapper = ({ children }: { children: React.ReactNode }) => {
@@ -90,18 +91,18 @@ export default function App() {
       } else {
         setProfile(null);
       }
-      setLoading(false);
+      
+      // Artificial delay to show the loading screen
+      setTimeout(() => {
+        setLoading(false);
+      }, 2000);
     });
 
     return () => unsubscribe();
   }, []);
 
   if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-brand-cream">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-brand-primary"></div>
-      </div>
-    );
+    return <LoadingScreen />;
   }
 
   return (
