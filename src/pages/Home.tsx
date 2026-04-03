@@ -1,5 +1,5 @@
 import { motion, useScroll, useTransform } from 'motion/react';
-import { Search, MapPin, Star, Clock, ChevronLeft, ArrowRight, Utensils, Heart, ShieldCheck } from 'lucide-react';
+import { Search, MapPin, Star, Clock, ChevronLeft, ArrowRight, Utensils, Heart, ShieldCheck, MessageCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import ChefMap from '../components/ChefMap';
 import { useRef } from 'react';
@@ -83,7 +83,7 @@ export default function Home() {
                 to="/meals" 
                 className="group relative inline-flex items-center gap-3 bg-brand-primary text-white px-10 py-5 rounded-full font-black text-xl overflow-hidden transition-all hover:pr-14"
               >
-                <span className="relative z-10">استكشف المنيو</span>
+                <span className="relative z-10">استكشف الأكلات</span>
                 <ArrowRight className="absolute right-6 opacity-0 group-hover:opacity-100 transition-all duration-300" size={24} />
                 <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
               </Link>
@@ -501,6 +501,51 @@ export default function Home() {
             <button className="text-white font-bold text-xl border-b-2 border-brand-primary pb-1 hover:text-brand-primary transition-colors">
               تواصل معنا للاستفسارات
             </button>
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ Section */}
+      <section className="py-24 bg-white">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-6xl font-black text-stone-900 mb-4">الأسئلة الشائعة</h2>
+            <p className="text-stone-500 text-xl">كل اللي محتاج تعرفه عن طبلية</p>
+          </div>
+
+          <div className="space-y-4">
+            {[
+              { q: "كيف تعمل طبلية؟", a: "طبلية هي منصة تربطك بأفضل الطهاة المنزليين في طنطا. يمكنك تصفح قوائم الطعام، اختيار وجباتك المفضلة، وتحديد موعد التوصيل." },
+              { q: "متى سيصل طعامي؟", a: "نحن نوفر خيارات توصيل مرنة. يمكنك اختيار التوصيل الفوري للوجبات المتاحة، أو الجدولة المسبقة لوجبات الأسبوع." },
+              { q: "من هم الطهاة؟", a: "طهاة طبلية هم 'حريفة' طنطا الموهوبين. نقوم بالتحقق من خلفياتهم، مهاراتهم في الطبخ، ومعايير النظافة." },
+              { q: "هل يمكنني الطلب من أكثر من طباخ؟", a: "بالتأكيد! يمكنك مزج وتنسيق وجبات من طهاة مختلفين في طلب واحد لتستمتع بتنوع النكهات." }
+            ].map((faq, idx) => (
+              <motion.div 
+                key={idx}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: idx * 0.1 }}
+                className="bg-brand-cream/30 rounded-3xl p-8 border border-stone-100"
+              >
+                <h3 className="text-xl font-bold text-brand-accent mb-4">{faq.q}</h3>
+                <p className="text-stone-600 leading-relaxed">{faq.a}</p>
+              </motion.div>
+            ))}
+          </div>
+
+          <div className="mt-12 text-center flex flex-col items-center gap-6">
+            <Link to="/faq" className="inline-flex items-center gap-2 text-brand-primary font-bold hover:gap-4 transition-all">
+              عرض كل الأسئلة <ArrowRight size={20} />
+            </Link>
+            
+            <div className="mt-8 p-8 bg-brand-cream/50 rounded-[2rem] border border-stone-100 max-w-lg w-full">
+              <p className="text-stone-500 font-bold mb-4 uppercase tracking-wider">لسه عندك أسئلة؟</p>
+              <button className="w-full flex items-center justify-center gap-3 bg-white border-2 border-stone-100 text-brand-accent py-4 rounded-2xl font-bold hover:border-brand-primary hover:text-brand-primary transition-all shadow-sm">
+                <MessageCircle size={20} />
+                تحدث معنا الآن
+              </button>
+            </div>
           </div>
         </div>
       </section>
