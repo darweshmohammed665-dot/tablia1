@@ -66,16 +66,16 @@ export default function Home() {
               transition={{ delay: 0.2 }}
               className="inline-block px-4 py-1.5 rounded-full bg-brand-primary/10 border border-brand-primary/20 text-brand-primary text-xs md:text-sm font-bold tracking-widest uppercase mb-8 backdrop-blur-md"
             >
-              مرحباً بكم في طبلية طنطا
+              تجربة طهي منزلي استثنائية في قلب طنطا
             </motion.span>
             
             <h1 className="text-[50px] md:text-[120px] font-black text-white leading-[0.9] tracking-tighter mb-8 drop-shadow-2xl">
-              أصل الأكل <br />
-              <span className="text-brand-primary italic font-serif">الفلاحي</span>
+              الأكل اللي <br />
+              <span className="text-brand-primary italic font-serif">بيعدل المزاج</span>
             </h1>
             
             <p className="text-lg md:text-2xl text-stone-300 max-w-2xl mx-auto mb-12 font-medium leading-relaxed opacity-90">
-              نقدم لكم تجربة طعام منزلية أصيلة، مطبوخة بكل حب من قلب طنطا إلى باب منزلكم.
+              مش مجرد وجبة، دي تجربة "عظمة" بتجمع بين نفس ست البيت. من طنطا لكل بيت بيدور على الطعم الأصلي.
             </p>
 
             <div className="flex flex-col md:flex-row items-center gap-6">
@@ -112,14 +112,21 @@ export default function Home() {
             transition={{ duration: 10, repeat: Infinity }}
             className="absolute top-[20%] left-[10%] text-6xl font-black text-white/5 rotate-12"
           >
-            نفس فلاحي
+            نفس حقيقي
           </motion.span>
           <motion.span 
             animate={{ y: [0, 40, 0], opacity: [0.1, 0.2, 0.1] }}
             transition={{ duration: 12, repeat: Infinity, delay: 1 }}
             className="absolute bottom-[30%] right-[15%] text-7xl font-black text-white/5 -rotate-12"
           >
-            طعم زمان
+            عظمة يا طنطا
+          </motion.span>
+          <motion.span 
+            animate={{ x: [0, 30, 0], opacity: [0.05, 0.1, 0.05] }}
+            transition={{ duration: 15, repeat: Infinity }}
+            className="absolute top-[40%] right-[5%] text-5xl font-black text-white/5"
+          >
+            تريند الطعم
           </motion.span>
         </div>
       </section>
@@ -134,13 +141,13 @@ export default function Home() {
               viewport={{ once: true }}
               transition={{ duration: 0.8 }}
             >
-              <span className="text-brand-primary font-bold tracking-widest uppercase text-sm mb-4 block">قصتنا</span>
+              <span className="text-brand-primary font-bold tracking-widest uppercase text-sm mb-4 block">رؤيتنا</span>
               <h2 className="text-4xl md:text-7xl font-black text-stone-900 mb-8 leading-tight">
-                نعيد تعريف <br />
-                <span className="text-brand-primary">الأكل البيتي</span> في طنطا
+                نصيغ مفهوماً جديداً <br />
+                لـ <span className="text-brand-primary">الطهي المنزلي</span>
               </h2>
               <p className="text-lg md:text-xl text-stone-600 mb-10 leading-relaxed">
-                في طبلية طنطا، نؤمن أن الأكل ليس مجرد وجبة، بل هو ذكرى وتاريخ. نحن نجمع أمهر الطهاة المنزليين لنقدم لكم أطباقاً تحمل عبق الريف المصري وأصالة مدينة طنطا.
+                في طبلية طنطا، نؤمن أن الطعام ليس مجرد وجبة، بل هو جسر يربطنا بجذورنا وتاريخنا. نحن ننتقي أمهر الطهاة المنزليين لنقدم لكم تجربة استثنائية تحمل أصالة مدينة طنطا العريقة.
               </p>
               <div className="flex flex-wrap gap-8">
                 <div className="flex flex-col">
@@ -208,17 +215,17 @@ export default function Home() {
       <section className="py-32 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-20">
-            <span className="text-brand-primary font-bold tracking-widest uppercase text-sm mb-4 block">لماذا نحن؟</span>
-            <h2 className="text-4xl md:text-6xl font-black text-stone-900 mb-6">نحن نهتم بكل تفصيلة</h2>
-            <p className="text-lg text-stone-600">نحن لا نقدم الطعام فقط، بل نقدم الجودة والأمان والحب في كل وجبة.</p>
+            <span className="text-brand-primary font-bold tracking-widest uppercase text-sm mb-4 block">لماذا طبلية؟</span>
+            <h2 className="text-4xl md:text-6xl font-black text-stone-900 mb-6">التزامنا بالتميز</h2>
+            <p className="text-lg text-stone-600">نحن لا نقدم وجبات فحسب، بل نضمن الجودة الفائقة، الأمان التام، واللمسة الإنسانية في كل طبق.</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
             {[
-              { icon: Utensils, title: "جودة استثنائية", desc: "نختار أفضل المكونات الطازجة يومياً لضمان طعم لا يقاوم." },
-              { icon: Heart, title: "مطبوخ بحب", desc: "طهاة منزليون يطبخون وجباتكم بنفس الشغف الذي يطبخون به لعائلاتهم." },
-              { icon: ShieldCheck, title: "أمان تام", desc: "فحص دوري وصارم لجميع المطابخ لضمان أعلى معايير النظافة." },
-              { icon: Star, title: "تميز دائم", desc: "نسعى دائماً لتقديم الأفضل وتجاوز توقعاتكم في كل طلب." }
+              { icon: Utensils, title: "معايير جودة صارمة", desc: "ننتقي أفضل المكونات الطازجة يومياً لضمان تقديم مذاق استثنائي يليق بكم." },
+              { icon: Heart, title: "طهي بشغف", desc: "طهاة منزليون محترفون يسكبون خبراتهم وشغفهم في كل وجبة تُعد خصيصاً لكم." },
+              { icon: ShieldCheck, title: "أمان وموثوقية", desc: "نطبق بروتوكولات فحص دورية وصارمة لجميع المطابخ لضمان أعلى مستويات النظافة." },
+              { icon: Star, title: "تجربة متكاملة", desc: "نسعى دوماً للارتقاء بتوقعاتكم من خلال تقديم خدمة متميزة وتجربة طعام لا تُنسى." }
             ].map((feature, idx) => (
               <motion.div 
                 key={idx}
@@ -256,12 +263,12 @@ export default function Home() {
             </div>
             
             <blockquote className="text-2xl md:text-3xl font-medium text-stone-700 leading-relaxed mb-8 italic">
-              "أحب برنامج طبلية! لقد جرب أطفالي أطعمة جديدة، وأشعر أننا جميعاً نأكل طعاماً جيداً جداً مقابل وقت وجهد أقل مني."
+              "بجد يا جماعة طبلية دي اختراع! الأكل واصل سخن ونفسه يجنن، كأني باكل في بيت جدي بالظبط. طنطا فعلاً فيها حريفة."
             </blockquote>
             
             <div className="text-stone-500">
-              <p className="font-bold text-lg">جيني س.</p>
-              <p>منطقة خليج طنطا</p>
+              <p className="font-bold text-lg">سارة م.</p>
+              <p>بلوجر طعام - طنطا</p>
             </div>
 
             <button className="absolute left-0 top-1/2 -translate-y-1/2 w-12 h-12 flex items-center justify-center rounded-full border border-stone-200 text-stone-400 hover:bg-white transition-colors">
@@ -281,8 +288,10 @@ export default function Home() {
             <div key={i} className="flex items-center gap-10 md:gap-20 mx-5 md:mx-10">
               <span className="text-3xl md:text-6xl font-black text-white/10 uppercase tracking-tighter">TABLIYA TANTA</span>
               <div className="w-2 h-2 md:w-3 md:h-3 bg-brand-primary rounded-full"></div>
-              <span className="text-3xl md:text-6xl font-black text-white uppercase tracking-tighter">AUTHENTIC EGYPTIAN</span>
+              <span className="text-3xl md:text-6xl font-black text-white uppercase tracking-tighter">أقوى أكل بيتي في مصر</span>
               <div className="w-2 h-2 md:w-3 md:h-3 bg-brand-accent rounded-full"></div>
+              <span className="text-3xl md:text-6xl font-black text-brand-primary uppercase tracking-tighter">طنطا بتطبخ صح</span>
+              <div className="w-2 h-2 md:w-3 md:h-3 bg-white rounded-full"></div>
             </div>
           ))}
         </div>
@@ -510,15 +519,15 @@ export default function Home() {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-6xl font-black text-stone-900 mb-4">الأسئلة الشائعة</h2>
-            <p className="text-stone-500 text-xl">كل اللي محتاج تعرفه عن طبلية</p>
+            <p className="text-stone-500 text-xl">كل ما تحتاج معرفته عن تجربة طبلية</p>
           </div>
 
           <div className="space-y-4">
             {[
-              { q: "كيف تعمل طبلية؟", a: "طبلية هي منصة تربطك بأفضل الطهاة المنزليين في طنطا. يمكنك تصفح قوائم الطعام، اختيار وجباتك المفضلة، وتحديد موعد التوصيل." },
-              { q: "متى سيصل طعامي؟", a: "نحن نوفر خيارات توصيل مرنة. يمكنك اختيار التوصيل الفوري للوجبات المتاحة، أو الجدولة المسبقة لوجبات الأسبوع." },
-              { q: "من هم الطهاة؟", a: "طهاة طبلية هم 'حريفة' طنطا الموهوبين. نقوم بالتحقق من خلفياتهم، مهاراتهم في الطبخ، ومعايير النظافة." },
-              { q: "هل يمكنني الطلب من أكثر من طباخ؟", a: "بالتأكيد! يمكنك مزج وتنسيق وجبات من طهاة مختلفين في طلب واحد لتستمتع بتنوع النكهات." }
+              { q: "كيف تعمل منصة طبلية؟", a: "طبلية هي منصة رائدة تربطكم بنخبة من أمهر الطهاة المنزليين في طنطا، حيث يتم إعداد وجباتكم طازجة وبأعلى معايير الجودة." },
+              { q: "ما هي خيارات التوصيل المتاحة؟", a: "نحن نوفر خيارات توصيل مرنة تشمل التوصيل الفوري أو الجدولة المسبقة لوجبات الأسبوع بالكامل لتناسب جدولكم المزدحم." },
+              { q: "كيف نضمن جودة الطهاة؟", a: "نطبق معايير اختيار دقيقة تشمل فحص المهارات والالتزام الصارم ببروتوكولات النظافة والسلامة الغذائية في كافة المطابخ." },
+              { q: "هل يمكنني تخصيص طلبي؟", a: "بالتأكيد، تمنحكم طبلية حرية اختيار وتنسيق وجبات من طهاة مختلفين، مع إمكانية التواصل المباشر لمناقشة أي تفضيلات خاصة." }
             ].map((faq, idx) => (
               <motion.div 
                 key={idx}

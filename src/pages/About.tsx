@@ -22,7 +22,7 @@ export default function About() {
             animate={{ opacity: 1, y: 0 }}
             className="flex items-center justify-end gap-3 mb-6"
           >
-            <span className="text-brand-accent font-black tracking-widest uppercase text-sm">حكايتنا بدأت من الطبلية</span>
+            <span className="text-brand-accent font-black tracking-widest uppercase text-sm">إرث الطهي الأصيل يبدأ من طبلية</span>
             <div className="h-[1px] w-12 bg-brand-accent"></div>
           </motion.div>
           
@@ -32,8 +32,8 @@ export default function About() {
             transition={{ duration: 0.8 }}
             className="text-5xl md:text-8xl font-black text-white mb-8 leading-tight"
           >
-            إحنا مين؟ <br />
-            <span className="text-brand-primary italic">طبلية</span> مش مجرد أبلكيشن
+            إحنا اللي <br />
+            <span className="text-brand-primary italic">رجعنا النفس</span> للأكل
           </motion.h1>
         </div>
       </section>
@@ -56,12 +56,12 @@ export default function About() {
             </div>
             
             <div className="text-right order-1 lg:order-2">
-              <h2 className="text-[56px] font-bold text-brand-accent mb-8">ليه عملنا <span className="text-brand-primary">طبلية</span>؟</h2>
+              <h2 className="text-[56px] font-bold text-brand-accent mb-8">ليه <span className="text-brand-primary">طبلية</span> هي اللي كسبت؟</h2>
               <p className="text-xl text-stone-600 leading-relaxed mb-8">
-                في زحمة الحياة والأكل السريع، نسينا طعم "النفس" الحقيقي.. طعم أكل ست الكل اللي بيتعمل بحب وصبر. طبلية اتولدت في قلب طنطا عشان ترجعنا للأصل.
+                في عصر الأكل السريع والديليفري اللي ملوش طعم، كان لازم حد يتدخل. طبلية مش مجرد أبلكيشن، دي حركة لترجيع "النفس" الحقيقي لموائدنا. إحنا هنا عشان نثبت إن أكل البيت هو اللي بيكسب دايماً.
               </p>
               <p className="text-xl text-stone-600 leading-relaxed">
-                إحنا منصة بتجمع "حريفة" طنطا - ستات البيوت الشاطرين اللي نفسهم ملوش زي - بالناس اللي بتدور على لقمة هنية، نظيفة، وطعمها بيعدل المزاج.
+                جمعنا "حريفة" طنطا في مكان واحد.. ستات البيوت اللي نفسهم "يوزن بلد" والناس اللي بتفهم في الأكل الصح. النتيجة؟ عظمة في كل طبق.
               </p>
             </div>
           </div>
@@ -72,8 +72,8 @@ export default function About() {
       <section className="py-[100px] bg-brand-cream">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-[56px] font-bold text-brand-accent mb-4">إيه اللي بيميزنا؟</h2>
-            <p className="text-stone-500 text-xl">قيمنا هي اللي بتخلي كل أكلة من طبلية حكاية</p>
+            <h2 className="text-[56px] font-bold text-brand-accent mb-4">ما الذي يميزنا؟</h2>
+            <p className="text-stone-500 text-xl">قيمنا الجوهرية هي المحرك الأساسي لكل ما نقدمه</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -81,24 +81,24 @@ export default function About() {
               <div className="w-16 h-16 bg-brand-primary/10 rounded-2xl flex items-center justify-center text-brand-primary mb-6 group-hover:bg-brand-primary group-hover:text-white transition-colors">
                 <Heart size={32} />
               </div>
-              <h3 className="text-2xl font-bold mb-4 text-brand-accent">النفس هو السر</h3>
-              <p className="text-stone-500">كل أكلة بتطلع من مطبخ طبلية معمولة بحب وشغف، مش مجرد طلب بيتحضر.</p>
+              <h3 className="text-2xl font-bold mb-4 text-brand-accent">شغف الطهي</h3>
+              <p className="text-stone-500">كل طبق يخرج من مطابخنا هو نتاج شغف حقيقي، وليس مجرد طلب يتم تحضيره آلياً.</p>
             </div>
 
             <div className="food-card p-[20px] group">
               <div className="w-16 h-16 bg-brand-secondary/10 rounded-2xl flex items-center justify-center text-brand-secondary mb-6 group-hover:bg-brand-secondary group-hover:text-white transition-colors">
                 <ShieldCheck size={32} />
               </div>
-              <h3 className="text-2xl font-bold mb-4 text-brand-accent">نظافة ست البيت</h3>
-              <p className="text-stone-500">بنطبق أعلى معايير النظافة والجودة، كأنك بتاكل من إيد والدتك بالظبط.</p>
+              <h3 className="text-2xl font-bold mb-4 text-brand-accent">جودة منزلية موثوقة</h3>
+              <p className="text-stone-500">نلتزم بأعلى معايير النظافة والجودة، لنقدم لكم طعاماً يضاهي ما يُعد في منازلكم عنايةً وحرصاً.</p>
             </div>
 
             <div className="food-card p-[20px] group">
               <div className="w-16 h-16 bg-brand-accent/10 rounded-2xl flex items-center justify-center text-brand-accent mb-6 group-hover:bg-brand-accent group-hover:text-white transition-colors">
                 <Users size={32} />
               </div>
-              <h3 className="text-2xl font-bold mb-4 text-brand-accent">دعم الحريفة</h3>
-              <p className="text-stone-500">بنفتح باب رزق لكل ست بيت شاطرة في طنطا عشان توصل موهبتها لكل بيت.</p>
+              <h3 className="text-2xl font-bold mb-4 text-brand-accent">تمكين المجتمع المحلي</h3>
+              <p className="text-stone-500">نفتح آفاقاً جديدة للطهاة الموهوبين في طنطا، لتمكينهم من مشاركة إبداعاتهم مع المجتمع.</p>
             </div>
           </div>
         </div>
@@ -131,11 +131,11 @@ export default function About() {
       {/* Call to Action */}
       <section className="py-[100px] bg-brand-cream">
         <div className="max-w-5xl mx-auto px-4 text-center">
-          <h2 className="text-[56px] font-bold text-brand-accent mb-8">جاهز تدوق <span className="text-brand-primary italic">الفرق</span>؟</h2>
-          <p className="text-xl text-stone-500 mb-12">انضم لعيلة طبلية النهاردة، سواء كنت حريف عاوز تفتح مطبخك أو أكيل بيدور على النفس الصح.</p>
+          <h2 className="text-[56px] font-bold text-brand-accent mb-8">جاهز تدوق <span className="text-brand-primary italic">العظمة</span>؟</h2>
+          <p className="text-xl text-stone-500 mb-12">انضم لعيلة طبلية النهاردة.. سواء كنت حريف عاوز تفتح مطبخك أو أكيل بيدور على النفس الصح اللي بجد.</p>
           <div className="flex flex-col sm:flex-row gap-6 justify-center">
-            <Link to="/meals" className="btn-primary py-5 px-12 text-xl shadow-2xl">اطلب دلوقتي</Link>
-            <Link to="/register?role=chef" className="btn-secondary py-5 px-12 text-xl">افتح مطبخك</Link>
+            <Link to="/meals" className="btn-primary py-5 px-12 text-xl shadow-2xl">دوق دلوقتي</Link>
+            <Link to="/register?role=chef" className="btn-secondary py-5 px-12 text-xl">انضم للحريفة</Link>
           </div>
         </div>
       </section>
