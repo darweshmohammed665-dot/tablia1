@@ -19,7 +19,7 @@ export default function Home() {
       <div className="fixed inset-0 z-0 pointer-events-none">
         <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-brand-primary/10 rounded-full blob"></div>
         <div className="absolute bottom-[-10%] right-[-10%] w-[60%] h-[60%] bg-brand-secondary/10 rounded-full blob" style={{ animationDelay: '-5s' }}></div>
-        <div className="absolute top-[20%] right-[10%] w-[30%] h-[30%] bg-brand-accent/10 rounded-full blob" style={{ animationDelay: '-10s' }}></div>
+        <div className="absolute top-[20%] right-[10%] w-[30%] h-[30%] bg-brand-peach/20 rounded-full blob" style={{ animationDelay: '-10s' }}></div>
         <div className="absolute inset-0 bg-grain opacity-[0.03]"></div>
       </div>
 
@@ -197,15 +197,15 @@ export default function Home() {
       </section>
 
       {/* Trust Banner */}
-      <div className="bg-[#4a1d2e] py-4 text-white overflow-hidden">
+      <div className="bg-brand-secondary py-4 text-white overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-center items-center gap-4 md:gap-12 text-sm md:text-lg font-medium">
           <div className="flex items-center gap-2">
-            <ShieldCheck size={20} className="text-brand-accent" />
+            <ShieldCheck size={20} className="text-brand-peach" />
             <span>آلاف الطهاة الموثوق بهم والذين تم فحصهم بدقة.</span>
           </div>
           <div className="hidden md:block w-px h-6 bg-white/20"></div>
           <div className="flex items-center gap-2">
-            <Star size={20} className="text-brand-accent" fill="currentColor" />
+            <Star size={20} className="text-brand-peach" fill="currentColor" />
             <span>معدل قبول أقل من 5%</span>
           </div>
         </div>
@@ -249,7 +249,7 @@ export default function Home() {
       </section>
 
       {/* Testimonial Section */}
-      <section className="py-24 bg-brand-cream/30 border-y border-stone-100">
+      <section className="py-24 bg-brand-peach/30 border-y border-stone-100">
         <div className="max-w-4xl mx-auto px-4 text-center">
           <h2 className="text-4xl md:text-5xl font-black text-stone-900 mb-16">
             موثوق به من قبل أكثر من <span className="text-brand-primary">180 ألف أسرة</span>
@@ -258,7 +258,7 @@ export default function Home() {
           <div className="relative px-12">
             <div className="flex justify-center mb-6">
               {[1, 2, 3, 4, 5].map((s) => (
-                <Star key={s} size={24} className="text-brand-accent mx-0.5" fill="currentColor" />
+                <Star key={s} size={24} className="text-brand-primary mx-0.5" fill="currentColor" />
               ))}
             </div>
             
@@ -267,7 +267,7 @@ export default function Home() {
             </blockquote>
             
             <div className="text-stone-500">
-              <p className="font-bold text-lg">سارة م.</p>
+              <p className="font-bold text-lg text-brand-secondary">سارة م.</p>
               <p>بلوجر طعام - طنطا</p>
             </div>
 
@@ -289,7 +289,7 @@ export default function Home() {
               <span className="text-3xl md:text-6xl font-black text-white/10 uppercase tracking-tighter">TABLIYA TANTA</span>
               <div className="w-2 h-2 md:w-3 md:h-3 bg-brand-primary rounded-full"></div>
               <span className="text-3xl md:text-6xl font-black text-white uppercase tracking-tighter">أقوى أكل بيتي في مصر</span>
-              <div className="w-2 h-2 md:w-3 md:h-3 bg-brand-accent rounded-full"></div>
+              <div className="w-2 h-2 md:w-3 md:h-3 bg-brand-peach rounded-full"></div>
               <span className="text-3xl md:text-6xl font-black text-brand-primary uppercase tracking-tighter">طنطا بتطبخ صح</span>
               <div className="w-2 h-2 md:w-3 md:h-3 bg-white rounded-full"></div>
             </div>
@@ -373,12 +373,12 @@ export default function Home() {
       </section>
 
       {/* Bento Grid Categories */}
-      <section className="py-24 bg-brand-cream">
+      <section className="py-24 bg-brand-peach/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
             <div className="text-right">
               <span className="text-brand-primary font-bold tracking-widest uppercase text-sm mb-4 block">التصنيفات</span>
-              <h2 className="text-5xl md:text-7xl font-black text-stone-900">أقسامنا المميزة</h2>
+              <h2 className="text-5xl md:text-7xl font-black text-brand-secondary">أقسامنا المميزة</h2>
             </div>
             <Link to="/meals" className="text-brand-primary font-bold flex items-center gap-2 hover:gap-4 transition-all">
               عرض الكل <ArrowRight size={20} />

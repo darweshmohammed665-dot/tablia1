@@ -5,15 +5,15 @@ export default function About() {
   return (
     <div className="bg-brand-cream min-h-screen">
       {/* Hero Section - Editorial Style */}
-      <section className="relative h-[70vh] flex items-center overflow-hidden bg-stone-950">
+      <section className="relative h-[70vh] flex items-center overflow-hidden bg-brand-secondary">
         <div className="absolute inset-0 z-0">
           <img 
             src="https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&q=80&w=2070" 
             alt="Traditional Egyptian Kitchen" 
-            className="w-full h-full object-cover opacity-40"
+            className="w-full h-full object-cover opacity-30"
             referrerPolicy="no-referrer"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-stone-950/60 to-stone-950"></div>
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-brand-secondary/60 to-brand-secondary"></div>
         </div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full text-right">
@@ -22,8 +22,8 @@ export default function About() {
             animate={{ opacity: 1, y: 0 }}
             className="flex items-center justify-end gap-3 mb-6"
           >
-            <span className="text-brand-accent font-black tracking-widest uppercase text-sm">إرث الطهي الأصيل يبدأ من طبلية</span>
-            <div className="h-[1px] w-12 bg-brand-accent"></div>
+            <span className="text-brand-peach font-black tracking-widest uppercase text-sm">إرث الطهي الأصيل يبدأ من طبلية</span>
+            <div className="h-[1px] w-12 bg-brand-peach"></div>
           </motion.div>
           
           <motion.h1 
@@ -56,7 +56,7 @@ export default function About() {
             </div>
             
             <div className="text-right order-1 lg:order-2">
-              <h2 className="text-[56px] font-bold text-brand-accent mb-8">ليه <span className="text-brand-primary">طبلية</span> هي اللي كسبت؟</h2>
+              <h2 className="text-[56px] font-bold text-brand-secondary mb-8">ليه <span className="text-brand-primary">طبلية</span> هي اللي كسبت؟</h2>
               <p className="text-xl text-stone-600 leading-relaxed mb-8">
                 في عصر الأكل السريع والديليفري اللي ملوش طعم، كان لازم حد يتدخل. طبلية مش مجرد أبلكيشن، دي حركة لترجيع "النفس" الحقيقي لموائدنا. إحنا هنا عشان نثبت إن أكل البيت هو اللي بيكسب دايماً.
               </p>
@@ -69,10 +69,10 @@ export default function About() {
       </section>
 
       {/* Values Section - Bento Grid */}
-      <section className="py-[100px] bg-brand-cream">
+      <section className="py-[100px] bg-brand-peach/30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-[56px] font-bold text-brand-accent mb-4">ما الذي يميزنا؟</h2>
+            <h2 className="text-[56px] font-bold text-brand-secondary mb-4">ما الذي يميزنا؟</h2>
             <p className="text-stone-500 text-xl">قيمنا الجوهرية هي المحرك الأساسي لكل ما نقدمه</p>
           </div>
 
@@ -81,7 +81,7 @@ export default function About() {
               <div className="w-16 h-16 bg-brand-primary/10 rounded-2xl flex items-center justify-center text-brand-primary mb-6 group-hover:bg-brand-primary group-hover:text-white transition-colors">
                 <Heart size={32} />
               </div>
-              <h3 className="text-2xl font-bold mb-4 text-brand-accent">شغف الطهي</h3>
+              <h3 className="text-2xl font-bold mb-4 text-brand-secondary">شغف الطهي</h3>
               <p className="text-stone-500">كل طبق يخرج من مطابخنا هو نتاج شغف حقيقي، وليس مجرد طلب يتم تحضيره آلياً.</p>
             </div>
 
@@ -89,15 +89,15 @@ export default function About() {
               <div className="w-16 h-16 bg-brand-secondary/10 rounded-2xl flex items-center justify-center text-brand-secondary mb-6 group-hover:bg-brand-secondary group-hover:text-white transition-colors">
                 <ShieldCheck size={32} />
               </div>
-              <h3 className="text-2xl font-bold mb-4 text-brand-accent">جودة منزلية موثوقة</h3>
+              <h3 className="text-2xl font-bold mb-4 text-brand-secondary">جودة منزلية موثوقة</h3>
               <p className="text-stone-500">نلتزم بأعلى معايير النظافة والجودة، لنقدم لكم طعاماً يضاهي ما يُعد في منازلكم عنايةً وحرصاً.</p>
             </div>
 
             <div className="food-card p-[20px] group">
-              <div className="w-16 h-16 bg-brand-accent/10 rounded-2xl flex items-center justify-center text-brand-accent mb-6 group-hover:bg-brand-accent group-hover:text-white transition-colors">
+              <div className="w-16 h-16 bg-brand-primary/10 rounded-2xl flex items-center justify-center text-brand-primary mb-6 group-hover:bg-brand-primary group-hover:text-white transition-colors">
                 <Users size={32} />
               </div>
-              <h3 className="text-2xl font-bold mb-4 text-brand-accent">تمكين المجتمع المحلي</h3>
+              <h3 className="text-2xl font-bold mb-4 text-brand-secondary">تمكين المجتمع المحلي</h3>
               <p className="text-stone-500">نفتح آفاقاً جديدة للطهاة الموهوبين في طنطا، لتمكينهم من مشاركة إبداعاتهم مع المجتمع.</p>
             </div>
           </div>
@@ -105,24 +105,24 @@ export default function About() {
       </section>
 
       {/* Stats Section */}
-      <section className="py-[100px] bg-brand-accent text-brand-cream">
+      <section className="py-[100px] bg-brand-secondary text-brand-cream">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-12 text-center">
             <div>
               <p className="text-5xl font-bold mb-2">+50</p>
-              <p className="text-brand-cream/80 font-bold text-xl">شيف حريفة</p>
+              <p className="text-brand-peach font-bold text-xl">شيف حريفة</p>
             </div>
             <div>
               <p className="text-5xl font-bold mb-2">+1000</p>
-              <p className="text-brand-cream/80 font-bold text-xl">عميل مبسوط</p>
+              <p className="text-brand-peach font-bold text-xl">عميل مبسوط</p>
             </div>
             <div>
               <p className="text-5xl font-bold mb-2">+200</p>
-              <p className="text-brand-cream/80 font-bold text-xl">أكلة متنوعة</p>
+              <p className="text-brand-peach font-bold text-xl">أكلة متنوعة</p>
             </div>
             <div>
               <p className="text-5xl font-bold mb-2">100%</p>
-              <p className="text-brand-cream/80 font-bold text-xl">طعم أصلي</p>
+              <p className="text-brand-peach font-bold text-xl">طعم أصلي</p>
             </div>
           </div>
         </div>
@@ -131,7 +131,7 @@ export default function About() {
       {/* Call to Action */}
       <section className="py-[100px] bg-brand-cream">
         <div className="max-w-5xl mx-auto px-4 text-center">
-          <h2 className="text-[56px] font-bold text-brand-accent mb-8">جاهز تدوق <span className="text-brand-primary italic">العظمة</span>؟</h2>
+          <h2 className="text-[56px] font-bold text-brand-secondary mb-8">جاهز تدوق <span className="text-brand-primary italic">العظمة</span>؟</h2>
           <p className="text-xl text-stone-500 mb-12">انضم لعيلة طبلية النهاردة.. سواء كنت حريف عاوز تفتح مطبخك أو أكيل بيدور على النفس الصح اللي بجد.</p>
           <div className="flex flex-col sm:flex-row gap-6 justify-center">
             <Link to="/meals" className="btn-primary py-5 px-12 text-xl shadow-2xl">دوق دلوقتي</Link>

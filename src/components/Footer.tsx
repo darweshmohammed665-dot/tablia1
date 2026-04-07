@@ -28,7 +28,7 @@ export default function Footer() {
   ];
 
   return (
-    <footer className="bg-brand-primary text-brand-beige pt-16 md:pt-32 pb-12 relative overflow-hidden text-right">
+    <footer className="bg-brand-secondary text-brand-cream pt-16 md:pt-32 pb-12 relative overflow-hidden text-right">
       {/* Decorative Background Elements */}
       <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-brand-primary to-transparent opacity-30"></div>
       <div className="absolute -top-24 -right-24 w-96 h-96 bg-brand-primary/5 rounded-full blur-3xl"></div>
@@ -47,7 +47,7 @@ export default function Footer() {
                 />
               </div>
             </Link>
-            <p className="text-xl text-brand-beige/80 leading-relaxed max-w-md mb-10">
+            <p className="text-xl text-brand-cream/80 leading-relaxed max-w-md mb-10">
               طنطا كلها بتطلب من طبلية.. دوقي النفس الفلاحي اللي بيعدل المزاج وبيخلص الكلام. اطلبي دلوقتي قبل ما الكمية تخلص!
             </p>
             <div className="flex gap-4">
@@ -88,7 +88,7 @@ export default function Footer() {
 
           <div className="md:col-span-3">
             <h4 className="text-brand-cream font-black text-lg mb-8 uppercase tracking-widest">النشرة الإخبارية</h4>
-            <p className="text-brand-beige/80 mb-6 font-bold">اشترك لتعرف أحدث العروض والخصومات الحصرية.</p>
+            <p className="text-brand-cream/80 mb-6 font-bold">اشترك لتعرف أحدث العروض والخصومات الحصرية.</p>
             <div className="relative">
               <input 
                 type="email" 
@@ -103,11 +103,11 @@ export default function Footer() {
         </div>
 
         <div className="pt-12 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-8">
-          <p className="text-sm font-bold text-brand-beige/60">
+          <p className="text-sm font-bold text-brand-cream/60">
             © {new Date().getFullYear()} طبلية طنطا. جميع الحقوق محفوظة.
           </p>
           <div className="flex items-center gap-8">
-            <p className="text-sm font-bold text-brand-beige/60 flex items-center gap-2">
+            <p className="text-sm font-bold text-brand-cream/60 flex items-center gap-2">
               صُنع بكل <Heart size={16} className="text-brand-primary fill-brand-primary" /> في طنطا - مصر
             </p>
             <div className="flex gap-4">
