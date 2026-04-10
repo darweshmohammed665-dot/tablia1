@@ -22,7 +22,6 @@ import MyOrders from './pages/MyOrders';
 import About from './pages/About';
 import FAQ from './pages/FAQ';
 import DriverTracking from './pages/DriverTracking';
-import Integrals from './pages/Integrals';
 import JoinUs from './pages/JoinUs';
 
 // Components
@@ -65,7 +64,6 @@ const AnimatedRoutes = ({ profile }: { profile: UserProfile | null }) => {
           <Route path="/about" element={<PageWrapper><About /></PageWrapper>} />
           <Route path="/faq" element={<PageWrapper><FAQ /></PageWrapper>} />
           <Route path="/driver-tracking" element={<PageWrapper><DriverTracking /></PageWrapper>} />
-          <Route path="/integrals" element={<PageWrapper><Integrals /></PageWrapper>} />
           <Route path="/join-us" element={<PageWrapper><JoinUs /></PageWrapper>} />
           
           {/* Protected Chef Route */}

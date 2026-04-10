@@ -27,13 +27,20 @@ export default function Cart() {
 
   if (cartItems.length === 0) {
     return (
-      <div className="min-h-[70vh] flex flex-col items-center justify-center px-4">
-        <div className="bg-stone-100 w-24 h-24 rounded-full flex items-center justify-center mb-6 text-stone-400">
-          <ShoppingBag size={40} />
-        </div>
-        <h2 className="text-2xl font-bold text-stone-900 mb-2">سلة التسوق فارغة</h2>
-        <p className="text-stone-500 mb-8">ابدأ بإضافة بعض الوجبات الشهية لسلتك</p>
-        <Link to="/meals" className="btn-primary px-10 py-4">تصفح الوجبات</Link>
+      <div className="min-h-[70vh] flex flex-col items-center justify-center px-4 text-center">
+        <motion.div 
+          initial={{ scale: 0.8, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          className="relative mb-8"
+        >
+          <div className="w-32 h-32 bg-orange-100 rounded-[32px] flex items-center justify-center text-orange-500 rotate-12">
+            <ShoppingBag size={64} />
+          </div>
+          <div className="absolute -top-2 -right-2 w-12 h-12 bg-brand-primary rounded-full flex items-center justify-center text-white font-black text-xl shadow-lg border-4 border-white">!</div>
+        </motion.div>
+        <h2 className="text-3xl font-black text-brand-accent mb-4">لا توجد طلبات</h2>
+        <p className="text-stone-500 mb-12 max-w-xs leading-relaxed text-lg">عندما تقوم بالطلب، سيظهر طلبك هنا. ابدأ باكتشاف أشهى الوجبات المنزلية!</p>
+        <Link to="/meals" className="btn-primary px-12 py-5 text-xl shadow-2xl shadow-brand-primary/20">تصفح الوجبات</Link>
       </div>
     );
   }
@@ -94,6 +101,32 @@ export default function Cart() {
             <Link to="/meals" className="inline-flex items-center gap-2 text-brand-secondary font-bold hover:underline mt-4">
               <ArrowRight size={20} /> إضافة المزيد من الوجبات
             </Link>
+
+            {/* You might also like */}
+            <div className="mt-16">
+              <h3 className="text-2xl font-black text-brand-accent mb-8">قد تعجبك أيضًا...</h3>
+              <div className="flex gap-4 overflow-x-auto pb-6 scrollbar-hide">
+                {[
+                  { id: 'm1', title: 'كنافة كريمة', price: 100, image: 'https://images.unsplash.com/photo-1517427294546-5aa121f68e8a?auto=format&fit=crop&q=80&w=400' },
+                  { id: 'm2', title: 'بسبوسة مكسرات', price: 45, image: 'https://images.unsplash.com/photo-1541773935662-328b32742952?auto=format&fit=crop&q=80&w=400' },
+                  { id: 'm3', title: 'كنافة نوتيلا', price: 120, image: 'https://images.unsplash.com/photo-1599785209707-a456fc1337bb?auto=format&fit=crop&q=80&w=400' },
+                  { id: 'm4', title: 'أرز بلبن', price: 30, image: 'https://images.unsplash.com/photo-1589113103503-1212cf480c51?auto=format&fit=crop&q=80&w=400' }
+                ].map((meal) => (
+                  <div key={meal.id} className="min-w-[160px] bg-white rounded-3xl p-3 border border-stone-100 shadow-sm hover:shadow-md transition-all group">
+                    <div className="aspect-square rounded-2xl overflow-hidden mb-3">
+                      <img src={meal.image} alt={meal.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform" />
+                    </div>
+                    <h4 className="font-bold text-brand-accent text-sm mb-1">{meal.title}</h4>
+                    <div className="flex items-center justify-between">
+                      <span className="text-brand-primary font-black text-xs">{meal.price} ج.م</span>
+                      <button className="w-8 h-8 bg-brand-cream rounded-full flex items-center justify-center text-brand-primary hover:bg-brand-primary hover:text-white transition-all">
+                        <Plus size={16} />
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
 
           {/* Summary */}

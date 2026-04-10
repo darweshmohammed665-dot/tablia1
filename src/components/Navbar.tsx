@@ -30,12 +30,12 @@ export default function Navbar({ user, profile }: NavbarProps) {
           <Link to="/" className="flex items-center">
             <motion.div 
               whileHover={{ scale: 1.05 }}
-              className="w-[60px] h-[48px] flex items-center justify-center overflow-hidden mix-blend-multiply contrast-[1.1]"
+              className="w-[100px] h-[80px] flex items-center justify-center overflow-hidden"
             >
               <img 
                 src="https://i.ibb.co/B2Fm90cV/Whats-Ap-Image-2026-04-02-at-13-09-41-1.jpg" 
                 alt="طبلية" 
-                className="w-full h-auto object-contain scale-125"
+                className="w-full h-auto object-contain"
                 referrerPolicy="no-referrer"
               />
             </motion.div>
@@ -127,7 +127,6 @@ export default function Navbar({ user, profile }: NavbarProps) {
               <Link to="/chefs" className="block text-lg text-stone-600 font-bold" onClick={() => setIsOpen(false)}>الطهاة</Link>
               <Link to="/about" className="block text-lg text-stone-600 font-bold" onClick={() => setIsOpen(false)}>من نحن</Link>
               <Link to="/join-us" className="block text-lg text-stone-600 font-bold" onClick={() => setIsOpen(false)}>انضم إلينا</Link>
-              <Link to="/integrals" className="block text-lg text-stone-600 font-bold" onClick={() => setIsOpen(false)}>جدول التكاملات</Link>
               <Link to="/cart" className="block text-lg text-stone-600 font-bold flex items-center justify-between" onClick={() => setIsOpen(false)}>
                 <span>السلة</span>
                 {cartCount > 0 && <span className="bg-brand-primary text-white text-xs px-2 py-1 rounded-full">{cartCount}</span>}

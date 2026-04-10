@@ -118,8 +118,8 @@ export default function Login() {
           className="max-w-md w-full"
         >
           <div className="mb-12">
-            <h1 className="text-[56px] font-bold text-brand-accent mb-4">مرحباً بعودتك</h1>
-            <p className="text-stone-500 text-xl">أدخل بياناتك للمتابعة والاستمتاع بأشهى الوجبات.</p>
+            <h1 className="text-[40px] md:text-[56px] font-black text-brand-accent mb-4 leading-tight">مرحباً بك في طبلية</h1>
+            <p className="text-stone-500 text-xl font-medium">سجل دخولك أو أنشئ حساباً جديداً للمتابعة</p>
           </div>
 
           {error && (

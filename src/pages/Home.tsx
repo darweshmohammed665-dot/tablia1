@@ -28,7 +28,7 @@ export default function Home() {
       </div>
 
       {/* Hero Section */}
-      <section className="relative min-h-screen overflow-hidden bg-brand-secondary flex items-center">
+      <section className="relative min-h-screen overflow-hidden cool-bg flex items-center">
         {/* Background Image with Immersive Effects */}
         <motion.div 
           style={{ y }}
@@ -37,11 +37,10 @@ export default function Home() {
           <img 
             src="https://images.unsplash.com/photo-1541518763669-279f00ed4242?auto=format&fit=crop&q=80&w=2000" 
             alt="Premium Egyptian Food Spread" 
-            className="w-full h-full object-cover opacity-70"
+            className="w-full h-full object-cover opacity-40 mix-blend-overlay"
             referrerPolicy="no-referrer"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-brand-secondary/80 via-brand-secondary/40 to-brand-secondary"></div>
-          <div className="absolute inset-0 bg-gradient-to-r from-brand-secondary/70 via-transparent to-brand-secondary/70"></div>
+          <div className="absolute inset-0 bg-gradient-to-b from-brand-secondary/60 via-transparent to-brand-secondary/80"></div>
         </motion.div>
 
         <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20">

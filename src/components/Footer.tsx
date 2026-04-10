@@ -23,7 +23,6 @@ export default function Footer() {
     { Icon: Instagram, href: "https://www.instagram.com/tablia_official?utm_source=qr&igsh=d3V1bjlzZzA5bXZ5" },
     { Icon: TikTokIcon, href: "https://www.tiktok.com/@tablia_official?_r=1&_t=ZS-959vIXdCNuu" },
     { Icon: WhatsApp, href: "https://wa.me/201000000000" }, // Placeholder WhatsApp
-    { Icon: Twitter, href: "#" },
     { Icon: Youtube, href: "https://youtube.com/@tablia-official?si=7L6cxyaxz5gYyP3I" },
   ];
 
@@ -38,11 +37,11 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-12 gap-20 mb-32">
           <div className="md:col-span-5">
             <Link to="/" className="flex items-center mb-10 group">
-              <div className="w-[70px] h-[56px] flex items-center justify-center group-hover:scale-110 transition-transform duration-700 overflow-hidden mix-blend-screen invert grayscale brightness-[2] contrast-[1.5]">
+              <div className="w-[120px] h-[90px] flex items-center justify-center group-hover:scale-110 transition-transform duration-700 overflow-hidden">
                 <img 
                   src="https://i.ibb.co/B2Fm90cV/Whats-Ap-Image-2026-04-02-at-13-09-41-1.jpg" 
                   alt="طبلية" 
-                  className="w-full h-auto object-contain scale-125"
+                  className="w-full h-auto object-contain"
                   referrerPolicy="no-referrer"
                 />
               </div>

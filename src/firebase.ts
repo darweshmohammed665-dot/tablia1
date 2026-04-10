@@ -1,6 +1,7 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth, GoogleAuthProvider, OAuthProvider } from 'firebase/auth';
-import { initializeFirestore, doc, getDocFromServer, getFirestore } from 'firebase/firestore';
+import { initializeFirestore, doc, getDocFromServer } from 'firebase/firestore';
+import { getAnalytics } from 'firebase/analytics';
 import firebaseConfig from '../firebase-applet-config.json';
 
 // Initialize Firebase SDK
@@ -15,6 +16,7 @@ export const db = initializeFirestore(app, {
 } as any, databaseId);
 
 export const auth = getAuth(app);
+export const analytics = typeof window !== 'undefined' ? getAnalytics(app) : null;
 export const googleProvider = new GoogleAuthProvider();
 export const appleProvider = new OAuthProvider('apple.com');
 

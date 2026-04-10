@@ -4,7 +4,7 @@ import { db } from '../firebase';
 import { Meal } from '../types';
 import { handleFirestoreError, OperationType } from '../lib/firestore-errors';
 import { motion, AnimatePresence } from 'motion/react';
-import { Search, Filter, Star, Clock, X, ChevronDown, SlidersHorizontal, ArrowUpDown, ShoppingCart, ShoppingBag } from 'lucide-react';
+import { Search, Filter, Star, Clock, X, ChevronDown, SlidersHorizontal, ArrowUpDown, ShoppingCart, ShoppingBag, UtensilsCrossed, Coffee, Pizza, IceCream, Sandwich } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { toast } from 'sonner';
@@ -113,19 +113,90 @@ export default function Meals() {
         </div>
 
         {/* Filters & Search */}
-        <div className="flex flex-col gap-6 mb-12">
+        <div className="flex flex-col gap-12 mb-20">
+          {/* Search Bar */}
           <div className="flex flex-col md:flex-row gap-4">
             <div className="flex-grow relative group">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-stone-400 group-focus-within:text-brand-primary transition-colors" size={20} />
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-stone-400 group-focus-within:text-brand-primary transition-colors" size={24} />
               <input 
                 type="text" 
-                placeholder="ابحث عن أكلة أو شيف..." 
+                placeholder="ابحث عن طعامك، بقالتك اليومية، ..." 
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-12 pr-4 py-4 rounded-2xl border border-stone-200 focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary outline-none transition-all bg-white shadow-sm"
+                className="w-full pl-14 pr-6 py-5 rounded-3xl border border-stone-100 focus:ring-4 focus:ring-brand-primary/10 focus:border-brand-primary outline-none transition-all bg-white shadow-xl text-lg font-medium"
               />
             </div>
-            
+          </div>
+
+          {/* Categories Icons */}
+          <div className="space-y-8">
+            <h3 className="text-2xl font-black text-brand-accent">ماذا تشتهي اليوم؟</h3>
+            <div className="flex gap-8 overflow-x-auto pb-4 scrollbar-hide">
+              {[
+                { id: 'burger', label: 'البرجر', icon: '🍔' },
+                { id: 'shawarma', label: 'شاورما', icon: '🌯' },
+                { id: 'coffee', label: 'شاي وقهوة', icon: '☕' },
+                { id: 'chicken', label: 'دجاج مقلي', icon: '🍗' },
+                { id: 'sweets', label: 'الحلويات', icon: '🍰' },
+                { id: 'pizza', label: 'بيتزا', icon: '🍕' },
+                { id: 'pasta', label: 'مكرونة', icon: '🍝' }
+              ].map((cat) => (
+                <button 
+                  key={cat.id}
+                  onClick={() => setSelectedCategories([cat.label])}
+                  className="flex flex-col items-center gap-4 min-w-[100px] group"
+                >
+                  <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center text-4xl shadow-lg group-hover:scale-110 transition-transform border border-stone-50">
+                    {cat.icon}
+                  </div>
+                  <span className="font-black text-stone-600 group-hover:text-brand-primary transition-colors">{cat.label}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Most Searched Tags */}
+          <div className="space-y-6">
+            <h3 className="text-xl font-black text-brand-accent">الأكثر بحثاً على طبلية</h3>
+            <div className="flex flex-wrap gap-3">
+              {['بيتزا', 'كشري', 'مشويات', 'برجر', 'كريب', 'حلويات النصر'].map((tag) => (
+                <button 
+                  key={tag}
+                  onClick={() => setSearchTerm(tag)}
+                  className="px-6 py-3 bg-white rounded-2xl border border-stone-100 font-bold text-stone-600 hover:border-brand-primary hover:text-brand-primary transition-all shadow-sm flex items-center gap-2"
+                >
+                  <ArrowUpDown size={14} className="rotate-45" />
+                  {tag}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Stores Near You */}
+          <div className="space-y-8">
+            <h3 className="text-2xl font-black text-brand-accent">المتاجر الكبرى بالقرب منك</h3>
+            <div className="flex gap-6 overflow-x-auto pb-4 scrollbar-hide">
+              {[
+                { name: 'بيم', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/BIM_logo.svg/1200px-BIM_logo.svg.png' },
+                { name: 'حاج عرفة', logo: 'https://hajarafa.com/wp-content/uploads/2021/04/Haj-Arafa-Logo.png' },
+                { name: 'خير زمان', logo: 'https://khairzaman.com.eg/wp-content/uploads/2021/06/KZ-Logo.png' },
+                { name: 'طبلية ماركت', logo: 'https://i.ibb.co/B2Fm90cV/Whats-Ap-Image-2026-04-02-at-13-09-41-1.jpg' }
+              ].map((store) => (
+                <div key={store.name} className="min-w-[140px] flex flex-col items-center gap-3">
+                  <div className="w-24 h-24 bg-white rounded-3xl p-4 shadow-lg border border-stone-50 flex items-center justify-center overflow-hidden">
+                    <img src={store.logo} alt={store.name} className="w-full h-auto object-contain" />
+                  </div>
+                  <div className="text-center">
+                    <p className="font-black text-sm text-stone-900">{store.name}</p>
+                    <p className="text-[10px] text-stone-400 font-bold">10-25 دقيقة</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="flex items-center justify-between pt-12 border-t border-stone-100">
+            <h2 className="text-3xl font-black text-brand-accent">كل الوجبات</h2>
             <div className="flex gap-2">
               <button 
                 onClick={() => setIsFilterOpen(true)}
@@ -133,11 +204,7 @@ export default function Meals() {
               >
                 <SlidersHorizontal size={20} />
                 <span>تصفية</span>
-                {(selectedCategories.length > 0 || minRating > 0 || maxDeliveryTime < 120 || priceRange[0] > 0 || priceRange[1] < 1000) && (
-                  <span className="w-2 h-2 bg-brand-primary rounded-full"></span>
-                )}
               </button>
-
               <div className="relative group">
                 <select 
                   value={sortBy}

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { MapPin, Phone, CreditCard, Truck, CheckCircle2, ArrowRight, ShieldCheck, Ticket, Info, Coins } from 'lucide-react';
+import { MapPin, Phone, CreditCard, Truck, CheckCircle2, ArrowRight, ShieldCheck, Ticket, Info, Coins, Bell, BellOff, UserCircle, MessageSquare, Clock, Plus } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { collection, addDoc } from 'firebase/firestore';
 import { db, auth } from '../firebase';
@@ -97,13 +97,23 @@ export default function Checkout() {
   const [isSuccess, setIsSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState<'cod' | 'stripe'>('cod');
+  const [deliveryInstruction, setDeliveryInstruction] = useState('call');
   const [couponCode, setCouponCode] = useState('');
   const [discount, setDiscount] = useState(0);
   const [formData, setFormData] = useState({
     address: '',
-    area: 'طنطا - وسط البلد',
-    phone: ''
+    area: 'طنطا - سيجر',
+    phone: '',
+    notes: ''
   });
+  const [countdown, setCountdown] = useState(6);
+
+  useEffect(() => {
+    if (step === 3 && countdown > 0) {
+      const timer = setTimeout(() => setCountdown(countdown - 1), 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [step, countdown]);
 
   const { cartItems, cartTotal, clearCart } = useCart();
 
@@ -130,6 +140,11 @@ export default function Checkout() {
 
     if (!formData.address || !formData.phone) {
       toast.error('يرجى إكمال بيانات التوصيل');
+      return;
+    }
+
+    if (step < 3) {
+      setStep(step + 1);
       return;
     }
 
@@ -218,118 +233,252 @@ export default function Checkout() {
   return (
     <div className="bg-brand-cream min-h-screen py-[100px]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h1 className="text-[56px] font-bold text-brand-accent mb-12">إتمام الطلب</h1>
+        <div className="flex items-center gap-4 mb-12">
+          {step > 1 && step < 4 && (
+            <button onClick={() => setStep(step - 1)} className="p-2 hover:bg-white rounded-full transition-all">
+              <ArrowRight size={24} />
+            </button>
+          )}
+          <h1 className="text-[40px] md:text-[56px] font-black text-brand-accent">
+            {step === 1 ? 'تنفيذ الطلب' : step === 2 ? 'التوصيل والدفع' : 'نظرة أخيرة...'}
+          </h1>
+        </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
           <div className="lg:col-span-2 space-y-8">
-            {/* Address Section */}
-            <div className="food-card p-[20px]">
-              <div className="flex items-center gap-4 mb-8">
-                <div className="w-10 h-10 bg-brand-primary/10 text-brand-primary rounded-full flex items-center justify-center font-bold">1</div>
-                <h2 className="text-2xl font-bold">عنوان التوصيل</h2>
-              </div>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="col-span-full">
-                  <label className="block text-sm font-medium text-stone-700 mb-2">العنوان بالتفصيل</label>
-                  <div className="relative">
-                    <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 text-stone-400" size={20} />
-                    <input 
-                      type="text" 
-                      placeholder="اسم الشارع، رقم العمارة، الشقة"
-                      value={formData.address}
-                      onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                      className="w-full pl-12 pr-4 py-3 rounded-xl border border-stone-200 focus:ring-2 focus:ring-brand-primary outline-none"
+            {step === 1 && (
+              <motion.div 
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                className="space-y-8"
+              >
+                {/* Address Section */}
+                <div className="food-card p-[20px]">
+                  <h2 className="text-2xl font-black mb-8">التوصيل</h2>
+                  
+                  {/* Map Mockup */}
+                  <div className="w-full h-48 rounded-2xl overflow-hidden mb-8 border border-stone-100 relative group">
+                    <img 
+                      src="https://images.unsplash.com/photo-1526778548025-fa2f459cd5c1?auto=format&fit=crop&q=80&w=1000" 
+                      alt="Map" 
+                      className="w-full h-full object-cover opacity-80 group-hover:scale-105 transition-transform duration-700"
                     />
-                  </div>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-stone-700 mb-2">المنطقة</label>
-                  <select 
-                    value={formData.area}
-                    onChange={(e) => setFormData({ ...formData, area: e.target.value })}
-                    className="w-full px-4 py-3 rounded-xl border border-stone-200 focus:ring-2 focus:ring-brand-primary outline-none"
-                  >
-                    <option>طنطا - وسط البلد</option>
-                    <option>طنطا - سيجر</option>
-                    <option>طنطا - القحافة</option>
-                    <option>طنطا - الجلاء</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-stone-700 mb-2">رقم الهاتف</label>
-                  <div className="relative">
-                    <Phone className="absolute left-4 top-1/2 -translate-y-1/2 text-stone-400" size={20} />
-                    <input 
-                      type="tel" 
-                      placeholder="01xxxxxxxxx"
-                      value={formData.phone}
-                      onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                      className="w-full pl-12 pr-4 py-3 rounded-xl border border-stone-200 focus:ring-2 focus:ring-brand-primary outline-none"
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Payment Section */}
-            <div className="food-card p-[20px]">
-              <div className="flex items-center gap-4 mb-8">
-                <div className="w-10 h-10 bg-brand-primary/10 text-brand-primary rounded-full flex items-center justify-center font-bold">2</div>
-                <h2 className="text-2xl font-bold">طريقة الدفع</h2>
-              </div>
-              
-              <div className="space-y-4">
-                <button 
-                  onClick={() => setPaymentMethod('cod')}
-                  className={`w-full p-6 rounded-2xl border-2 transition-all text-right flex items-center gap-4 ${paymentMethod === 'cod' ? 'border-brand-primary bg-brand-primary/5' : 'border-stone-100 hover:border-stone-200'}`}
-                >
-                  <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${paymentMethod === 'cod' ? 'border-brand-primary' : 'border-stone-300'}`}>
-                    {paymentMethod === 'cod' && <div className="w-3 h-3 rounded-full bg-brand-primary"></div>}
-                  </div>
-                  <div className="flex-grow">
-                    <p className="font-black text-lg">الدفع عند الاستلام</p>
-                    <p className="text-sm text-stone-500 font-medium">ادفع نقداً بمجرد وصول طلبك</p>
-                  </div>
-                  <Truck className={paymentMethod === 'cod' ? 'text-brand-primary' : 'text-stone-400'} size={32} />
-                </button>
-
-                <button 
-                  onClick={() => setPaymentMethod('stripe')}
-                  className={`w-full p-6 rounded-2xl border-2 transition-all text-right flex items-center gap-4 ${paymentMethod === 'stripe' ? 'border-brand-primary bg-brand-primary/5' : 'border-stone-100 hover:border-stone-200'}`}
-                >
-                  <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${paymentMethod === 'stripe' ? 'border-brand-primary' : 'border-stone-300'}`}>
-                    {paymentMethod === 'stripe' && <div className="w-3 h-3 rounded-full bg-brand-primary"></div>}
-                  </div>
-                  <div className="flex-grow">
-                    <p className="font-black text-lg">بطاقة ائتمان</p>
-                    <p className="text-sm text-stone-500 font-medium">ادفع بأمان باستخدام بطاقتك عبر Stripe</p>
-                  </div>
-                  <CreditCard className={paymentMethod === 'stripe' ? 'text-brand-primary' : 'text-stone-400'} size={32} />
-                </button>
-
-                <AnimatePresence>
-                  {paymentMethod === 'stripe' && (
-                    <motion.div 
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: 'auto', opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      className="overflow-hidden"
-                    >
-                      <div className="pt-4 px-2">
-                        <Elements stripe={stripePromise}>
-                          <StripeForm 
-                            amount={total} 
-                            onSuccess={(id) => handleOrderCreation(id)} 
-                            onLoading={(l) => setLoading(l)}
-                          />
-                        </Elements>
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="w-12 h-12 bg-brand-primary rounded-full flex items-center justify-center text-white shadow-xl animate-bounce">
+                        <MapPin size={24} />
                       </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-            </div>
+                    </div>
+                    <div className="absolute bottom-4 right-4 bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl text-xs font-bold shadow-lg">
+                      مركز الخدمات الاجتماعية المتكاملة بسبرباي
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="col-span-full">
+                      <label className="block text-sm font-black text-brand-accent mb-2">شقة (سبرباي)</label>
+                      <div className="relative">
+                        <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 text-stone-400" size={20} />
+                        <input 
+                          type="text" 
+                          placeholder="امشي على اللوكيشن، مبني وزارة التضامن، هستلم تحت"
+                          value={formData.address}
+                          onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+                          className="w-full pl-12 pr-4 py-4 rounded-2xl border border-stone-100 focus:ring-2 focus:ring-brand-primary outline-none font-medium"
+                        />
+                      </div>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-black text-brand-accent mb-2">المنطقة</label>
+                      <select 
+                        value={formData.area}
+                        onChange={(e) => setFormData({ ...formData, area: e.target.value })}
+                        className="w-full px-4 py-4 rounded-2xl border border-stone-100 focus:ring-2 focus:ring-brand-primary outline-none font-medium appearance-none bg-white"
+                      >
+                        <option>طنطا - سيجر</option>
+                        <option>طنطا - القحافة</option>
+                        <option>طنطا - الجلاء</option>
+                        <option>طنطا - الاستاد</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-black text-brand-accent mb-2">رقم الهاتف المتنقل</label>
+                      <div className="relative">
+                        <Phone className="absolute left-4 top-1/2 -translate-y-1/2 text-stone-400" size={20} />
+                        <input 
+                          type="tel" 
+                          placeholder="+20 1107507344"
+                          value={formData.phone}
+                          onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                          className="w-full pl-12 pr-4 py-4 rounded-2xl border border-stone-100 focus:ring-2 focus:ring-brand-primary outline-none font-medium"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="mt-8 space-y-4">
+                    <div className="p-4 rounded-2xl border-2 border-brand-accent bg-white flex items-center justify-between">
+                      <div className="flex items-center gap-4">
+                        <div className="w-4 h-4 rounded-full bg-brand-accent"></div>
+                        <div>
+                          <p className="font-black">يصل خلال 15-25 دقيقة</p>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="p-4 rounded-2xl border-2 border-stone-100 bg-white flex items-center justify-between opacity-50">
+                      <div className="flex items-center gap-4">
+                        <div className="w-4 h-4 rounded-full border-2 border-stone-300"></div>
+                        <div>
+                          <p className="font-black">يصل خلال 10-20 دقيقة • إكسبرس</p>
+                        </div>
+                      </div>
+                      <span className="font-black text-brand-primary">+ 6 ج.م</span>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            )}
+
+            {step === 2 && (
+              <motion.div 
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                className="space-y-8"
+              >
+                {/* Delivery Instructions */}
+                <div className="food-card p-[20px]">
+                  <h2 className="text-2xl font-black mb-8">تعليمات التوصيل</h2>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    {[
+                      { id: 'call', label: 'اتصل عند الوصول', icon: Phone },
+                      { id: 'no-ring', label: 'لا تطرق الجرس', icon: BellOff },
+                      { id: 'reception', label: 'اتركه بالاستقبال', icon: UserCircle },
+                      { id: 'ring', label: 'اطرق الجرس', icon: Bell }
+                    ].map((item) => (
+                      <button
+                        key={item.id}
+                        onClick={() => setDeliveryInstruction(item.id)}
+                        className={`p-4 rounded-2xl border-2 flex flex-col items-center gap-3 transition-all ${deliveryInstruction === item.id ? 'border-brand-primary bg-brand-primary/5' : 'border-stone-100 hover:border-stone-200'}`}
+                      >
+                        <item.icon size={24} className={deliveryInstruction === item.id ? 'text-brand-primary' : 'text-stone-400'} />
+                        <span className={`text-xs font-black ${deliveryInstruction === item.id ? 'text-brand-primary' : 'text-stone-600'}`}>{item.label}</span>
+                      </button>
+                    ))}
+                  </div>
+                  <div className="mt-6 flex items-center gap-3">
+                    <input type="checkbox" id="save-instructions" className="w-5 h-5 rounded border-stone-300 text-brand-primary focus:ring-brand-primary" />
+                    <label htmlFor="save-instructions" className="text-sm font-bold text-stone-600">استخدم تعليماتي لهذا العنوان في المرة القادمة</label>
+                  </div>
+                </div>
+
+                {/* Payment Section */}
+                <div className="food-card p-[20px]">
+                  <h2 className="text-2xl font-black mb-8">الدفع من خلال</h2>
+                  <div className="space-y-4">
+                    <button 
+                      onClick={() => setPaymentMethod('stripe')}
+                      className={`w-full p-6 rounded-2xl border-2 transition-all text-right flex items-center gap-4 ${paymentMethod === 'stripe' ? 'border-brand-primary bg-brand-primary/5' : 'border-stone-100 hover:border-stone-200'}`}
+                    >
+                      <Plus className="text-stone-400" size={24} />
+                      <div className="flex-grow">
+                        <p className="font-black text-lg">أضف بطاقة جديدة</p>
+                      </div>
+                    </button>
+
+                    <button 
+                      onClick={() => setPaymentMethod('cod')}
+                      className={`w-full p-6 rounded-2xl border-2 transition-all text-right flex items-center gap-4 ${paymentMethod === 'cod' ? 'border-brand-primary bg-brand-primary/5' : 'border-stone-100 hover:border-stone-200'}`}
+                    >
+                      <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${paymentMethod === 'cod' ? 'border-brand-primary' : 'border-stone-300'}`}>
+                        {paymentMethod === 'cod' && <div className="w-3 h-3 rounded-full bg-brand-primary"></div>}
+                      </div>
+                      <div className="flex-grow">
+                        <p className="font-black text-lg">نقداً</p>
+                      </div>
+                      <Coins className={paymentMethod === 'cod' ? 'text-brand-primary' : 'text-stone-400'} size={24} />
+                    </button>
+
+                    <AnimatePresence>
+                      {paymentMethod === 'stripe' && (
+                        <motion.div 
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: 'auto', opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          className="overflow-hidden"
+                        >
+                          <div className="pt-4 px-2">
+                            <Elements stripe={stripePromise}>
+                              <StripeForm 
+                                amount={total} 
+                                onSuccess={(id) => handleOrderCreation(id)} 
+                                onLoading={(l) => setLoading(l)}
+                              />
+                            </Elements>
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                </div>
+              </motion.div>
+            )}
+
+            {step === 3 && (
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="space-y-8"
+              >
+                <div className="food-card p-[40px] text-center relative overflow-hidden">
+                  <div className="absolute top-0 left-0 w-full h-2 bg-brand-primary/10">
+                    <motion.div 
+                      initial={{ width: '100%' }}
+                      animate={{ width: '0%' }}
+                      transition={{ duration: 6, ease: 'linear' }}
+                      className="h-full bg-brand-primary"
+                    />
+                  </div>
+                  
+                  <div className="mb-8">
+                    <h3 className="text-xl font-black text-brand-accent mb-2">شقة (سبرباي)</h3>
+                    <p className="text-stone-500 font-medium">امشي على اللوكيشن، مبني وزارة التضامن، هستلم تحت</p>
+                  </div>
+
+                  <hr className="border-stone-100 my-8" />
+
+                  <div className="flex items-center justify-between mb-8">
+                    <div className="flex items-center gap-4">
+                      <div className="w-12 h-12 bg-brand-cream rounded-2xl flex items-center justify-center text-brand-primary font-black">1</div>
+                      <p className="font-black text-lg">{cartItems[0]?.title || 'كنافة كريمة'}</p>
+                    </div>
+                  </div>
+
+                  <hr className="border-stone-100 my-8" />
+
+                  <div className="flex items-center justify-between mb-12">
+                    <div className="flex items-center gap-4">
+                      <Coins className="text-stone-400" size={24} />
+                      <p className="font-black text-lg">نقداً</p>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col gap-4">
+                    <button 
+                      onClick={() => setStep(2)}
+                      className="w-full py-4 rounded-2xl border-2 border-stone-100 font-black text-stone-600 hover:bg-stone-50 transition-all flex items-center justify-center gap-2"
+                    >
+                      تعديل الطلب (00:0{countdown})
+                    </button>
+                    <button 
+                      onClick={handlePlaceOrder}
+                      disabled={loading}
+                      className="btn-primary w-full py-5 text-2xl shadow-2xl shadow-brand-primary/30"
+                    >
+                      {loading ? 'جاري التنفيذ...' : 'كل شيء تمام'}
+                    </button>
+                  </div>
+                </div>
+              </motion.div>
+            )}
           </div>
 
           {/* Order Summary */}
