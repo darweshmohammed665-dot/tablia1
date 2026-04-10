@@ -29,12 +29,12 @@ export default function About() {
             </span>
             
             <h1 className="text-[60px] md:text-[140px] font-black text-white mb-10 leading-[0.85] tracking-[-0.04em]">
-              إحنا اللي <br />
-              <span className="text-brand-primary italic font-serif">رجعنا النفس</span> للأكل
+              من نحن <br />
+              <span className="text-brand-primary italic font-serif">طبلية طنطا</span>
             </h1>
             
             <p className="text-xl md:text-4xl text-white/60 max-w-3xl ml-auto font-medium leading-tight">
-              في طبلية، بنرجع هيبة الأكل البيتي اللي بجد. مش مجرد وجبات، دي حكايات بتتحكي في كل طبق.
+              أول منصة في طنطا للأكل البيتي، مكونات مضمونة، ونضافة، وسعر على قد الإيد.
             </p>
           </motion.div>
         </div>
@@ -88,37 +88,53 @@ export default function About() {
         </div>
       </section>
 
-      {/* Values Section - Bento Grid */}
+      {/* Quality Standards Section */}
       <section className="py-[100px] bg-brand-peach/30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-[56px] font-bold text-brand-secondary mb-4">ما الذي يميزنا؟</h2>
-            <p className="text-stone-500 text-xl">قيمنا الجوهرية هي المحرك الأساسي لكل ما نقدمه</p>
+            <h2 className="text-[56px] font-bold text-brand-secondary mb-4">معايير الجودة بتاعتنا</h2>
+            <p className="text-stone-500 text-xl">نحن نلتزم بأعلى المعايير لضمان تجربة طعام آمنة ومميزة</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="food-card p-[20px] group">
               <div className="w-16 h-16 bg-brand-primary/10 rounded-2xl flex items-center justify-center text-brand-primary mb-6 group-hover:bg-brand-primary group-hover:text-white transition-colors">
-                <Heart size={32} />
+                <Users size={32} />
               </div>
-              <h3 className="text-2xl font-bold mb-4 text-brand-secondary">شغف الطهي</h3>
-              <p className="text-stone-500">كل طبق يخرج من مطابخنا هو نتاج شغف حقيقي، وليس مجرد طلب يتم تحضيره آلياً.</p>
+              <h3 className="text-2xl font-bold mb-4 text-brand-secondary">اختيار دقيق للطهاة</h3>
+              <p className="text-stone-500">كل طباخة بتعدي على مقابلة شخصية ومراجعة نظافة مطبخها قبل الانضمام إلينا.</p>
+            </div>
+
+            <div className="food-card p-[20px] group">
+              <div className="w-16 h-16 bg-brand-secondary/10 rounded-2xl flex items-center justify-center text-brand-secondary mb-6 group-hover:bg-brand-secondary group-hover:text-white transition-colors">
+                <Utensils size={32} />
+              </div>
+              <h3 className="text-2xl font-bold mb-4 text-brand-secondary">مكونات طازجة يومياً</h3>
+              <p className="text-stone-500">المكونات بتتجاب طازجة كل يوم — مفيش مجمد أو قديم في مطابخنا.</p>
+            </div>
+
+            <div className="food-card p-[20px] group">
+              <div className="w-16 h-16 bg-brand-primary/10 rounded-2xl flex items-center justify-center text-brand-primary mb-6 group-hover:bg-brand-primary group-hover:text-white transition-colors">
+                <ShieldCheck size={32} />
+              </div>
+              <h3 className="text-2xl font-bold mb-4 text-brand-secondary">طهي عند الطلب</h3>
+              <p className="text-stone-500">مفيش أكل جاهز — كل أكلة بتتطبخ بعد الطلب لضمان وصولها طازجة تماماً.</p>
             </div>
 
             <div className="food-card p-[20px] group">
               <div className="w-16 h-16 bg-brand-secondary/10 rounded-2xl flex items-center justify-center text-brand-secondary mb-6 group-hover:bg-brand-secondary group-hover:text-white transition-colors">
                 <ShieldCheck size={32} />
               </div>
-              <h3 className="text-2xl font-bold mb-4 text-brand-secondary">جودة منزلية موثوقة</h3>
-              <p className="text-stone-500">نلتزم بأعلى معايير النظافة والجودة، لنقدم لكم طعاماً يضاهي ما يُعد في منازلكم عنايةً وحرصاً.</p>
+              <h3 className="text-2xl font-bold mb-4 text-brand-secondary">تغليف محكم ونظيف</h3>
+              <p className="text-stone-500">التغليف نظيف ومحكم ومناسب للتوصيل لضمان وصول الوجبة في أفضل حالة.</p>
             </div>
 
             <div className="food-card p-[20px] group">
               <div className="w-16 h-16 bg-brand-primary/10 rounded-2xl flex items-center justify-center text-brand-primary mb-6 group-hover:bg-brand-primary group-hover:text-white transition-colors">
-                <Users size={32} />
+                <Star size={32} />
               </div>
-              <h3 className="text-2xl font-bold mb-4 text-brand-secondary">تمكين المجتمع المحلي</h3>
-              <p className="text-stone-500">نفتح آفاقاً جديدة للطهاة الموهوبين في طنطا، لتمكينهم من مشاركة إبداعاتهم مع المجتمع.</p>
+              <h3 className="text-2xl font-bold mb-4 text-brand-secondary">تقييم مستمر</h3>
+              <p className="text-stone-500">نتابع تقييمات العملاء باستمرار بعد كل طلب لضمان استمرار الجودة.</p>
             </div>
           </div>
         </div>
@@ -155,7 +171,7 @@ export default function About() {
           <p className="text-xl text-stone-500 mb-12">انضم لعيلة طبلية النهاردة.. سواء كنت حريف عاوز تفتح مطبخك أو أكيل بيدور على النفس الصح اللي بجد.</p>
           <div className="flex flex-col sm:flex-row gap-6 justify-center">
             <Link to="/meals" className="btn-primary py-5 px-12 text-xl shadow-2xl">دوق دلوقتي</Link>
-            <Link to="/register?role=chef" className="btn-secondary py-5 px-12 text-xl">انضم للحريفة</Link>
+            <Link to="/join-us" className="btn-secondary py-5 px-12 text-xl">انضم للحريفة</Link>
           </div>
         </div>
       </section>

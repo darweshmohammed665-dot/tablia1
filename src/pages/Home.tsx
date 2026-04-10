@@ -57,12 +57,12 @@ export default function Home() {
                 </span>
                 
                 <h1 className="text-[60px] md:text-[140px] font-black text-white leading-[0.85] tracking-[-0.04em] mb-10">
-                  الأكل اللي <br />
-                  <span className="text-brand-primary italic font-serif">بيعدل المزاج</span>
+                  تعبت من <br />
+                  <span className="text-brand-primary italic font-serif">أكل الشارع؟</span>
                 </h1>
                 
                 <p className="text-xl md:text-3xl text-white/70 max-w-2xl ml-auto mb-12 font-medium leading-tight">
-                  مش مجرد وجبة، دي حكاية "نفس" وتاريخ من طنطا لكل بيت بيدور على الطعم الأصلي.
+                  طبلية بيوصلك أكل بيت حقيقي، من مطبخ ست شاطرة، بأحسن جودة وأقل سعر ولحد باب بيتك في طنطا.
                 </p>
 
                 <div className="flex flex-col md:flex-row-reverse items-center gap-6">
@@ -74,9 +74,12 @@ export default function Home() {
                     <ArrowRight className="group-hover:translate-x-2 transition-transform" size={28} />
                   </Link>
                   
-                  <button className="px-12 py-6 rounded-[16px] border-2 border-white/10 text-white font-bold text-2xl backdrop-blur-md hover:bg-white/5 transition-all">
+                  <Link 
+                    to="/about"
+                    className="px-12 py-6 rounded-[16px] border-2 border-white/10 text-white font-bold text-2xl backdrop-blur-md hover:bg-white/5 transition-all"
+                  >
                     تعرف علينا
-                  </button>
+                  </Link>
                 </div>
               </motion.div>
             </div>
@@ -129,13 +132,15 @@ export default function Home() {
               viewport={{ once: true }}
               transition={{ duration: 0.8 }}
             >
-              <span className="text-brand-primary font-bold tracking-widest uppercase text-sm mb-4 block">رؤيتنا</span>
+              <span className="text-brand-primary font-bold tracking-widest uppercase text-sm mb-4 block">قصة طبلية</span>
               <h2 className="text-4xl md:text-7xl font-black text-stone-900 mb-8 leading-tight">
-                نصيغ مفهوماً جديداً <br />
-                لـ <span className="text-brand-primary">الطهي المنزلي</span>
+                من قلب طنطا <br />
+                <span className="text-brand-primary">لكل بيت</span>
               </h2>
               <p className="text-lg md:text-xl text-stone-600 mb-10 leading-relaxed">
-                في طبلية طنطا، نؤمن أن الطعام ليس مجرد وجبة، بل هو جسر يربطنا بجذورنا وتاريخنا. نحن ننتقي أمهر الطهاة المنزليين لنقدم لكم تجربة استثنائية تحمل أصالة مدينة طنطا العريقة.
+                في طنطا، كل شارع فيه بيت ريحة أكله بتجوع الجيران، وفي كل بيت ست شاطرة نفسها أكلها وحلاوة نفسها يوصلوا للناس. وفي نفس الشارع.. موظف راجع مهدود، أو أم وراها ألف حاجة، ونفسهم في لقمة بيتي ترم العظم من غير فرهدة المطبخ أو أسعار الدليفري اللي بتخلص المرتب.
+                <br /><br />
+                من هنا بدأت طبلية.. قررنا نكون حلقة الوصل اللي بتريح الطرفين. قفلنا دايرة التعب، وفتحنا مطابخ أشطر ستات في طنطا عشان تجبلك أكل بيتي بجودة عالية ونضافة وسعر على قد الإيد.
               </p>
               <div className="flex flex-wrap gap-8">
                 <div className="flex flex-col">
@@ -189,12 +194,22 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-center items-center gap-4 md:gap-12 text-sm md:text-lg font-medium">
           <div className="flex items-center gap-2">
             <ShieldCheck size={20} className="text-brand-peach" />
-            <span>آلاف الطهاة الموثوق بهم والذين تم فحصهم بدقة.</span>
+            <span>طازج يومياً</span>
           </div>
           <div className="hidden md:block w-px h-6 bg-white/20"></div>
           <div className="flex items-center gap-2">
-            <Star size={20} className="text-brand-peach" fill="currentColor" />
-            <span>معدل قبول أقل من 5%</span>
+            <Utensils size={20} className="text-brand-peach" />
+            <span>مطبوخ بأيادي أشطر ستات بيوت</span>
+          </div>
+          <div className="hidden md:block w-px h-6 bg-white/20"></div>
+          <div className="flex items-center gap-2">
+            <ShieldCheck size={20} className="text-brand-peach" />
+            <span>نضيف ومضمون</span>
+          </div>
+          <div className="hidden md:block w-px h-6 bg-white/20"></div>
+          <div className="flex items-center gap-2">
+            <Clock size={20} className="text-brand-peach" />
+            <span>توصيل سريع في طنطا</span>
           </div>
         </div>
       </div>
@@ -203,17 +218,18 @@ export default function Home() {
       <section className="py-32 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-20">
-            <span className="text-brand-primary font-bold tracking-widest uppercase text-sm mb-4 block">لماذا طبلية؟</span>
-            <h2 className="text-4xl md:text-6xl font-black text-stone-900 mb-6">التزامنا بالتميز</h2>
-            <p className="text-lg text-stone-600">نحن لا نقدم وجبات فحسب، بل نضمن الجودة الفائقة، الأمان التام، واللمسة الإنسانية في كل طبق.</p>
+            <span className="text-brand-primary font-bold tracking-widest uppercase text-sm mb-4 block">ليه طبلية؟</span>
+            <h2 className="text-4xl md:text-6xl font-black text-stone-900 mb-6">ليه طبلية مش زي غيره؟</h2>
+            <p className="text-lg text-stone-600">أول منصة في طنطا للأكل البيتي، مكونات مضمونة، ونضافة، وسعر على قد الإيد.</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
+          <div className="grid grid-cols-1 md:grid-cols-5 gap-8">
             {[
-              { icon: Utensils, title: "معايير جودة صارمة", desc: "ننتقي أفضل المكونات الطازجة يومياً لضمان تقديم مذاق استثنائي يليق بكم." },
-              { icon: Heart, title: "طهي بشغف", desc: "طهاة منزليون محترفون يسكبون خبراتهم وشغفهم في كل وجبة تُعد خصيصاً لكم." },
-              { icon: ShieldCheck, title: "أمان وموثوقية", desc: "نطبق بروتوكولات فحص دورية وصارمة لجميع المطابخ لضمان أعلى مستويات النظافة." },
-              { icon: Star, title: "تجربة متكاملة", desc: "نسعى دوماً للارتقاء بتوقعاتكم من خلال تقديم خدمة متميزة وتجربة طعام لا تُنسى." }
+              { icon: Utensils, title: "طازة مش مجمد", desc: "كل أكلة بتتطبخ من الأول عشانك" },
+              { icon: Heart, title: "أيادي ستات شاطرة", desc: "أختارنا الطباخات بعناية" },
+              { icon: ShieldCheck, title: "نضافة مضمونة", desc: "معايير نظافة صارمة ومتابعة دورية" },
+              { icon: ShoppingBag, title: "سعر على قد الإيد", desc: "أكلات بجودة عالية مقابل سعر على قد الإيد" },
+              { icon: Clock, title: "توصيل سريع في طنطا", desc: "وجبتك هتوصلك سخنة وفي ميعادها" }
             ].map((feature, idx) => (
               <motion.div 
                 key={idx}
@@ -365,8 +381,8 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row justify-between items-end mb-20 gap-8">
             <div className="text-right">
-              <span className="text-brand-primary font-black tracking-[0.3em] uppercase text-sm mb-6 block">التصنيفات</span>
-              <h2 className="text-6xl md:text-[90px] font-black text-brand-secondary leading-[0.9] tracking-tighter">أقسامنا <br /> المميزة</h2>
+              <span className="text-brand-primary font-black tracking-[0.3em] uppercase text-sm mb-6 block">لمحة من المنيو</span>
+              <h2 className="text-6xl md:text-[90px] font-black text-brand-secondary leading-[0.9] tracking-tighter">عندنا ايه <br /> النهاردة؟</h2>
             </div>
             <Link to="/meals" className="btn-secondary group">
               عرض الكل 
@@ -504,16 +520,16 @@ export default function Home() {
         </div>
         <div className="max-w-7xl mx-auto px-4 relative z-10 text-center">
           <h2 className="text-5xl md:text-8xl font-black text-white mb-12 leading-tight">
-            جاهز لتجربة <br />
-            <span className="text-brand-primary italic font-serif">أصل الأكل؟</span>
+            سواء كنت تعبان من المطبخ، <br />
+            <span className="text-brand-primary italic font-serif">طبلية هنا.</span>
           </h2>
           <div className="flex flex-col md:flex-row items-center justify-center gap-8">
             <Link to="/meals" className="bg-brand-primary text-white px-12 py-6 rounded-full font-black text-2xl hover:scale-105 transition-transform shadow-2xl shadow-brand-primary/40">
-              ابدأ طلبك الآن
+              اطلب أكلتك دلوقتي
             </Link>
-            <button className="text-white font-bold text-xl border-b-2 border-brand-primary pb-1 hover:text-brand-primary transition-colors">
-              تواصل معنا للاستفسارات
-            </button>
+            <a href="https://wa.me/201234567890" className="text-white font-bold text-xl border-b-2 border-brand-primary pb-1 hover:text-brand-primary transition-colors">
+              واتساب / تليفون
+            </a>
           </div>
         </div>
       </section>

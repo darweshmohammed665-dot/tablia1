@@ -60,8 +60,8 @@ export default function Navbar({ user, profile }: NavbarProps) {
                 من نحن
                 <span className="absolute -bottom-1 left-0 w-0 h-1 bg-brand-primary transition-all duration-300 group-hover:w-full"></span>
               </Link>
-              <Link to="/integrals" className="relative text-brand-secondary hover:text-brand-primary transition-all font-black text-sm uppercase tracking-[0.2em] group">
-                جدول التكاملات
+              <Link to="/join-us" className="relative text-brand-secondary hover:text-brand-primary transition-all font-black text-sm uppercase tracking-[0.2em] group">
+                انضم إلينا
                 <span className="absolute -bottom-1 left-0 w-0 h-1 bg-brand-primary transition-all duration-300 group-hover:w-full"></span>
               </Link>
             </div>
@@ -126,6 +126,7 @@ export default function Navbar({ user, profile }: NavbarProps) {
               <Link to="/meals" className="block text-lg text-stone-600 font-bold" onClick={() => setIsOpen(false)}>الأكلات</Link>
               <Link to="/chefs" className="block text-lg text-stone-600 font-bold" onClick={() => setIsOpen(false)}>الطهاة</Link>
               <Link to="/about" className="block text-lg text-stone-600 font-bold" onClick={() => setIsOpen(false)}>من نحن</Link>
+              <Link to="/join-us" className="block text-lg text-stone-600 font-bold" onClick={() => setIsOpen(false)}>انضم إلينا</Link>
               <Link to="/integrals" className="block text-lg text-stone-600 font-bold" onClick={() => setIsOpen(false)}>جدول التكاملات</Link>
               <Link to="/cart" className="block text-lg text-stone-600 font-bold flex items-center justify-between" onClick={() => setIsOpen(false)}>
                 <span>السلة</span>
