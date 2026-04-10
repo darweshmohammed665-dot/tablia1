@@ -1,6 +1,6 @@
 @import "tailwindcss";
 @import "leaflet/dist/leaflet.css";
-@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Aref+Ruqaa:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
 
 @theme {
   --color-brand-primary: #f11d58;    /* Vibrant Pink - From Image */
@@ -10,35 +10,35 @@
   --color-brand-peach: #ffdac7;      /* Light Peach - From Image */
   --color-brand-text: #35091a;       /* Dark Maroon */
   
-  --font-sans: "Cairo", ui-sans-serif, system-ui, sans-serif;
-  --font-brush: "Aref Ruqaa", serif;
+  --font-sans: "Outfit", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Playfair Display", ui-serif, Georgia, serif;
 }
 
 @layer base {
   body {
-    @apply bg-brand-cream text-[#1F2937] selection:bg-brand-primary selection:text-white;
+    @apply bg-brand-cream text-brand-text selection:bg-brand-primary selection:text-white font-sans;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    @apply font-sans font-bold tracking-tight;
+    @apply font-sans font-black tracking-tight;
   }
 }
 
 @layer components {
   .btn-primary {
-    @apply bg-brand-primary text-white px-7 py-3.5 rounded-[12px] font-semibold shadow-md transition-all duration-300 hover:scale-105 active:scale-95 flex items-center justify-center gap-2;
+    @apply bg-brand-primary text-white px-8 py-4 rounded-[16px] font-bold shadow-lg shadow-brand-primary/20 transition-all duration-300 hover:scale-[1.02] hover:shadow-xl hover:shadow-brand-primary/30 active:scale-[0.98] flex items-center justify-center gap-2;
   }
   
   .btn-secondary {
-    @apply bg-brand-secondary text-white px-7 py-3.5 rounded-[12px] font-semibold shadow-md transition-all duration-300 hover:scale-105 active:scale-95 flex items-center justify-center gap-2;
+    @apply bg-brand-secondary text-white px-8 py-4 rounded-[16px] font-bold shadow-lg shadow-brand-secondary/20 transition-all duration-300 hover:scale-[1.02] hover:shadow-xl hover:shadow-brand-secondary/30 active:scale-[0.98] flex items-center justify-center gap-2;
   }
 
   .food-card {
-    @apply bg-white rounded-[18px] shadow-[0_10px_25px_rgba(0,0,0,0.08)] overflow-hidden transition-all duration-300 hover:-translate-y-[6px];
+    @apply bg-white rounded-[24px] shadow-[0_10px_40px_rgba(0,0,0,0.04)] overflow-hidden transition-all duration-500 hover:-translate-y-[8px] hover:shadow-[0_20px_60px_rgba(0,0,0,0.08)];
   }
 
   .glass-card {
-    @apply bg-white/90 backdrop-blur-xl border border-white/40 rounded-[18px] shadow-[0_8px_20px_rgba(0,0,0,0.08)];
+    @apply bg-white/80 backdrop-blur-2xl border border-white/40 rounded-[24px] shadow-[0_8px_32px_rgba(0,0,0,0.04)];
   }
 
   .egyptian-pattern {

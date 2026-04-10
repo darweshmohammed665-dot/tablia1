@@ -6,6 +6,7 @@ import { handleFirestoreError, OperationType } from '../lib/firestore-errors';
 import { motion } from 'motion/react';
 import { Search, MapPin, Star, ChefHat } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { CHEF_IMAGE_URL } from '../constants';
 
 export default function Chefs() {
   const [chefs, setChefs] = useState<UserProfile[]>([]);
@@ -37,9 +38,10 @@ export default function Chefs() {
   return (
     <div className="bg-brand-cream min-h-screen py-[100px]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="mb-12 text-center">
-          <h1 className="text-[56px] font-bold text-brand-accent mb-4">حريفة طنطا</h1>
-          <p className="text-stone-500 text-xl">قابلوا ملوك النفس الفلاحي والأكل البيتي اللي ملوش زي في طنطا.</p>
+        <div className="mb-20 text-center">
+          <span className="text-brand-primary font-black tracking-[0.3em] uppercase text-sm mb-6 block">الحريفة</span>
+          <h1 className="text-6xl md:text-[100px] font-black text-brand-secondary leading-[0.9] tracking-tighter mb-8">ملوك <br /> <span className="text-brand-primary italic font-serif">النفس</span> الفلاحي</h1>
+          <p className="text-stone-500 text-2xl max-w-2xl mx-auto font-medium">قابلوا ملوك النفس الفلاحي والأكل البيتي اللي ملوش زي في طنطا.</p>
         </div>
 
         {/* Search */}
@@ -72,12 +74,14 @@ export default function Chefs() {
               >
                 <div className="relative w-32 h-32 mx-auto mb-6">
                   <div className="absolute inset-0 bg-brand-primary/10 rounded-full animate-pulse"></div>
-                  <img 
-                    src={chef.photoURL || `https://images.unsplash.com/photo-1581299894007-aaa50297cf16?auto=format&fit=crop&q=80&w=200&h=200`} 
-                    alt={chef.displayName} 
-                    className="w-full h-full rounded-full object-cover relative z-10 border-4 border-white shadow-md"
-                    referrerPolicy="no-referrer"
-                  />
+                  <div className="w-full h-full rounded-full bg-brand-secondary flex items-center justify-center relative z-10 border-4 border-white shadow-md overflow-hidden">
+                    <img 
+                      src={CHEF_IMAGE_URL} 
+                      alt={chef.displayName} 
+                      className="w-full h-full object-cover opacity-80"
+                      referrerPolicy="no-referrer"
+                    />
+                  </div>
                   <div className="absolute -bottom-2 -right-2 bg-brand-secondary text-white p-2 rounded-full shadow-lg z-20">
                     <ChefHat size={16} />
                   </div>

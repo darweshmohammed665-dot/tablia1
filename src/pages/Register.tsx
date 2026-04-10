@@ -7,6 +7,7 @@ import { motion } from 'motion/react';
 import { Mail, Lock, User, ChefHat, ArrowRight, Chrome, CheckCircle2, Apple } from 'lucide-react';
 import { UserRole } from '../types';
 import { toast } from 'sonner';
+import { CHEF_IMAGE_URL } from '../constants';
 
 const GoogleIcon = () => (
   <svg viewBox="0 0 24 24" width="20" height="20" xmlns="http://www.w3.org/2000/svg">
@@ -109,12 +110,12 @@ export default function Register() {
       {/* Left Side: Branding & Info (Hidden on mobile) */}
       <div className="hidden md:flex md:w-1/2 relative bg-stone-900 overflow-hidden">
         <img 
-          src="https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&q=80&w=2070" 
-          alt="Chef Cooking" 
-          className="absolute inset-0 w-full h-full object-cover opacity-50 scale-110 hover:scale-100 transition-transform duration-10000"
+          src={CHEF_IMAGE_URL} 
+          alt="Traditional Egyptian Kitchen" 
+          className="absolute inset-0 w-full h-full object-cover opacity-85 scale-110 hover:scale-100 transition-transform duration-10000"
           referrerPolicy="no-referrer"
         />
-        <div className="absolute inset-0 bg-gradient-to-br from-brand-primary/80 to-transparent"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-brand-primary/60 to-transparent"></div>
         
         <div className="relative z-10 flex flex-col justify-between p-16 w-full text-white">
           <Link to="/" className="text-4xl font-black tracking-tighter flex items-center gap-2">

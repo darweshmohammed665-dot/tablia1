@@ -3,12 +3,16 @@ import { useParams, Link } from 'react-router-dom';
 import { doc, getDoc, collection, query, where, getDocs } from 'firebase/firestore';
 import { db, auth } from '../firebase';
 import { UserProfile, Meal } from '../types';
+import { CHEF_IMAGE_URL } from '../constants';
 import { motion, AnimatePresence } from 'motion/react';
-import { MapPin, Star, ChefHat, Clock, Edit3, UtensilsCrossed, Share2, Users } from 'lucide-react';
+import { MapPin, Star, ChefHat, Clock, Edit3, UtensilsCrossed, Share2, Users, ShoppingBag } from 'lucide-react';
 import ChefProfileForm from '../components/ChefProfileForm';
+import { useCart } from '../context/CartContext';
+import { toast } from 'sonner';
 
 export default function ChefProfile() {
   const { id } = useParams();
+  const { addToCart } = useCart();
   const [chef, setChef] = useState<UserProfile | null>(null);
   const [meals, setMeals] = useState<Meal[]>([]);
   const [popularMeals, setPopularMeals] = useState<Meal[]>([]);
@@ -69,12 +73,14 @@ export default function ChefProfile() {
         <div className="food-card p-8 md:p-12 mb-[80px]">
           <div className="flex flex-col md:flex-row gap-8 items-center md:items-end">
             <div className="relative w-40 h-40 -mt-20 md:-mt-32">
-              <img 
-                src={chef.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(chef.displayName)}&background=c65d3a&color=fff&size=200`} 
-                alt={chef.displayName} 
-                className="w-full h-full rounded-full object-cover border-8 border-white shadow-lg"
-                referrerPolicy="no-referrer"
-              />
+              <div className="w-full h-full rounded-full bg-brand-secondary flex items-center justify-center border-8 border-white shadow-lg overflow-hidden">
+                <img 
+                  src={CHEF_IMAGE_URL} 
+                  alt={chef.displayName} 
+                  className="w-full h-full object-cover opacity-80"
+                  referrerPolicy="no-referrer"
+                />
+              </div>
               <div className="absolute bottom-2 right-2 bg-brand-accent text-stone-900 p-2 rounded-full shadow-lg">
                 <ChefHat size={20} />
               </div>
@@ -204,9 +210,24 @@ export default function ChefProfile() {
                           <Star size={16} className="fill-brand-accent" />
                           <span className="font-bold">{meal.rating}</span>
                         </div>
-                        <Link to="/checkout" className="btn-primary py-2 px-6 text-sm shadow-md hover:shadow-brand-primary/20">
-                          اشتري الآن
-                        </Link>
+                        <button 
+                          onClick={() => {
+                            addToCart({
+                              id: meal.id,
+                              title: meal.title,
+                              price: meal.price,
+                              quantity: 1,
+                              image: meal.image,
+                              chefId: chef.uid,
+                              chefName: chef.displayName
+                            });
+                            toast.success(`تم إضافة ${meal.title} إلى السلة`);
+                          }}
+                          className="btn-primary py-2 px-6 text-sm shadow-md hover:shadow-brand-primary/20 flex items-center gap-2"
+                        >
+                          <ShoppingBag size={16} />
+                          أضف للسلة
+                        </button>
                       </div>
                     </div>
                   </div>
@@ -268,7 +289,24 @@ export default function ChefProfile() {
                     <div className="flex items-center gap-2 text-stone-400 text-sm font-bold">
                       <Clock size={16} /> 45 دقيقة
                     </div>
-                    <Link to="/checkout" className="btn-primary py-2 px-6 text-sm">اطلب الآن</Link>
+                    <button 
+                      onClick={() => {
+                        addToCart({
+                          id: meal.id,
+                          title: meal.title,
+                          price: meal.price,
+                          quantity: 1,
+                          image: meal.image,
+                          chefId: chef.uid,
+                          chefName: chef.displayName
+                        });
+                        toast.success(`تم إضافة ${meal.title} إلى السلة`);
+                      }}
+                      className="btn-primary py-2 px-6 text-sm flex items-center gap-2"
+                    >
+                      <ShoppingBag size={16} />
+                      أضف للسلة
+                    </button>
                   </div>
                 </div>
               </motion.div>

@@ -3,14 +3,32 @@ import { useParams, Link } from 'react-router-dom';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../firebase';
 import { Meal } from '../types';
+import { CHEF_IMAGE_URL } from '../constants';
 import { motion } from 'motion/react';
-import { Star, Clock, ChefHat, ShoppingCart, ArrowRight, ShieldCheck, Truck } from 'lucide-react';
+import { Star, Clock, ChefHat, ShoppingCart, ArrowRight, ShieldCheck, Truck, ShoppingBag } from 'lucide-react';
+import { useCart } from '../context/CartContext';
+import { toast } from 'sonner';
 
 export default function MealDetails() {
   const { id } = useParams();
   const [meal, setMeal] = useState<Meal | null>(null);
   const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
+  const { addToCart } = useCart();
+
+  const handleAddToCart = () => {
+    if (!meal) return;
+    addToCart({
+      id: meal.id,
+      title: meal.title,
+      price: meal.price,
+      quantity: quantity,
+      image: meal.image,
+      chefId: meal.chefId,
+      chefName: meal.chefName
+    });
+    toast.success(`تم إضافة ${quantity} ${meal.title} إلى السلة`);
+  };
 
   useEffect(() => {
     const fetchMeal = async () => {
@@ -87,8 +105,13 @@ export default function MealDetails() {
 
             <div className="flex items-center gap-4 mb-10">
               <Link to={`/chef/${meal.chefId}`} className="flex items-center gap-4 group">
-                <div className="w-14 h-14 rounded-full bg-stone-200 overflow-hidden border-2 border-white shadow-sm group-hover:border-brand-primary transition-all">
-                  <img src={`https://ui-avatars.com/api/?name=${encodeURIComponent(meal.chefName)}&background=c65d3a&color=fff`} alt={meal.chefName} />
+                <div className="w-14 h-14 rounded-full bg-brand-secondary flex items-center justify-center border-2 border-white shadow-sm group-hover:border-brand-primary transition-all overflow-hidden">
+                  <img 
+                    src={CHEF_IMAGE_URL} 
+                    alt={meal.chefName} 
+                    className="w-full h-full object-cover opacity-80"
+                    referrerPolicy="no-referrer"
+                  />
                 </div>
                 <div>
                   <p className="text-xs text-stone-400">بواسطة الشيف</p>
@@ -98,26 +121,38 @@ export default function MealDetails() {
             </div>
 
             <div className="mt-auto space-y-6">
-              <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6">
-                <div className="flex items-center bg-white rounded-full border border-stone-200 p-1 shadow-sm w-full sm:w-auto justify-between sm:justify-start">
-                  <button 
-                    onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                    className="w-12 h-12 rounded-full flex items-center justify-center hover:bg-brand-cream text-stone-600 text-2xl"
-                  >
-                    -
-                  </button>
-                  <span className="w-12 text-center font-bold text-xl">{quantity}</span>
-                  <button 
-                    onClick={() => setQuantity(quantity + 1)}
-                    className="w-12 h-12 rounded-full flex items-center justify-center hover:bg-brand-cream text-stone-600 text-2xl"
-                  >
-                    +
-                  </button>
+                <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6">
+                  <div className="flex items-center bg-white rounded-full border border-stone-200 p-1 shadow-sm w-full sm:w-auto justify-between sm:justify-start">
+                    <button 
+                      onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                      className="w-12 h-12 rounded-full flex items-center justify-center hover:bg-brand-cream text-stone-600 text-2xl"
+                    >
+                      -
+                    </button>
+                    <span className="w-12 text-center font-bold text-xl">{quantity}</span>
+                    <button 
+                      onClick={() => setQuantity(quantity + 1)}
+                      className="w-12 h-12 rounded-full flex items-center justify-center hover:bg-brand-cream text-stone-600 text-2xl"
+                    >
+                      +
+                    </button>
+                  </div>
+                  <div className="flex gap-4 w-full sm:flex-grow">
+                    <button 
+                      onClick={handleAddToCart}
+                      className="bg-brand-secondary text-white w-full py-4 flex items-center justify-center gap-3 text-lg rounded-full font-bold hover:bg-brand-accent transition-colors shadow-lg"
+                    >
+                      <ShoppingBag size={24} /> أضف للسلة
+                    </button>
+                    <Link 
+                      to="/checkout" 
+                      onClick={handleAddToCart}
+                      className="btn-primary w-full py-4 flex items-center justify-center gap-3 text-lg"
+                    >
+                      <ShoppingCart size={24} /> اشتري الآن
+                    </Link>
+                  </div>
                 </div>
-                <Link to="/checkout" className="btn-primary w-full sm:flex-grow py-4 flex items-center justify-center gap-3 text-lg">
-                  <ShoppingCart size={24} /> اشتري الآن - {(meal.price * quantity).toFixed(0)} ج.م
-                </Link>
-              </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="flex items-center gap-3 text-sm text-stone-500 bg-stone-100/50 p-4 rounded-2xl">

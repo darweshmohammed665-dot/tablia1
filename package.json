@@ -12,6 +12,8 @@
   },
   "dependencies": {
     "@google/genai": "^1.29.0",
+    "@stripe/react-stripe-js": "^6.1.0",
+    "@stripe/stripe-js": "^9.1.0",
     "@tailwindcss/vite": "^4.1.14",
     "@types/leaflet": "^1.9.21",
     "@vitejs/plugin-react": "^5.0.4",
@@ -30,6 +32,7 @@
     "socket.io": "^4.8.3",
     "socket.io-client": "^4.8.3",
     "sonner": "^2.0.7",
+    "stripe": "^22.0.0",
     "tailwind-merge": "^3.5.0"
   },
   "devDependencies": {

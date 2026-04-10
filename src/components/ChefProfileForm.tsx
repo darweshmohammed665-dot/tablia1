@@ -3,7 +3,7 @@ import { doc, updateDoc } from 'firebase/firestore';
 import { db } from '../firebase';
 import { UserProfile } from '../types';
 import { motion } from 'motion/react';
-import { Camera, MapPin, AlignLeft, Save, X } from 'lucide-react';
+import { Camera, MapPin, AlignLeft, Save, X, Utensils } from 'lucide-react';
 
 interface ChefProfileFormProps {
   profile: UserProfile;
@@ -60,22 +60,20 @@ export default function ChefProfileForm({ profile, onComplete, onCancel }: ChefP
         {/* Profile Picture */}
         <div className="flex flex-col items-center gap-4">
           <div className="relative w-32 h-32 group">
-            <img 
-              src={photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(profile.displayName)}&background=c65d3a&color=fff&size=200`} 
-              alt="Profile" 
-              className="w-full h-full rounded-full object-cover border-4 border-stone-100 shadow-inner"
-              referrerPolicy="no-referrer"
-            />
-            <div className="absolute inset-0 bg-black/40 rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white">
-              <Camera size={24} />
+            <div className="w-full h-full rounded-full bg-brand-secondary flex items-center justify-center text-white border-4 border-stone-100 shadow-inner overflow-hidden">
+              {photoURL ? (
+                <img src={photoURL} alt="Profile Preview" className="w-full h-full object-cover" />
+              ) : (
+                <Utensils size={48} />
+              )}
             </div>
           </div>
           <div className="w-full">
-            <label className="block text-sm font-medium text-stone-700 mb-2">رابط صورة الملف الشخصي</label>
+            <label className="block text-sm font-medium text-stone-700 mb-2">رابط صورة المطبخ أو الأكلات</label>
             <input 
               type="url" 
               required
-              placeholder="https://example.com/photo.jpg"
+              placeholder="https://example.com/kitchen-photo.jpg"
               value={photoURL}
               onChange={(e) => setPhotoURL(e.target.value)}
               className="w-full px-4 py-3 rounded-xl border border-stone-200 focus:ring-2 focus:ring-brand-secondary outline-none transition-all"

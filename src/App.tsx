@@ -27,6 +27,7 @@ import DriverTracking from './pages/DriverTracking';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import LoadingScreen from './components/LoadingScreen';
+import { CartProvider } from './context/CartContext';
 
 // Page Transition Wrapper
 const PageWrapper = ({ children }: { children: React.ReactNode }) => {
@@ -81,26 +82,40 @@ export default function App() {
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
 
+  const [isOffline, setIsOffline] = useState(false);
+
   useEffect(() => {
+    const handleOnline = () => setIsOffline(false);
+    const handleOffline = () => setIsOffline(true);
+
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       setUser(firebaseUser);
       if (firebaseUser) {
-        const docRef = doc(db, 'users', firebaseUser.uid);
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
-          setProfile(docSnap.data() as UserProfile);
+        try {
+          const docRef = doc(db, 'users', firebaseUser.uid);
+          const docSnap = await getDoc(docRef);
+          if (docSnap.exists()) {
+            setProfile(docSnap.data() as UserProfile);
+          }
+        } catch (error) {
+          console.error("Error fetching profile:", error);
+          // If Firestore is unreachable, we might still have a user but no profile
         }
       } else {
         setProfile(null);
       }
       
-      // Artificial delay to show the loading screen
-      setTimeout(() => {
-        setLoading(false);
-      }, 2000);
+      setLoading(false);
     });
 
-    return () => unsubscribe();
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+      unsubscribe();
+    };
   }, []);
 
   if (loading) {
@@ -109,14 +124,21 @@ export default function App() {
 
   return (
     <Router>
-      <div className="min-h-screen flex flex-col font-sans" dir="rtl">
-        <Toaster position="top-center" richColors />
-        <Navbar user={user} profile={profile} />
-        <main className="flex-grow">
-          <AnimatedRoutes profile={profile} />
-        </main>
-        <Footer />
-      </div>
+      <CartProvider>
+        <div className="min-h-screen flex flex-col font-sans" dir="rtl">
+          <Toaster position="top-center" richColors />
+          {isOffline && (
+            <div className="bg-red-500 text-white text-center py-2 text-sm font-bold animate-pulse">
+              أنت تعمل في وضع عدم الاتصال. قد لا تتوفر بعض الميزات.
+            </div>
+          )}
+          <Navbar user={user} profile={profile} />
+          <main className="flex-grow">
+            <AnimatedRoutes profile={profile} />
+          </main>
+          <Footer />
+        </div>
+      </CartProvider>
     </Router>
   );
 }

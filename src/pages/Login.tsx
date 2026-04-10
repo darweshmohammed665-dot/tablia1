@@ -5,6 +5,7 @@ import { auth, googleProvider, appleProvider } from '../firebase';
 import { motion } from 'motion/react';
 import { Mail, Lock, ArrowRight, Chrome, Apple } from 'lucide-react';
 import { toast } from 'sonner';
+import { CHEF_IMAGE_URL } from '../constants';
 
 const GoogleIcon = () => (
   <svg viewBox="0 0 24 24" width="20" height="20" xmlns="http://www.w3.org/2000/svg">
@@ -77,12 +78,12 @@ export default function Login() {
       {/* Left Side: Image & Branding (Hidden on mobile) */}
       <div className="hidden md:flex md:w-1/2 relative bg-stone-900 overflow-hidden">
         <img 
-          src="https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&q=80&w=2070" 
-          alt="Cooking with Love" 
-          className="absolute inset-0 w-full h-full object-cover opacity-60 scale-105 hover:scale-100 transition-transform duration-10000"
+          src={CHEF_IMAGE_URL} 
+          alt="Authentic Egyptian Food" 
+          className="absolute inset-0 w-full h-full object-cover opacity-85 scale-105 hover:scale-100 transition-transform duration-10000"
           referrerPolicy="no-referrer"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-brand-secondary/80 to-transparent"></div>
+        <div className="absolute inset-0 bg-gradient-to-t from-brand-secondary/60 to-transparent"></div>
         
         <div className="relative z-10 flex flex-col justify-between p-16 w-full text-white">
           <Link to="/" className="text-4xl font-black tracking-tighter flex items-center gap-2">

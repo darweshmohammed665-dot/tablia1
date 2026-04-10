@@ -1,68 +1,88 @@
 import { motion } from 'motion/react';
 import { Heart, ShieldCheck, Utensils, Users, MapPin, Star } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { CHEF_IMAGE_URL } from '../constants';
 
 export default function About() {
   return (
     <div className="bg-brand-cream min-h-screen">
       {/* Hero Section - Editorial Style */}
-      <section className="relative h-[70vh] flex items-center overflow-hidden bg-brand-secondary">
+      <section className="relative min-h-[80vh] flex items-center overflow-hidden bg-brand-secondary">
         <div className="absolute inset-0 z-0">
           <img 
-            src="https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&q=80&w=2070" 
-            alt="Traditional Egyptian Kitchen" 
-            className="w-full h-full object-cover opacity-30"
+            src="https://images.unsplash.com/photo-1547592166-23ac45744acd?auto=format&fit=crop&q=80&w=1920" 
+            alt="Artisanal Cooking Background" 
+            className="w-full h-full object-cover opacity-60"
             referrerPolicy="no-referrer"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-brand-secondary/60 to-brand-secondary"></div>
+          <div className="absolute inset-0 bg-gradient-to-b from-brand-secondary/80 via-brand-secondary/40 to-brand-secondary"></div>
         </div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full text-right">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            className="flex items-center justify-end gap-3 mb-6"
-          >
-            <span className="text-brand-peach font-black tracking-widest uppercase text-sm">إرث الطهي الأصيل يبدأ من طبلية</span>
-            <div className="h-[1px] w-12 bg-brand-peach"></div>
-          </motion.div>
-          
-          <motion.h1 
-            initial={{ opacity: 0, x: 50 }}
-            animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8 }}
-            className="text-5xl md:text-8xl font-black text-white mb-8 leading-tight"
           >
-            إحنا اللي <br />
-            <span className="text-brand-primary italic">رجعنا النفس</span> للأكل
-          </motion.h1>
+            <span className="inline-block px-6 py-2 rounded-full bg-brand-primary/20 border border-brand-primary/30 text-brand-primary text-sm font-black tracking-[0.3em] uppercase mb-10 backdrop-blur-xl">
+              إرث الطهي الأصيل يبدأ من طبلية
+            </span>
+            
+            <h1 className="text-[60px] md:text-[140px] font-black text-white mb-10 leading-[0.85] tracking-[-0.04em]">
+              إحنا اللي <br />
+              <span className="text-brand-primary italic font-serif">رجعنا النفس</span> للأكل
+            </h1>
+            
+            <p className="text-xl md:text-4xl text-white/60 max-w-3xl ml-auto font-medium leading-tight">
+              في طبلية، بنرجع هيبة الأكل البيتي اللي بجد. مش مجرد وجبات، دي حكايات بتتحكي في كل طبق.
+            </p>
+          </motion.div>
         </div>
       </section>
 
       {/* The Story Section */}
-      <section className="py-[100px] relative overflow-hidden">
+      <section className="py-32 relative overflow-hidden bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
-            <div className="order-2 lg:order-1">
-              <div className="relative">
-                <div className="absolute -top-10 -left-10 w-40 h-40 bg-brand-primary/10 rounded-full blur-3xl"></div>
-                <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-brand-secondary/10 rounded-full blur-3xl"></div>
-                <img 
-                  src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&q=80&w=1000" 
-                  alt="Food Presentation" 
-                  className="relative z-10 rounded-[3rem] shadow-2xl rotate-2 hover:rotate-0 transition-transform duration-700"
-                  referrerPolicy="no-referrer"
-                />
-              </div>
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-24 items-center">
+            <div className="lg:col-span-5 order-2 lg:order-1">
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                className="relative"
+              >
+                <div className="aspect-[4/5] rounded-[60px] overflow-hidden shadow-2xl rotate-[-3deg] hover:rotate-0 transition-transform duration-1000">
+                  <img 
+                    src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&q=80&w=1000" 
+                    alt="Food Presentation" 
+                    className="w-full h-full object-cover"
+                    referrerPolicy="no-referrer"
+                  />
+                </div>
+                <div className="absolute -bottom-10 -right-10 w-48 h-48 bg-brand-primary rounded-full flex items-center justify-center text-white p-8 text-center rotate-12 shadow-2xl">
+                  <p className="font-black text-xl leading-tight">طعم ملوش زي في طنطا</p>
+                </div>
+              </motion.div>
             </div>
             
-            <div className="text-right order-1 lg:order-2">
-              <h2 className="text-[56px] font-bold text-brand-secondary mb-8">ليه <span className="text-brand-primary">طبلية</span> هي اللي كسبت؟</h2>
-              <p className="text-xl text-stone-600 leading-relaxed mb-8">
-                في عصر الأكل السريع والديليفري اللي ملوش طعم، كان لازم حد يتدخل. طبلية مش مجرد أبلكيشن، دي حركة لترجيع "النفس" الحقيقي لموائدنا. إحنا هنا عشان نثبت إن أكل البيت هو اللي بيكسب دايماً.
-              </p>
-              <p className="text-xl text-stone-600 leading-relaxed">
-                جمعنا "حريفة" طنطا في مكان واحد.. ستات البيوت اللي نفسهم "يوزن بلد" والناس اللي بتفهم في الأكل الصح. النتيجة؟ عظمة في كل طبق.
-              </p>
+            <div className="lg:col-span-7 text-right order-1 lg:order-2">
+              <motion.div
+                initial={{ opacity: 0, x: 50 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+              >
+                <h2 className="text-[60px] md:text-[90px] font-black text-brand-secondary mb-10 leading-[0.9] tracking-tighter">
+                  ليه <span className="text-brand-primary">طبلية</span> <br /> هي اللي كسبت؟
+                </h2>
+                <div className="space-y-8">
+                  <p className="text-2xl text-stone-600 leading-relaxed font-medium">
+                    في عصر الأكل السريع والديليفري اللي ملوش طعم، كان لازم حد يتدخل. طبلية مش مجرد أبلكيشن، دي حركة لترجيع "النفس" الحقيقي لموائدنا. إحنا هنا عشان نثبت إن أكل البيت هو اللي بيكسب دايماً.
+                  </p>
+                  <p className="text-2xl text-stone-600 leading-relaxed font-medium">
+                    جمعنا "حريفة" طنطا في مكان واحد.. ستات البيوت اللي نفسهم "يوزن بلد" والناس اللي بتفهم في الأكل الصح. النتيجة؟ عظمة في كل طبق.
+                  </p>
+                </div>
+              </motion.div>
             </div>
           </div>
         </div>
@@ -142,5 +162,3 @@ export default function About() {
     </div>
   );
 }
-
-import { Link } from 'react-router-dom';

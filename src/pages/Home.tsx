@@ -1,10 +1,14 @@
 import { motion, useScroll, useTransform } from 'motion/react';
-import { Search, MapPin, Star, Clock, ChevronLeft, ArrowRight, Utensils, Heart, ShieldCheck, MessageCircle } from 'lucide-react';
+import { ShoppingBag, Clock, ArrowRight, MessageCircle, Utensils, Heart, Star, ShieldCheck, ChevronLeft, MapPin } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import ChefMap from '../components/ChefMap';
 import { useRef } from 'react';
+import { CHEF_IMAGE_URL } from '../constants';
+import { useCart } from '../context/CartContext';
+import { toast } from 'sonner';
 
 export default function Home() {
+  const { addToCart } = useCart();
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -24,111 +28,95 @@ export default function Home() {
       </div>
 
       {/* Hero Section */}
-      <section className="relative h-[90vh] md:h-[100vh] overflow-hidden bg-stone-950 flex items-center justify-center">
-        {/* Background Image with Parallax and Subtle Zoom */}
+      <section className="relative min-h-screen overflow-hidden bg-brand-secondary flex items-center">
+        {/* Background Image with Immersive Effects */}
         <motion.div 
           style={{ y }}
-          animate={{ 
-            scale: [1.05, 1.1, 1.05],
-          }}
-          transition={{ 
-            duration: 20, 
-            repeat: Infinity, 
-            ease: "linear" 
-          }}
-          className="absolute inset-0 z-0 opacity-40"
+          className="absolute inset-0 z-0"
         >
           <img 
-            src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&q=80&w=2000" 
-            alt="Home Cooked Food" 
-            className="w-full h-full object-cover"
+            src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&q=80&w=2000" 
+            alt="Delicious Egyptian Grilled Food" 
+            className="w-full h-full object-cover opacity-60"
             referrerPolicy="no-referrer"
           />
-          {/* Sophisticated Gradient Overlay */}
-          <div className="absolute inset-0 bg-gradient-to-b from-stone-950/90 via-stone-950/20 to-stone-950"></div>
-          <div className="absolute inset-0 bg-gradient-to-r from-stone-950/60 via-transparent to-stone-950/60"></div>
+          <div className="absolute inset-0 bg-gradient-to-b from-brand-secondary/80 via-brand-secondary/40 to-brand-secondary"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-brand-secondary/70 via-transparent to-brand-secondary/70"></div>
         </motion.div>
 
-        {/* Grain Texture Overlay */}
-        <div className="absolute inset-0 bg-grain opacity-[0.05] pointer-events-none z-[1]"></div>
-
-        {/* Professional Hero Content */}
-        <div className="relative z-10 w-full max-w-5xl mx-auto px-4 text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-            className="flex flex-col items-center"
-          >
-            <motion.span 
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.2 }}
-              className="inline-block px-4 py-1.5 rounded-full bg-brand-primary/10 border border-brand-primary/20 text-brand-primary text-xs md:text-sm font-bold tracking-widest uppercase mb-8 backdrop-blur-md"
-            >
-              تجربة طهي منزلي استثنائية في قلب طنطا
-            </motion.span>
-            
-            <h1 className="text-[50px] md:text-[120px] font-black text-white leading-[0.9] tracking-tighter mb-8 drop-shadow-2xl">
-              الأكل اللي <br />
-              <span className="text-brand-primary italic font-serif">بيعدل المزاج</span>
-            </h1>
-            
-            <p className="text-lg md:text-2xl text-stone-300 max-w-2xl mx-auto mb-12 font-medium leading-relaxed opacity-90">
-              مش مجرد وجبة، دي تجربة "عظمة" بتجمع بين نفس ست البيت. من طنطا لكل بيت بيدور على الطعم الأصلي.
-            </p>
-
-            <div className="flex flex-col md:flex-row items-center gap-6">
-              <Link 
-                to="/meals" 
-                className="group relative inline-flex items-center gap-3 bg-brand-primary text-white px-10 py-5 rounded-full font-black text-xl overflow-hidden transition-all hover:pr-14"
+        <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+            <div className="lg:col-span-8 text-right">
+              <motion.div
+                initial={{ opacity: 0, x: 50 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
               >
-                <span className="relative z-10">استكشف الأكلات</span>
-                <ArrowRight className="absolute right-6 opacity-0 group-hover:opacity-100 transition-all duration-300" size={24} />
-                <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
-              </Link>
-              
-              <button className="px-10 py-5 rounded-full border border-white/20 text-white font-bold text-xl backdrop-blur-md hover:bg-white/10 transition-colors">
-                تعرف علينا
-              </button>
+                <span className="inline-block px-6 py-2 rounded-full bg-brand-primary/20 border border-brand-primary/30 text-brand-primary text-sm font-black tracking-[0.2em] uppercase mb-8 backdrop-blur-xl">
+                  تراث طنطا في كل لقمة
+                </span>
+                
+                <h1 className="text-[60px] md:text-[140px] font-black text-white leading-[0.85] tracking-[-0.04em] mb-10">
+                  الأكل اللي <br />
+                  <span className="text-brand-primary italic font-serif">بيعدل المزاج</span>
+                </h1>
+                
+                <p className="text-xl md:text-3xl text-white/70 max-w-2xl ml-auto mb-12 font-medium leading-tight">
+                  مش مجرد وجبة، دي حكاية "نفس" وتاريخ من طنطا لكل بيت بيدور على الطعم الأصلي.
+                </p>
+
+                <div className="flex flex-col md:flex-row-reverse items-center gap-6">
+                  <Link 
+                    to="/meals" 
+                    className="btn-primary text-2xl px-12 py-6 group"
+                  >
+                    استكشف الأكلات
+                    <ArrowRight className="group-hover:translate-x-2 transition-transform" size={28} />
+                  </Link>
+                  
+                  <button className="px-12 py-6 rounded-[16px] border-2 border-white/10 text-white font-bold text-2xl backdrop-blur-md hover:bg-white/5 transition-all">
+                    تعرف علينا
+                  </button>
+                </div>
+              </motion.div>
             </div>
-          </motion.div>
+
+            <div className="lg:col-span-4 hidden lg:block">
+              <motion.div
+                initial={{ opacity: 0, scale: 0.8, rotate: 10 }}
+                animate={{ opacity: 1, scale: 1, rotate: 0 }}
+                transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
+                className="relative"
+              >
+                <div className="aspect-[3/4] rounded-[40px] overflow-hidden border-8 border-white/10 shadow-2xl rotate-3 hover:rotate-0 transition-transform duration-700 bg-brand-secondary">
+                   <img 
+                    src={CHEF_IMAGE_URL} 
+                    className="w-full h-full object-cover object-[50%_50%] opacity-80 hover:opacity-100 transition-all duration-700"
+                    alt="Our Chefs"
+                  />
+                </div>
+                <div className="absolute -bottom-10 -left-10 glass-card p-8 rotate-[-6deg] bg-brand-primary text-white border-none">
+                  <div className="flex items-center gap-4 mb-2">
+                    <div className="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center text-white">
+                      <Heart size={24} fill="currentColor" />
+                    </div>
+                    <span className="font-black text-xl">+12k</span>
+                  </div>
+                  <p className="text-white/80 font-bold text-sm">طلب ناجح في طنطا</p>
+                </div>
+              </motion.div>
+            </div>
+          </div>
         </div>
 
         {/* Scroll Indicator */}
         <motion.div 
           animate={{ y: [0, 10, 0] }}
           transition={{ duration: 2, repeat: Infinity }}
-          className="absolute bottom-10 left-1/2 -translate-x-1/2 z-10 text-white/30 flex flex-col items-center gap-2"
+          className="absolute bottom-10 left-1/2 -translate-x-1/2 z-10 text-white/20 flex flex-col items-center gap-2"
         >
-          <span className="text-[10px] uppercase tracking-[0.3em] font-bold">اسحب للأسفل</span>
-          <div className="w-px h-12 bg-gradient-to-b from-white/40 to-transparent"></div>
+          <div className="w-px h-20 bg-gradient-to-b from-white/40 to-transparent"></div>
         </motion.div>
-
-        {/* Subtle Floating Words (Professional Texture) */}
-        <div className="absolute inset-0 pointer-events-none overflow-hidden hidden md:block">
-          <motion.span 
-            animate={{ y: [0, -40, 0], opacity: [0.1, 0.2, 0.1] }}
-            transition={{ duration: 10, repeat: Infinity }}
-            className="absolute top-[20%] left-[10%] text-6xl font-black text-white/5 rotate-12"
-          >
-            نفس حقيقي
-          </motion.span>
-          <motion.span 
-            animate={{ y: [0, 40, 0], opacity: [0.1, 0.2, 0.1] }}
-            transition={{ duration: 12, repeat: Infinity, delay: 1 }}
-            className="absolute bottom-[30%] right-[15%] text-7xl font-black text-white/5 -rotate-12"
-          >
-            عظمة يا طنطا
-          </motion.span>
-          <motion.span 
-            animate={{ x: [0, 30, 0], opacity: [0.05, 0.1, 0.05] }}
-            transition={{ duration: 15, repeat: Infinity }}
-            className="absolute top-[40%] right-[5%] text-5xl font-black text-white/5"
-          >
-            تريند الطعم
-          </motion.span>
-        </div>
       </section>
 
       {/* Introduction Section */}
@@ -174,18 +162,18 @@ export default function Home() {
               >
                 <div className="space-y-4">
                   <div className="aspect-[4/5] rounded-3xl overflow-hidden shadow-xl">
-                    <img src="https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&q=80&w=800" alt="Egyptian Chef 1" className="w-full h-full object-cover hover:scale-110 transition-transform duration-700" referrerPolicy="no-referrer" />
+                    <img src={CHEF_IMAGE_URL} alt="Chef 1" className="w-full h-full object-cover object-[10%_50%] hover:scale-110 transition-transform duration-700" referrerPolicy="no-referrer" />
                   </div>
                   <div className="aspect-square rounded-3xl overflow-hidden shadow-xl">
-                    <img src="https://images.unsplash.com/photo-1606787366850-de6330128bfc?auto=format&fit=crop&q=80&w=800" alt="Egyptian Chef 2" className="w-full h-full object-cover hover:scale-110 transition-transform duration-700" referrerPolicy="no-referrer" />
+                    <img src={CHEF_IMAGE_URL} alt="Chef 2" className="w-full h-full object-cover object-[50%_50%] hover:scale-110 transition-transform duration-700" referrerPolicy="no-referrer" />
                   </div>
                 </div>
                 <div className="pt-12 space-y-4">
                   <div className="aspect-square rounded-3xl overflow-hidden shadow-xl">
-                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=800" alt="Egyptian Chef 3" className="w-full h-full object-cover hover:scale-110 transition-transform duration-700" referrerPolicy="no-referrer" />
+                    <img src={CHEF_IMAGE_URL} alt="Chef 3" className="w-full h-full object-cover object-[90%_50%] hover:scale-110 transition-transform duration-700" referrerPolicy="no-referrer" />
                   </div>
                   <div className="aspect-[4/5] rounded-3xl overflow-hidden shadow-xl">
-                    <img src="https://images.unsplash.com/photo-1566554273541-37a9ca77b91f?auto=format&fit=crop&q=80&w=800" alt="Egyptian Chef 4" className="w-full h-full object-cover hover:scale-110 transition-transform duration-700" referrerPolicy="no-referrer" />
+                    <img src={CHEF_IMAGE_URL} alt="Chef 4" className="w-full h-full object-cover object-[30%_50%] hover:scale-110 transition-transform duration-700" referrerPolicy="no-referrer" />
                   </div>
                 </div>
               </motion.div>
@@ -311,7 +299,7 @@ export default function Home() {
             {[
               {
                 step: "1",
-                text: "يقوم فريق الطهاة لدينا بالعثور على أفضل الطهاة الشخصيين في منطقتك والتحقق من خلفياتهم.",
+                text: "يقوم فريقنا بالعثور على أفضل الطهاة المنزليين في منطقتك والتحقق من جودة مطابخهم.",
                 img: "https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&q=80&w=800"
               },
               {
@@ -373,72 +361,73 @@ export default function Home() {
       </section>
 
       {/* Bento Grid Categories */}
-      <section className="py-24 bg-brand-peach/20">
+      <section className="py-32 bg-brand-peach/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
+          <div className="flex flex-col md:flex-row justify-between items-end mb-20 gap-8">
             <div className="text-right">
-              <span className="text-brand-primary font-bold tracking-widest uppercase text-sm mb-4 block">التصنيفات</span>
-              <h2 className="text-5xl md:text-7xl font-black text-brand-secondary">أقسامنا المميزة</h2>
+              <span className="text-brand-primary font-black tracking-[0.3em] uppercase text-sm mb-6 block">التصنيفات</span>
+              <h2 className="text-6xl md:text-[90px] font-black text-brand-secondary leading-[0.9] tracking-tighter">أقسامنا <br /> المميزة</h2>
             </div>
-            <Link to="/meals" className="text-brand-primary font-bold flex items-center gap-2 hover:gap-4 transition-all">
-              عرض الكل <ArrowRight size={20} />
+            <Link to="/meals" className="btn-secondary group">
+              عرض الكل 
+              <ArrowRight className="group-hover:translate-x-2 transition-transform" size={20} />
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 auto-rows-[350px]">
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-8 auto-rows-[400px]">
             <motion.div 
-              whileHover={{ y: -10 }}
-              className="md:col-span-2 rounded-[2.5rem] overflow-hidden relative group shadow-xl"
+              whileHover={{ y: -15 }}
+              className="md:col-span-8 rounded-[40px] overflow-hidden relative group shadow-2xl"
             >
-              <img src="https://images.unsplash.com/photo-1541518763669-27fef04b14ea?auto=format&fit=crop&q=80&w=800" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="Mahshi" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent p-10 flex flex-col justify-end text-white">
-                <h3 className="text-4xl font-black mb-2">المحاشي الفلاحي</h3>
-                <p className="text-white/80 font-medium">من قلب الغيط لسفرتك</p>
+              <img src="https://images.unsplash.com/photo-1541518763669-27fef04b14ea?auto=format&fit=crop&q=80&w=1200" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" alt="Mahshi" />
+              <div className="absolute inset-0 bg-gradient-to-t from-brand-secondary via-brand-secondary/20 to-transparent p-12 flex flex-col justify-end text-white">
+                <h3 className="text-5xl md:text-7xl font-black mb-4">المحاشي الفلاحي</h3>
+                <p className="text-white/70 text-xl font-medium">من قلب الغيط لسفرتك، طعم ملوش زي</p>
               </div>
             </motion.div>
             
             <motion.div 
-              whileHover={{ y: -10 }}
-              className="md:col-span-2 rounded-[2.5rem] overflow-hidden relative group shadow-xl"
+              whileHover={{ y: -15 }}
+              className="md:col-span-4 rounded-[40px] overflow-hidden relative group shadow-2xl"
             >
-              <img src="https://images.unsplash.com/photo-1626074353765-517a681e40be?auto=format&fit=crop&q=80&w=800" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="Feteer" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent p-10 flex flex-col justify-end text-white">
+              <img src="https://images.unsplash.com/photo-1626074353765-517a681e40be?auto=format&fit=crop&q=80&w=800" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" alt="Feteer" />
+              <div className="absolute inset-0 bg-gradient-to-t from-brand-secondary via-brand-secondary/20 to-transparent p-10 flex flex-col justify-end text-white">
                 <h3 className="text-4xl font-black mb-2">فطير مشلتت</h3>
-                <p className="text-white/80 font-medium">بالسمن البلدي الأصلي</p>
+                <p className="text-white/70 font-medium">بالسمن البلدي الأصلي</p>
               </div>
             </motion.div>
 
             <motion.div 
-              whileHover={{ y: -10 }}
-              className="md:col-span-1 rounded-[2.5rem] overflow-hidden relative group shadow-xl"
+              whileHover={{ y: -15 }}
+              className="md:col-span-4 rounded-[40px] overflow-hidden relative group shadow-2xl"
             >
-              <img src="https://images.unsplash.com/photo-1551024601-bec78aea704b?auto=format&fit=crop&q=80&w=800" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="Desserts" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent p-8 flex flex-col justify-end text-white">
-                <h3 className="text-2xl font-black">حلويات</h3>
+              <img src="https://images.unsplash.com/photo-1551024601-bec78aea704b?auto=format&fit=crop&q=80&w=800" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" alt="Desserts" />
+              <div className="absolute inset-0 bg-gradient-to-t from-brand-secondary via-brand-secondary/20 to-transparent p-10 flex flex-col justify-end text-white">
+                <h3 className="text-4xl font-black">حلويات</h3>
               </div>
             </motion.div>
 
             <motion.div 
-              whileHover={{ y: -10 }}
-              className="md:col-span-2 rounded-[2.5rem] bg-brand-primary p-12 flex flex-col justify-center text-white relative overflow-hidden group shadow-xl"
+              whileHover={{ y: -15 }}
+              className="md:col-span-4 rounded-[40px] bg-brand-primary p-12 flex flex-col justify-center text-white relative overflow-hidden group shadow-2xl"
             >
               <div className="relative z-10">
-                <h3 className="text-4xl font-black mb-4">اكتشف المزيد</h3>
-                <p className="text-lg opacity-80 mb-8">أكثر من 20 قسم متنوع بانتظارك لتجربة فريدة!</p>
-                <Link to="/meals" className="inline-flex items-center gap-2 bg-white text-brand-primary px-8 py-3 rounded-full font-bold hover:bg-stone-100 transition-colors">
-                  تصفح الأقسام <ArrowRight size={18} />
+                <h3 className="text-5xl font-black mb-6">اكتشف <br /> المزيد</h3>
+                <p className="text-xl opacity-80 mb-10">أكثر من 20 قسم متنوع بانتظارك لتجربة فريدة!</p>
+                <Link to="/meals" className="inline-flex items-center gap-3 bg-white text-brand-primary px-10 py-4 rounded-full font-black text-lg hover:bg-brand-cream transition-colors">
+                  تصفح الأقسام <ArrowRight size={22} />
                 </Link>
               </div>
-              <Utensils className="absolute -bottom-10 -right-10 text-white/10 group-hover:scale-110 transition-transform duration-500" size={250} />
+              <Utensils className="absolute -bottom-20 -right-20 text-white/10 group-hover:scale-110 transition-transform duration-1000" size={350} />
             </motion.div>
 
             <motion.div 
-              whileHover={{ y: -10 }}
-              className="md:col-span-1 rounded-[2.5rem] overflow-hidden relative group shadow-xl"
+              whileHover={{ y: -15 }}
+              className="md:col-span-4 rounded-[40px] overflow-hidden relative group shadow-2xl"
             >
-              <img src="https://images.unsplash.com/photo-1547592166-23ac45744acd?auto=format&fit=crop&q=80&w=800" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="Soups" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent p-8 flex flex-col justify-end text-white">
-                <h3 className="text-2xl font-black">شوربات</h3>
+              <img src="https://images.unsplash.com/photo-1547592166-23ac45744acd?auto=format&fit=crop&q=80&w=800" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" alt="Soups" />
+              <div className="absolute inset-0 bg-gradient-to-t from-brand-secondary via-brand-secondary/20 to-transparent p-10 flex flex-col justify-end text-white">
+                <h3 className="text-4xl font-black">شوربات</h3>
               </div>
             </motion.div>
           </div>
@@ -482,8 +471,23 @@ export default function Home() {
                       <Clock size={18} />
                       <span>45-60 دقيقة</span>
                     </div>
-                    <button className="bg-brand-primary text-white px-8 py-3 rounded-full font-bold hover:scale-105 transition-transform shadow-lg shadow-brand-primary/30">
-                      اطلب الآن
+                    <button 
+                      onClick={() => {
+                        addToCart({
+                          id: meal.id.toString(),
+                          title: meal.name,
+                          price: parseInt(meal.price),
+                          quantity: 1,
+                          image: meal.img,
+                          chefId: "chef1", // Placeholder
+                          chefName: "شيف طبلية" // Placeholder
+                        });
+                        toast.success(`تم إضافة ${meal.name} إلى السلة`);
+                      }}
+                      className="bg-brand-primary text-white px-8 py-3 rounded-full font-bold hover:scale-105 transition-transform shadow-lg shadow-brand-primary/30 flex items-center gap-2"
+                    >
+                      <ShoppingBag size={18} />
+                      أضف للسلة
                     </button>
                   </div>
                 </div>
@@ -495,8 +499,8 @@ export default function Home() {
 
       {/* Final CTA Section */}
       <section className="py-24 bg-stone-950 relative overflow-hidden">
-        <div className="absolute inset-0 opacity-20">
-          <img src="https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&q=80&w=2000" alt="Background" className="w-full h-full object-cover" />
+        <div className="absolute inset-0 opacity-50">
+          <img src="https://images.unsplash.com/photo-1506084868730-3c2393fb993f?auto=format&fit=crop&q=80&w=2000" alt="Fresh Healthy Food Background" className="w-full h-full object-cover" />
         </div>
         <div className="max-w-7xl mx-auto px-4 relative z-10 text-center">
           <h2 className="text-5xl md:text-8xl font-black text-white mb-12 leading-tight">

@@ -5,6 +5,7 @@ import { collection, query, where, getDocs, limit, orderBy } from 'firebase/fire
 import { db, auth } from '../firebase';
 import { UserProfile, Order } from '../types';
 import { ChefHat, ShoppingBag, MapPin, Navigation } from 'lucide-react';
+import { CHEF_IMAGE_URL } from '../constants';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { motion } from 'motion/react';
 
@@ -219,7 +220,7 @@ export default function ChefMap() {
                           <div className="p-3 text-right min-w-[200px]" dir="rtl">
                             <div className="flex items-center gap-3 mb-3">
                               <img 
-                                src={chef.photoURL || `https://picsum.photos/seed/${chef.uid}/100/100`} 
+                                src={chef.photoURL || CHEF_IMAGE_URL} 
                                 alt={chef.displayName} 
                                 className="w-12 h-12 rounded-full object-cover border-2 border-brand-primary/20"
                               />

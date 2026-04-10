@@ -4,8 +4,10 @@ import { db } from '../firebase';
 import { Meal } from '../types';
 import { handleFirestoreError, OperationType } from '../lib/firestore-errors';
 import { motion, AnimatePresence } from 'motion/react';
-import { Search, Filter, Star, Clock, X, ChevronDown, SlidersHorizontal, ArrowUpDown } from 'lucide-react';
+import { Search, Filter, Star, Clock, X, ChevronDown, SlidersHorizontal, ArrowUpDown, ShoppingCart, ShoppingBag } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useCart } from '../context/CartContext';
+import { toast } from 'sonner';
 
 export default function Meals() {
   const [meals, setMeals] = useState<Meal[]>([]);
@@ -31,6 +33,7 @@ export default function Meals() {
   const [minRating, setMinRating] = useState(0);
   const [maxDeliveryTime, setMaxDeliveryTime] = useState(120);
   const [sortBy, setSortBy] = useState('newest');
+  const { addToCart } = useCart();
 
   useEffect(() => {
     const fetchMeals = async () => {
@@ -103,9 +106,10 @@ export default function Meals() {
   return (
     <div className="bg-brand-cream min-h-screen py-[100px]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="mb-12 text-center">
-          <h1 className="text-[56px] font-bold text-brand-accent mb-4">منيو طبلية</h1>
-          <p className="text-stone-500 text-xl">كل اللي نفسك فيه وأكتر.. أكل بيتي سخن وطازة بيوصلك لحد الباب.</p>
+        <div className="mb-20 text-center">
+          <span className="text-brand-primary font-black tracking-[0.3em] uppercase text-sm mb-6 block">المنيو</span>
+          <h1 className="text-6xl md:text-[100px] font-black text-brand-secondary leading-[0.9] tracking-tighter mb-8">أشهى الأكلات <br /> <span className="text-brand-primary italic font-serif">البيتي</span></h1>
+          <p className="text-stone-500 text-2xl max-w-2xl mx-auto font-medium">كل اللي نفسك فيه وأكتر.. أكل بيتي سخن وطازة بيوصلك لحد الباب.</p>
         </div>
 
         {/* Filters & Search */}
@@ -296,9 +300,30 @@ export default function Meals() {
                 transition={{ delay: i * 0.05 }}
                 className="bg-white rounded-[2rem] overflow-hidden flex flex-col shadow-[0_8px_30px_rgba(0,0,0,0.05)] hover:shadow-[0_20px_40px_rgba(0,0,0,0.1)] transition-all duration-300 border border-stone-100"
               >
-                <Link to={`/meal/${meal.id}`} className="block relative h-64 overflow-hidden">
-                  <img src={meal.image} alt={meal.title} className="w-full h-full object-cover hover:scale-110 transition-transform duration-700" referrerPolicy="no-referrer" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+                <div className="relative h-64 overflow-hidden group/img">
+                  <Link to={`/meal/${meal.id}`} className="block h-full">
+                    <img src={meal.image} alt={meal.title} className="w-full h-full object-cover group-hover/img:scale-110 transition-transform duration-700" referrerPolicy="no-referrer" />
+                  </Link>
+                  <div className="absolute inset-0 bg-black/20 opacity-0 group-hover/img:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                    <button 
+                      onClick={(e) => {
+                        e.preventDefault();
+                        addToCart({
+                          id: meal.id,
+                          title: meal.title,
+                          price: meal.price,
+                          quantity: 1,
+                          image: meal.image,
+                          chefId: meal.chefId,
+                          chefName: meal.chefName
+                        });
+                        toast.success(`تم إضافة ${meal.title} إلى السلة`);
+                      }}
+                      className="bg-white text-brand-primary p-4 rounded-full shadow-2xl hover:scale-110 transition-transform"
+                    >
+                      <ShoppingBag size={24} />
+                    </button>
+                  </div>
                   <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-4 py-1.5 rounded-full text-sm font-black text-brand-primary shadow-sm">
                     {meal.price} ج.م
                   </div>
@@ -307,7 +332,7 @@ export default function Meals() {
                       مميز
                     </div>
                   )}
-                </Link>
+                </div>
                 <div className="p-6 flex flex-col flex-grow">
                   <div className="flex justify-between items-start mb-3">
                     <Link to={`/meal/${meal.id}`} className="text-2xl font-black text-brand-accent hover:text-brand-primary transition-colors leading-tight">{meal.title}</Link>
@@ -323,9 +348,29 @@ export default function Meals() {
                     <div className="flex items-center gap-2 text-stone-400 text-sm font-black">
                       <Clock size={16} /> {meal.deliveryTime || 45} دقيقة
                     </div>
-                    <Link to={`/meal/${meal.id}`} className="bg-brand-primary text-white py-3 px-8 rounded-2xl text-sm font-black hover:bg-brand-accent transition-colors shadow-lg shadow-brand-primary/20">
-                      عرض التفاصيل
-                    </Link>
+                    <div className="flex gap-2">
+                      <Link to={`/meal/${meal.id}`} className="bg-stone-100 text-stone-600 p-3 rounded-2xl hover:bg-stone-200 transition-colors">
+                        عرض
+                      </Link>
+                      <button 
+                        onClick={() => {
+                          addToCart({
+                            id: meal.id,
+                            title: meal.title,
+                            price: meal.price,
+                            quantity: 1,
+                            image: meal.image,
+                            chefId: meal.chefId,
+                            chefName: meal.chefName
+                          });
+                          toast.success(`تم إضافة ${meal.title} إلى السلة`);
+                        }}
+                        className="bg-brand-primary text-white py-3 px-6 rounded-2xl text-sm font-black hover:bg-brand-accent transition-colors shadow-lg shadow-brand-primary/20 flex items-center gap-2"
+                      >
+                        <ShoppingCart size={18} />
+                        أضف للسلة
+                      </button>
+                    </div>
                   </div>
                 </div>
               </motion.div>
