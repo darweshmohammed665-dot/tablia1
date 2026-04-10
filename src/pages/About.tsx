@@ -10,9 +10,9 @@ export default function About() {
       <section className="relative min-h-[80vh] flex items-center overflow-hidden bg-brand-secondary">
         <div className="absolute inset-0 z-0">
           <img 
-            src="https://images.unsplash.com/photo-1547592166-23ac45744acd?auto=format&fit=crop&q=80&w=1920" 
-            alt="Artisanal Cooking Background" 
-            className="w-full h-full object-cover opacity-60"
+            src="https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&q=80&w=1920" 
+            alt="Professional Home Cooking Background" 
+            className="w-full h-full object-cover opacity-70"
             referrerPolicy="no-referrer"
           />
           <div className="absolute inset-0 bg-gradient-to-b from-brand-secondary/80 via-brand-secondary/40 to-brand-secondary"></div>

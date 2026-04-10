@@ -60,6 +60,10 @@ export default function Navbar({ user, profile }: NavbarProps) {
                 من نحن
                 <span className="absolute -bottom-1 left-0 w-0 h-1 bg-brand-primary transition-all duration-300 group-hover:w-full"></span>
               </Link>
+              <Link to="/integrals" className="relative text-brand-secondary hover:text-brand-primary transition-all font-black text-sm uppercase tracking-[0.2em] group">
+                جدول التكاملات
+                <span className="absolute -bottom-1 left-0 w-0 h-1 bg-brand-primary transition-all duration-300 group-hover:w-full"></span>
+              </Link>
             </div>
             
             <div className="flex items-center gap-6 mr-6 border-r border-brand-secondary/10 pr-6">
@@ -122,6 +126,7 @@ export default function Navbar({ user, profile }: NavbarProps) {
               <Link to="/meals" className="block text-lg text-stone-600 font-bold" onClick={() => setIsOpen(false)}>الأكلات</Link>
               <Link to="/chefs" className="block text-lg text-stone-600 font-bold" onClick={() => setIsOpen(false)}>الطهاة</Link>
               <Link to="/about" className="block text-lg text-stone-600 font-bold" onClick={() => setIsOpen(false)}>من نحن</Link>
+              <Link to="/integrals" className="block text-lg text-stone-600 font-bold" onClick={() => setIsOpen(false)}>جدول التكاملات</Link>
               <Link to="/cart" className="block text-lg text-stone-600 font-bold flex items-center justify-between" onClick={() => setIsOpen(false)}>
                 <span>السلة</span>
                 {cartCount > 0 && <span className="bg-brand-primary text-white text-xs px-2 py-1 rounded-full">{cartCount}</span>}

@@ -35,9 +35,9 @@ export default function Home() {
           className="absolute inset-0 z-0"
         >
           <img 
-            src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&q=80&w=2000" 
-            alt="Delicious Egyptian Grilled Food" 
-            className="w-full h-full object-cover opacity-60"
+            src="https://images.unsplash.com/photo-1541518763669-279f00ed4242?auto=format&fit=crop&q=80&w=2000" 
+            alt="Premium Egyptian Food Spread" 
+            className="w-full h-full object-cover opacity-70"
             referrerPolicy="no-referrer"
           />
           <div className="absolute inset-0 bg-gradient-to-b from-brand-secondary/80 via-brand-secondary/40 to-brand-secondary"></div>
@@ -499,8 +499,8 @@ export default function Home() {
 
       {/* Final CTA Section */}
       <section className="py-24 bg-stone-950 relative overflow-hidden">
-        <div className="absolute inset-0 opacity-50">
-          <img src="https://images.unsplash.com/photo-1506084868730-3c2393fb993f?auto=format&fit=crop&q=80&w=2000" alt="Fresh Healthy Food Background" className="w-full h-full object-cover" />
+        <div className="absolute inset-0 opacity-60">
+          <img src="https://images.unsplash.com/photo-1514327605112-b887c0e61c0a?auto=format&fit=crop&q=80&w=2000" alt="Artistic Spices and Ingredients" className="w-full h-full object-cover" />
         </div>
         <div className="max-w-7xl mx-auto px-4 relative z-10 text-center">
           <h2 className="text-5xl md:text-8xl font-black text-white mb-12 leading-tight">
