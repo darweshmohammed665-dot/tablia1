@@ -23,14 +23,14 @@ export default function Navbar({ user, profile }: NavbarProps) {
   };
 
   return (
-    <nav className="bg-brand-cream/70 backdrop-blur-2xl sticky top-0 z-50 border-b border-white/20 shadow-sm">
+    <nav className="bg-white/80 backdrop-blur-2xl sticky top-0 z-50 border-b border-brand-secondary/5 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-24 items-center">
+        <div className="flex justify-between h-20 items-center">
           {/* Logo */}
           <Link to="/" className="flex items-center">
             <motion.div 
               whileHover={{ scale: 1.05 }}
-              className="w-[100px] h-[80px] flex items-center justify-center overflow-hidden"
+              className="w-[100px] h-[50px] flex items-center justify-center overflow-hidden"
             >
               <img 
                 src="https://i.ibb.co/B2Fm90cV/Whats-Ap-Image-2026-04-02-at-13-09-41-1.jpg" 
@@ -42,35 +42,31 @@ export default function Navbar({ user, profile }: NavbarProps) {
           </Link>
 
           {/* Desktop Nav */}
-          <div className="hidden md:flex items-center gap-12">
-            <div className="flex items-center gap-10">
-              <Link to="/" className="relative text-brand-secondary hover:text-brand-primary transition-all font-black text-sm uppercase tracking-[0.2em] group">
+          <div className="hidden md:flex items-center gap-10">
+            <div className="flex items-center gap-8">
+              <Link to="/" className="relative text-brand-secondary hover:text-brand-primary transition-all font-bold text-sm uppercase tracking-wider group">
                 الرئيسية
-                <span className="absolute -bottom-1 left-0 w-0 h-1 bg-brand-primary transition-all duration-300 group-hover:w-full"></span>
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-brand-primary transition-all duration-300 group-hover:w-full"></span>
               </Link>
-              <Link to="/meals" className="relative text-brand-secondary hover:text-brand-primary transition-all font-black text-sm uppercase tracking-[0.2em] group">
+              <Link to="/meals" className="relative text-brand-secondary hover:text-brand-primary transition-all font-bold text-sm uppercase tracking-wider group">
                 الأكلات
-                <span className="absolute -bottom-1 left-0 w-0 h-1 bg-brand-primary transition-all duration-300 group-hover:w-full"></span>
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-brand-primary transition-all duration-300 group-hover:w-full"></span>
               </Link>
-              <Link to="/chefs" className="relative text-brand-secondary hover:text-brand-primary transition-all font-black text-sm uppercase tracking-[0.2em] group">
+              <Link to="/chefs" className="relative text-brand-secondary hover:text-brand-primary transition-all font-bold text-sm uppercase tracking-wider group">
                 الطهاة
-                <span className="absolute -bottom-1 left-0 w-0 h-1 bg-brand-primary transition-all duration-300 group-hover:w-full"></span>
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-brand-primary transition-all duration-300 group-hover:w-full"></span>
               </Link>
-              <Link to="/about" className="relative text-brand-secondary hover:text-brand-primary transition-all font-black text-sm uppercase tracking-[0.2em] group">
+              <Link to="/about" className="relative text-brand-secondary hover:text-brand-primary transition-all font-bold text-sm uppercase tracking-wider group">
                 من نحن
-                <span className="absolute -bottom-1 left-0 w-0 h-1 bg-brand-primary transition-all duration-300 group-hover:w-full"></span>
-              </Link>
-              <Link to="/join-us" className="relative text-brand-secondary hover:text-brand-primary transition-all font-black text-sm uppercase tracking-[0.2em] group">
-                انضم إلينا
-                <span className="absolute -bottom-1 left-0 w-0 h-1 bg-brand-primary transition-all duration-300 group-hover:w-full"></span>
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-brand-primary transition-all duration-300 group-hover:w-full"></span>
               </Link>
             </div>
             
-            <div className="flex items-center gap-6 mr-6 border-r border-brand-secondary/10 pr-6">
-              <Link to="/cart" className="p-3 text-brand-secondary hover:text-brand-primary relative bg-white/50 rounded-2xl transition-all border border-white/50 shadow-sm">
-                <ShoppingCart size={22} />
+            <div className="flex items-center gap-5 mr-4 border-r border-brand-secondary/10 pr-5">
+              <Link to="/cart" className="p-2.5 text-brand-secondary hover:text-brand-primary relative bg-stone-50 rounded-xl transition-all border border-stone-100 shadow-sm">
+                <ShoppingCart size={20} />
                 {cartCount > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-brand-primary text-white text-[10px] w-5 h-5 flex items-center justify-center rounded-full font-black shadow-lg shadow-brand-primary/30">
+                  <span className="absolute -top-1 -right-1 bg-brand-primary text-white text-[10px] w-4.5 h-4.5 flex items-center justify-center rounded-full font-black shadow-lg shadow-brand-primary/30">
                     {cartCount}
                   </span>
                 )}
@@ -79,27 +75,23 @@ export default function Navbar({ user, profile }: NavbarProps) {
               {user ? (
                 <div className="flex items-center gap-4">
                   {profile?.role === 'chef' && (
-                    <Link to="/dashboard" className="bg-brand-secondary text-white px-5 py-2.5 rounded-xl font-black text-sm hover:scale-105 transition-all shadow-lg shadow-brand-secondary/20">لوحة التحكم</Link>
+                    <Link to="/dashboard" className="bg-brand-secondary text-white px-5 py-2 rounded-xl font-bold text-sm hover:bg-brand-secondary/90 transition-all shadow-md">لوحة التحكم</Link>
                   )}
-                  {profile?.role === 'customer' && (
-                    <Link to="/orders" className="text-brand-secondary hover:text-brand-primary transition-colors font-black text-sm">طلباتي</Link>
-                  )}
-                  <div className="h-8 w-[1px] bg-brand-secondary/10 mx-2"></div>
-                  <Link to="/profile" className="w-12 h-12 rounded-2xl bg-white flex items-center justify-center text-brand-secondary overflow-hidden border-2 border-white shadow-xl hover:border-brand-primary transition-all">
+                  <Link to="/profile" className="w-10 h-10 rounded-xl bg-stone-50 flex items-center justify-center text-brand-secondary overflow-hidden border border-stone-100 shadow-sm hover:border-brand-primary transition-all">
                     {profile?.photoURL ? (
                       <img src={profile.photoURL} alt="Profile" className="w-full h-full object-cover" />
                     ) : (
-                      <UserIcon size={24} />
+                      <UserIcon size={20} />
                     )}
                   </Link>
-                  <button onClick={handleLogout} className="p-2 text-brand-secondary/40 hover:text-brand-primary transition-colors">
-                    <LogOut size={20} />
+                  <button onClick={handleLogout} className="p-2 text-stone-400 hover:text-brand-primary transition-colors">
+                    <LogOut size={18} />
                   </button>
                 </div>
               ) : (
-                <div className="flex items-center gap-6">
-                  <Link to="/login" className="text-brand-secondary hover:text-brand-primary font-black text-sm uppercase tracking-widest">دخول</Link>
-                  <Link to="/register" className="btn-primary py-3.5 px-8 text-sm">سجل الآن</Link>
+                <div className="flex items-center gap-5">
+                  <Link to="/login" className="text-brand-secondary hover:text-brand-primary font-bold text-sm uppercase tracking-wider">دخول</Link>
+                  <Link to="/register" className="bg-brand-primary text-white px-6 py-2.5 rounded-xl font-bold text-sm hover:bg-brand-primary/90 transition-all shadow-md">سجل الآن</Link>
                 </div>
               )}
             </div>

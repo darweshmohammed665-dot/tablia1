@@ -28,19 +28,19 @@ export default function Home() {
       </div>
 
       {/* Hero Section */}
-      <section className="relative min-h-screen overflow-hidden cool-bg flex items-center">
+      <section className="relative min-h-[80vh] overflow-hidden tablia-wood flex items-center">
         {/* Background Image with Immersive Effects */}
         <motion.div 
           style={{ y }}
           className="absolute inset-0 z-0"
         >
           <img 
-            src="https://images.unsplash.com/photo-1541518763669-279f00ed4242?auto=format&fit=crop&q=80&w=2000" 
-            alt="Premium Egyptian Food Spread" 
-            className="w-full h-full object-cover opacity-40 mix-blend-overlay"
+            src="https://images.unsplash.com/photo-1590593162211-f98f76d28ec5?auto=format&fit=crop&q=80&w=2000" 
+            alt="Traditional Egyptian Tablia Spread" 
+            className="w-full h-full object-cover opacity-60 mix-blend-overlay"
             referrerPolicy="no-referrer"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-brand-secondary/60 via-transparent to-brand-secondary/80"></div>
+          <div className="absolute inset-0 bg-gradient-to-b from-brand-secondary/80 via-brand-secondary/40 to-brand-secondary/90"></div>
         </motion.div>
 
         <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20">
@@ -55,13 +55,13 @@ export default function Home() {
                   تراث طنطا في كل لقمة
                 </span>
                 
-                <h1 className="text-[60px] md:text-[140px] font-black text-white leading-[0.85] tracking-[-0.04em] mb-10">
-                  تعبت من <br />
-                  <span className="text-brand-primary italic font-serif">أكل الشارع؟</span>
+                <h1 className="text-[60px] md:text-[120px] font-black text-white leading-[0.85] tracking-[-0.04em] mb-10">
+                  طعم البيت <br />
+                  <span className="text-brand-primary italic font-serif">على أصوله</span>
                 </h1>
                 
-                <p className="text-xl md:text-3xl text-white/70 max-w-2xl ml-auto mb-12 font-medium leading-tight">
-                  طبلية بيوصلك أكل بيت حقيقي، من مطبخ ست شاطرة، بأحسن جودة وأقل سعر ولحد باب بيتك في طنطا.
+                <p className="text-xl md:text-3xl text-white/90 max-w-2xl ml-auto mb-12 font-medium leading-tight">
+                  طبلية بيوصلك أكل بيتي حقيقي، من مطبخ ست شاطرة، بأحسن جودة وأقل سعر ولحد باب بيتك في طنطا.
                 </p>
 
                 <div className="flex flex-col md:flex-row-reverse items-center gap-6">

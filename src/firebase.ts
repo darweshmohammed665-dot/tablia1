@@ -1,45 +1,44 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth, GoogleAuthProvider, OAuthProvider } from 'firebase/auth';
-import { initializeFirestore, doc, getDocFromServer } from 'firebase/firestore';
+import { getFirestore, doc, getDocFromServer } from 'firebase/firestore';
 import { getAnalytics } from 'firebase/analytics';
 import firebaseConfig from '../firebase-applet-config.json';
 
 // Initialize Firebase SDK
 const app = initializeApp(firebaseConfig);
 
-// Initialize Firestore with settings optimized for sandboxed environments
-const databaseId = (firebaseConfig as any).firestoreDatabaseId || '(default)';
-
-export const db = initializeFirestore(app, {
-  experimentalForceLongPolling: true,
-  useFetchStreams: false,
-} as any, databaseId);
+export const db = getFirestore(app);
 
 export const auth = getAuth(app);
 export const analytics = typeof window !== 'undefined' ? getAnalytics(app) : null;
 export const googleProvider = new GoogleAuthProvider();
 export const appleProvider = new OAuthProvider('apple.com');
 
-async function testConnection(retries = 5) {
-  // Wait longer before testing to allow initialization and provisioning to settle
-  await new Promise(resolve => setTimeout(resolve, 10000));
-  
-  for (let i = 0; i < retries; i++) {
-    try {
-      console.log(`Testing Firestore connection (Attempt ${i + 1}/${retries}) to database:`, databaseId);
-      const testDoc = await getDocFromServer(doc(db, 'test', 'connection'));
-      console.log('Firestore connection test successful:', testDoc.exists());
-      return; // Success
-    } catch (error) {
-      console.error(`Firestore connection attempt ${i + 1} failed:`, error);
-      if (i < retries - 1) {
-        console.log('Retrying in 10 seconds...');
-        await new Promise(resolve => setTimeout(resolve, 10000));
-      } else {
-        if (error instanceof Error && (error.message.includes('the client is offline') || error.message.includes('Could not reach Cloud Firestore backend'))) {
-          console.error("Firestore is still unreachable after multiple attempts. This may be due to provisioning delays or network restrictions. The app will continue in offline mode.");
-        }
-      }
+export type ConnectionStatus = 'loading' | 'connected' | 'error';
+let connectionStatus: ConnectionStatus = 'loading';
+let onStatusChange: ((status: ConnectionStatus) => void) | null = null;
+
+export const getConnectionStatus = () => connectionStatus;
+export const subscribeToConnectionStatus = (cb: (status: ConnectionStatus) => void) => {
+  onStatusChange = cb;
+  cb(connectionStatus);
+  return () => { onStatusChange = null; };
+};
+
+async function testConnection() {
+  try {
+    await getDocFromServer(doc(db, 'test', 'connection'));
+    console.log('Firestore connection successful');
+    connectionStatus = 'connected';
+    onStatusChange?.('connected');
+  } catch (error) {
+    if (error instanceof Error && (error.message.includes('the client is offline') || error.message.includes('Could not reach Cloud Firestore backend') || error.message.includes('Missing or insufficient permissions'))) {
+      console.error("🔥 FIRESTORE NOT ENABLED: Please go to the Firebase Console (https://console.firebase.google.com/project/tablia1/firestore), click 'Create database', and start in Test Mode.");
+      connectionStatus = 'error';
+      onStatusChange?.('error');
+    } else {
+      console.error("Firestore connection test failed:", error);
+      // We don't set error here unless it's a definitive "not enabled" or "no permission" on the test doc
     }
   }
 }

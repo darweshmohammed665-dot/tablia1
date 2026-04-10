@@ -1,9 +1,60 @@
 import React, { useEffect, useState } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, Circle, useMap } from 'react-leaflet';
 import L from 'leaflet';
-import { collection, query, where, getDocs, limit, orderBy } from 'firebase/firestore';
+import { collection, query, where, getDocs, limit, orderBy, getDoc, doc } from 'firebase/firestore';
 import { db, auth } from '../firebase';
 import { UserProfile, Order } from '../types';
+
+enum OperationType {
+  CREATE = 'create',
+  UPDATE = 'update',
+  DELETE = 'delete',
+  LIST = 'list',
+  GET = 'get',
+  WRITE = 'write',
+}
+
+interface FirestoreErrorInfo {
+  error: string;
+  operationType: OperationType;
+  path: string | null;
+  authInfo: {
+    userId: string | undefined;
+    email: string | null | undefined;
+    emailVerified: boolean | undefined;
+    isAnonymous: boolean | undefined;
+    tenantId: string | null | undefined;
+    providerInfo: {
+      providerId: string;
+      displayName: string | null;
+      email: string | null;
+      photoUrl: string | null;
+    }[];
+  }
+}
+
+function handleFirestoreError(error: unknown, operationType: OperationType, path: string | null) {
+  const errInfo: FirestoreErrorInfo = {
+    error: error instanceof Error ? error.message : String(error),
+    authInfo: {
+      userId: auth.currentUser?.uid,
+      email: auth.currentUser?.email,
+      emailVerified: auth.currentUser?.emailVerified,
+      isAnonymous: auth.currentUser?.isAnonymous,
+      tenantId: auth.currentUser?.tenantId,
+      providerInfo: auth.currentUser?.providerData.map(provider => ({
+        providerId: provider.providerId,
+        displayName: provider.displayName,
+        email: provider.email,
+        photoUrl: provider.photoURL
+      })) || []
+    },
+    operationType,
+    path
+  }
+  console.error('Firestore Error: ', JSON.stringify(errInfo));
+  throw new Error(JSON.stringify(errInfo));
+}
 import { ChefHat, ShoppingBag, MapPin, Navigation } from 'lucide-react';
 import { CHEF_IMAGE_URL } from '../constants';
 import { renderToStaticMarkup } from 'react-dom/server';
@@ -86,7 +137,13 @@ export default function ChefMap() {
       try {
         // Fetch Chefs
         const chefsQ = query(collection(db, 'users'), where('role', '==', 'chef'));
-        const chefsSnap = await getDocs(chefsQ);
+        let chefsSnap;
+        try {
+          chefsSnap = await getDocs(chefsQ);
+        } catch (error) {
+          handleFirestoreError(error, OperationType.LIST, 'users');
+          return; // Should not reach here as handleFirestoreError throws
+        }
         const chefsData = chefsSnap.docs.map(doc => ({ uid: doc.id, ...doc.data() } as UserProfile));
         
         // Add mock coordinates for Tanta area if missing
@@ -115,27 +172,8 @@ export default function ChefMap() {
         setChefs(chefsWithCoords);
 
         // Fetch Recent Orders (to show active delivery zones)
-        // Only fetch if authenticated to avoid permission errors on public map
-        if (auth.currentUser) {
-          try {
-            const ordersQ = query(collection(db, 'orders'), orderBy('createdAt', 'desc'), limit(15));
-            const ordersSnap = await getDocs(ordersQ);
-            const ordersData = ordersSnap.docs.map(doc => {
-              const data = doc.data();
-              // Mock coordinates for orders near Tanta
-              return {
-                id: doc.id,
-                lat: center[0] + (Math.random() - 0.5) * 0.06,
-                lng: center[1] + (Math.random() - 0.5) * 0.06,
-                ...data
-              };
-            });
-            setRecentOrders(ordersData);
-          } catch (orderError) {
-            console.warn("Could not fetch orders for map (likely permission restriction):", orderError);
-            // Silently fail for orders, we still have chefs
-          }
-        }
+        // Removed global orders fetch as it violates security rules and causes permission errors.
+        setRecentOrders([]);
 
       } catch (error) {
         console.error("Error fetching map data:", error);

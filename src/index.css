@@ -3,12 +3,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
 
 @theme {
-  --color-brand-primary: #e55a8c;    /* Pink/Magenta - From Image */
-  --color-brand-secondary: #35091a;  /* Dark Maroon - From Image */
-  --color-brand-accent: #e55a8c;     /* Pink/Magenta */
-  --color-brand-cream: #ffdac7;      /* Light Peach - From Image */
-  --color-brand-peach: #ffdac7;      /* Light Peach - From Image */
-  --color-brand-text: #35091a;       /* Dark Maroon */
+  --color-brand-primary: #E63946;    /* Vibrant Red/Coral */
+  --color-brand-secondary: #1D3557;  /* Deep Navy */
+  --color-brand-accent: #A8DADC;     /* Soft Blue */
+  --color-brand-cream: #F1FAEE;      /* Minty Cream */
+  --color-brand-peach: #F8EDEB;      /* Soft Peach */
+  --color-brand-wood: #4A3728;       /* Deep Wood */
+  --color-brand-text: #1D3557;       /* Dark Navy text */
   
   --font-sans: "Outfit", ui-sans-serif, system-ui, sans-serif;
   --font-serif: "Playfair Display", ui-serif, Georgia, serif;
@@ -21,9 +22,22 @@
 
   body::before {
     content: "";
-    @apply fixed inset-0 z-[-1] opacity-[0.05] pointer-events-none;
-    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23e55a8c' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4v-4H4v4H0v2h4v4h2v-4h4v-2H6zM36 4v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-    animation: pattern-move 60s linear infinite;
+    @apply fixed inset-0 z-[-1] opacity-[0.04] pointer-events-none;
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%231D3557' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+
+  .tablia-wood {
+    background-image: url("https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&q=80&w=2000");
+    background-size: cover;
+    background-position: center;
+    position: relative;
+  }
+
+  .tablia-wood::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, rgba(29, 53, 87, 0.8), rgba(29, 53, 87, 0.4));
   }
 
   @keyframes pattern-move {
@@ -58,7 +72,7 @@
   }
 
   .cool-bg {
-    background: linear-gradient(-45deg, #35091a, #e55a8c, #35091a, #ffdac7, #e55a8c);
+    background: linear-gradient(-45deg, #222222, #FF5A5F, #222222, #FFF0ED, #FF5A5F);
     background-size: 400% 400%;
     animation: gradient 10s ease infinite;
     position: relative;
