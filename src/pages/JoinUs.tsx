@@ -19,9 +19,12 @@ export default function JoinUs() {
   };
 
   return (
-    <div className="bg-brand-cream min-h-screen">
+    <div className="bg-brand-cream min-h-screen relative">
+      {/* Background Grain Overlay */}
+      <div className="fixed inset-0 pointer-events-none z-[99] opacity-[0.03] bg-grain"></div>
+      
       {/* Hero Section */}
-      <section className="relative py-24 bg-brand-secondary text-white overflow-hidden">
+      <section className="relative py-24 bg-brand-secondary text-white overflow-hidden egyptian-pattern">
         <div className="absolute inset-0 opacity-30">
           <img 
             src="https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&q=80&w=2000" 

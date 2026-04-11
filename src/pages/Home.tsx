@@ -1,5 +1,5 @@
 import { motion, useScroll, useTransform } from 'motion/react';
-import { ShoppingBag, Clock, ArrowRight, MessageCircle, Utensils, Heart, Star, ShieldCheck, ChevronLeft, MapPin } from 'lucide-react';
+import { ShoppingBag, Clock, ArrowRight, MessageCircle, Utensils, Heart, Star, ShieldCheck, ChevronLeft, MapPin, Flame, Award, Sparkles } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import ChefMap from '../components/ChefMap';
 import { useRef } from 'react';
@@ -18,111 +18,90 @@ export default function Home() {
   const y = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
 
   return (
-    <div ref={containerRef} className="relative bg-brand-cream overflow-hidden">
-      {/* Tarsh Background Effects */}
-      <div className="fixed inset-0 z-0 pointer-events-none">
-        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-brand-primary/10 rounded-full blob"></div>
-        <div className="absolute bottom-[-10%] right-[-10%] w-[60%] h-[60%] bg-brand-secondary/10 rounded-full blob" style={{ animationDelay: '-5s' }}></div>
-        <div className="absolute top-[20%] right-[10%] w-[30%] h-[30%] bg-brand-peach/20 rounded-full blob" style={{ animationDelay: '-10s' }}></div>
-        <div className="absolute inset-0 bg-grain opacity-[0.03]"></div>
-      </div>
+    <div ref={containerRef} className="relative bg-brand-cream overflow-hidden selection:bg-brand-primary selection:text-white">
+      {/* Background Grain Overlay */}
+      <div className="fixed inset-0 pointer-events-none z-[99] opacity-[0.03] bg-grain"></div>
 
       {/* Hero Section */}
-      <section className="relative min-h-[80vh] overflow-hidden tablia-wood flex items-center">
-        {/* Background Image with Immersive Effects */}
-        <motion.div 
-          style={{ y }}
-          className="absolute inset-0 z-0"
-        >
-          <img 
-            src="https://images.unsplash.com/photo-1590593162211-f98f76d28ec5?auto=format&fit=crop&q=80&w=2000" 
-            alt="Traditional Egyptian Tablia Spread" 
-            className="w-full h-full object-cover opacity-60 mix-blend-overlay"
-            referrerPolicy="no-referrer"
-          />
-          <div className="absolute inset-0 bg-gradient-to-b from-brand-secondary/80 via-brand-secondary/40 to-brand-secondary/90"></div>
-        </motion.div>
-
-        <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20">
+      <section className="relative pt-20 pb-20 lg:pt-32 lg:pb-32 overflow-hidden bg-brand-cream flex items-center egyptian-pattern">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-            <div className="lg:col-span-8 text-right">
+            <div className="text-right lg:col-span-5 lg:order-1 order-2">
               <motion.div
                 initial={{ opacity: 0, x: 50 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
               >
-                <span className="inline-block px-6 py-2 rounded-full bg-brand-primary/20 border border-brand-primary/30 text-brand-primary text-sm font-black tracking-[0.2em] uppercase mb-8 backdrop-blur-xl">
-                  تراث طنطا في كل لقمة
-                </span>
-                
-                <h1 className="text-[60px] md:text-[120px] font-black text-white leading-[0.85] tracking-[-0.04em] mb-10">
-                  طعم البيت <br />
-                  <span className="text-brand-primary italic font-serif">على أصوله</span>
+                <h1 className="text-[50px] md:text-[80px] font-black text-brand-secondary leading-[1.1] tracking-[-0.02em] mb-6">
+                  تعبت من <br />
+                  <motion.span 
+                    animate={{ color: ['#E14F33', '#2D2D2D', '#E14F33'] }}
+                    transition={{ duration: 4, repeat: Infinity }}
+                    className="italic font-serif"
+                  >أكل الشارع؟</motion.span>
                 </h1>
                 
-                <p className="text-xl md:text-3xl text-white/90 max-w-2xl ml-auto mb-12 font-medium leading-tight">
-                  طبلية بيوصلك أكل بيتي حقيقي، من مطبخ ست شاطرة، بأحسن جودة وأقل سعر ولحد باب بيتك في طنطا.
+                <p className="text-xl md:text-2xl text-stone-600 max-w-lg ml-auto mb-6 font-medium leading-relaxed">
+                  طبلية بيوصلك أكل بيت حقيقي، من مطبخ ست شاطرة، بأحسن جودة وأقل سعر ولحد باب بيتك في طنطا.
                 </p>
 
-                <div className="flex flex-col md:flex-row-reverse items-center gap-6">
+                <p className="text-lg md:text-xl text-brand-primary max-w-lg ml-auto mb-10 font-bold leading-relaxed border-r-4 border-brand-primary pr-4">
+                  أول منصة في طنطا للأكل البيتي، مكونات مضمونة، ونضافة، وسعر على قد الإيد.
+                </p>
+
+                <div className="flex flex-col sm:flex-row-reverse items-center gap-4 justify-start">
                   <Link 
                     to="/meals" 
-                    className="btn-primary text-2xl px-12 py-6 group"
+                    className="btn-primary text-xl px-10 py-5 w-full sm:w-auto group"
                   >
-                    استكشف الأكلات
-                    <ArrowRight className="group-hover:translate-x-2 transition-transform" size={28} />
+                    اطلب دلوقتي!
+                    <ArrowRight className="group-hover:translate-x-2 transition-transform" size={24} />
                   </Link>
                   
-                  <Link 
-                    to="/about"
-                    className="px-12 py-6 rounded-[16px] border-2 border-white/10 text-white font-bold text-2xl backdrop-blur-md hover:bg-white/5 transition-all"
+                  <a 
+                    href="https://wa.me/201234567890"
+                    className="px-10 py-5 rounded-[16px] border-2 border-stone-200 text-brand-secondary font-bold text-xl hover:border-brand-primary hover:text-brand-primary transition-all w-full sm:w-auto text-center flex items-center justify-center gap-2 bg-white/50 backdrop-blur-sm"
                   >
-                    تعرف علينا
-                  </Link>
+                    اتصل بينا - واتساب
+                  </a>
                 </div>
               </motion.div>
             </div>
 
-            <div className="lg:col-span-4 hidden lg:block">
+            <div className="lg:col-span-7 lg:order-2 order-1">
               <motion.div
-                initial={{ opacity: 0, scale: 0.8, rotate: 10 }}
-                animate={{ opacity: 1, scale: 1, rotate: 0 }}
-                transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
                 className="relative"
               >
-                <div className="aspect-[3/4] rounded-[40px] overflow-hidden border-8 border-white/10 shadow-2xl rotate-3 hover:rotate-0 transition-transform duration-700 bg-brand-secondary">
+                <div className="aspect-[4/3] md:aspect-[4/3] rounded-[3rem] overflow-hidden shadow-2xl border-8 border-white">
                    <img 
-                    src={CHEF_IMAGE_URL} 
-                    className="w-full h-full object-cover object-[50%_50%] opacity-80 hover:opacity-100 transition-all duration-700"
-                    alt="Our Chefs"
+                    src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&q=80&w=1200" 
+                    className="w-full h-full object-cover animate-subtle-zoom"
+                    alt="Home Cooked Food"
+                    referrerPolicy="no-referrer"
                   />
                 </div>
-                <div className="absolute -bottom-10 -left-10 glass-card p-8 rotate-[-6deg] bg-brand-primary text-white border-none">
-                  <div className="flex items-center gap-4 mb-2">
-                    <div className="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center text-white">
-                      <Heart size={24} fill="currentColor" />
-                    </div>
-                    <span className="font-black text-xl">+12k</span>
+                {/* Floating Badges */}
+                <motion.div 
+                  animate={{ y: [0, -10, 0] }}
+                  transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                  className="absolute -top-6 -left-6 bg-white p-4 rounded-2xl shadow-xl border border-stone-100 hidden md:flex items-center gap-3"
+                >
+                  <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center text-green-600">
+                    <ShieldCheck size={20} />
                   </div>
-                  <p className="text-white/80 font-bold text-sm">طلب ناجح في طنطا</p>
-                </div>
+                  <span className="font-bold text-stone-800">نضافة مضمونة 100%</span>
+                </motion.div>
               </motion.div>
             </div>
           </div>
         </div>
-
-        {/* Scroll Indicator */}
-        <motion.div 
-          animate={{ y: [0, 10, 0] }}
-          transition={{ duration: 2, repeat: Infinity }}
-          className="absolute bottom-10 left-1/2 -translate-x-1/2 z-10 text-white/20 flex flex-col items-center gap-2"
-        >
-          <div className="w-px h-20 bg-gradient-to-b from-white/40 to-transparent"></div>
-        </motion.div>
       </section>
 
       {/* Introduction Section */}
-      <section className="relative py-24 md:py-40 bg-brand-cream z-20">
+      <section className="relative py-24 md:py-40 bg-white z-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <motion.div
@@ -131,15 +110,15 @@ export default function Home() {
               viewport={{ once: true }}
               transition={{ duration: 0.8 }}
             >
-              <span className="text-brand-primary font-bold tracking-widest uppercase text-sm mb-4 block">قصة طبلية</span>
+              <span className="text-brand-primary font-bold tracking-[0.3em] uppercase text-sm mb-4 block">قصة طبلية</span>
               <h2 className="text-4xl md:text-7xl font-black text-stone-900 mb-8 leading-tight">
                 من قلب طنطا <br />
-                <span className="text-brand-primary">لكل بيت</span>
+                <span className="text-brand-primary italic font-serif">لكل بيت</span>
               </h2>
-              <p className="text-lg md:text-xl text-stone-600 mb-10 leading-relaxed">
+              <p className="text-lg md:text-xl text-stone-600 mb-10 leading-relaxed font-medium">
                 في طنطا، كل شارع فيه بيت ريحة أكله بتجوع الجيران، وفي كل بيت ست شاطرة نفسها أكلها وحلاوة نفسها يوصلوا للناس. وفي نفس الشارع.. موظف راجع مهدود، أو أم وراها ألف حاجة، ونفسهم في لقمة بيتي ترم العظم من غير فرهدة المطبخ أو أسعار الدليفري اللي بتخلص المرتب.
                 <br /><br />
-                من هنا بدأت طبلية.. قررنا نكون حلقة الوصل اللي بتريح الطرفين. قفلنا دايرة التعب، وفتحنا مطابخ أشطر ستات في طنطا عشان تجبلك أكل بيتي بجودة عالية ونضافة وسعر على قد الإيد.
+                من هنا بدأت طبلية.. قررنا نكون حلقة الوصل اللي بتريح الطرفين. قفلنا دايرة التعب، وفتحنا مطابخ أشطر ستات في طنطا عشان تجبلك أكل بيتي بجودة عالية ونضافة وسعر على قد الإيد، وعلشان تساعد كل ست بيت نفسها تفتح مشروعها الخاص من مطبخها.
               </p>
               <div className="flex flex-wrap gap-8">
                 <div className="flex flex-col">
@@ -150,10 +129,7 @@ export default function Home() {
                   <span className="text-4xl font-black text-brand-primary">12k+</span>
                   <span className="text-stone-500 font-medium">عميل سعيد</span>
                 </div>
-                <div className="flex flex-col">
-                  <span className="text-4xl font-black text-brand-primary">4.9</span>
-                  <span className="text-stone-500 font-medium">تقييم عام</span>
-                </div>
+
               </div>
             </motion.div>
 
@@ -189,37 +165,36 @@ export default function Home() {
       </section>
 
       {/* Trust Banner */}
-      <div className="bg-brand-secondary py-4 text-white overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-center items-center gap-4 md:gap-12 text-sm md:text-lg font-medium">
-          <div className="flex items-center gap-2">
-            <ShieldCheck size={20} className="text-brand-peach" />
+      <div className="bg-brand-peach py-6 text-brand-secondary overflow-hidden border-y border-stone-200">
+        <div className="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-center items-center gap-4 md:gap-12 text-sm md:text-lg font-bold">
+          <div className="flex items-center gap-3">
+            <ShieldCheck size={24} className="text-brand-primary" />
             <span>طازج يومياً</span>
           </div>
-          <div className="hidden md:block w-px h-6 bg-white/20"></div>
-          <div className="flex items-center gap-2">
-            <Utensils size={20} className="text-brand-peach" />
+          <div className="hidden md:block w-px h-6 bg-stone-300"></div>
+          <div className="flex items-center gap-3">
+            <Utensils size={24} className="text-brand-primary" />
             <span>مطبوخ بأيادي أشطر ستات بيوت</span>
           </div>
-          <div className="hidden md:block w-px h-6 bg-white/20"></div>
-          <div className="flex items-center gap-2">
-            <ShieldCheck size={20} className="text-brand-peach" />
+          <div className="hidden md:block w-px h-6 bg-stone-300"></div>
+          <div className="flex items-center gap-3">
+            <ShieldCheck size={24} className="text-brand-primary" />
             <span>نضيف ومضمون</span>
           </div>
-          <div className="hidden md:block w-px h-6 bg-white/20"></div>
-          <div className="flex items-center gap-2">
-            <Clock size={20} className="text-brand-peach" />
+          <div className="hidden md:block w-px h-6 bg-stone-300"></div>
+          <div className="flex items-center gap-3">
+            <Clock size={24} className="text-brand-primary" />
             <span>توصيل سريع في طنطا</span>
           </div>
         </div>
       </div>
 
       {/* Features Section */}
-      <section className="py-32 bg-white">
+      <section className="py-32 bg-brand-peach/30 egyptian-pattern">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-20">
-            <span className="text-brand-primary font-bold tracking-widest uppercase text-sm mb-4 block">ليه طبلية؟</span>
             <h2 className="text-4xl md:text-6xl font-black text-stone-900 mb-6">ليه طبلية مش زي غيره؟</h2>
-            <p className="text-lg text-stone-600">أول منصة في طنطا للأكل البيتي، مكونات مضمونة، ونضافة، وسعر على قد الإيد.</p>
+            <div className="w-24 h-1 bg-brand-primary mx-auto rounded-full"></div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-5 gap-8">
@@ -236,13 +211,13 @@ export default function Home() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: idx * 0.1 }}
-                className="group p-8 rounded-3xl bg-brand-cream/50 hover:bg-brand-primary hover:text-white transition-all duration-500"
+                className="group p-8 rounded-[32px] bg-white hover:bg-brand-primary hover:text-white transition-all duration-500 shadow-xl shadow-stone-200/50 hover:shadow-brand-primary/30"
               >
-                <div className="w-16 h-16 mb-8 text-brand-primary group-hover:text-white transition-colors">
-                  <feature.icon size={64} strokeWidth={1} />
+                <div className="w-16 h-16 mb-8 text-brand-primary group-hover:text-white transition-colors bg-brand-primary/5 group-hover:bg-white/20 rounded-2xl flex items-center justify-center">
+                  <feature.icon size={32} />
                 </div>
                 <h3 className="text-2xl font-black mb-4">{feature.title}</h3>
-                <p className="text-stone-600 group-hover:text-white/80 transition-colors leading-relaxed">
+                <p className="text-stone-600 group-hover:text-white/80 transition-colors leading-relaxed font-medium">
                   {feature.desc}
                 </p>
               </motion.div>
@@ -251,49 +226,17 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Testimonial Section */}
-      <section className="py-24 bg-brand-peach/30 border-y border-stone-100">
-        <div className="max-w-4xl mx-auto px-4 text-center">
-          <h2 className="text-4xl md:text-5xl font-black text-stone-900 mb-16">
-            موثوق به من قبل أكثر من <span className="text-brand-primary">180 ألف أسرة</span>
-          </h2>
-          
-          <div className="relative px-12">
-            <div className="flex justify-center mb-6">
-              {[1, 2, 3, 4, 5].map((s) => (
-                <Star key={s} size={24} className="text-brand-primary mx-0.5" fill="currentColor" />
-              ))}
-            </div>
-            
-            <blockquote className="text-2xl md:text-3xl font-medium text-stone-700 leading-relaxed mb-8 italic">
-              "بجد يا جماعة طبلية دي اختراع! الأكل واصل سخن ونفسه يجنن، كأني باكل في بيت جدي بالظبط. طنطا فعلاً فيها حريفة."
-            </blockquote>
-            
-            <div className="text-stone-500">
-              <p className="font-bold text-lg text-brand-secondary">سارة م.</p>
-              <p>بلوجر طعام - طنطا</p>
-            </div>
-
-            <button className="absolute left-0 top-1/2 -translate-y-1/2 w-12 h-12 flex items-center justify-center rounded-full border border-stone-200 text-stone-400 hover:bg-white transition-colors">
-              <ChevronLeft size={24} />
-            </button>
-            <button className="absolute right-0 top-1/2 -translate-y-1/2 w-12 h-12 flex items-center justify-center rounded-full border border-stone-200 text-stone-400 hover:bg-white transition-colors rotate-180">
-              <ChevronLeft size={24} />
-            </button>
-          </div>
-        </div>
-      </section>
 
       {/* Trending Marquee - Global Style */}
-      <div className="bg-stone-950 py-6 md:py-10 overflow-hidden border-y border-white/10 z-30 relative">
+      <div className="bg-brand-primary py-6 md:py-8 overflow-hidden z-30 relative">
         <div className="flex whitespace-nowrap animate-marquee">
           {[...Array(10)].map((_, i) => (
             <div key={i} className="flex items-center gap-10 md:gap-20 mx-5 md:mx-10">
-              <span className="text-3xl md:text-6xl font-black text-white/10 uppercase tracking-tighter">TABLIYA TANTA</span>
-              <div className="w-2 h-2 md:w-3 md:h-3 bg-brand-primary rounded-full"></div>
-              <span className="text-3xl md:text-6xl font-black text-white uppercase tracking-tighter">أقوى أكل بيتي في مصر</span>
-              <div className="w-2 h-2 md:w-3 md:h-3 bg-brand-peach rounded-full"></div>
-              <span className="text-3xl md:text-6xl font-black text-brand-primary uppercase tracking-tighter">طنطا بتطبخ صح</span>
+              <span className="text-2xl md:text-4xl font-black text-white/30 uppercase tracking-tighter">TABLIYA TANTA</span>
+              <div className="w-2 h-2 md:w-3 md:h-3 bg-white rounded-full"></div>
+              <span className="text-2xl md:text-4xl font-black text-white uppercase tracking-tighter">أقوى أكل بيتي في مصر</span>
+              <div className="w-2 h-2 md:w-3 md:h-3 bg-brand-secondary rounded-full"></div>
+              <span className="text-2xl md:text-4xl font-black text-brand-secondary uppercase tracking-tighter">طنطا بتطبخ صح</span>
               <div className="w-2 h-2 md:w-3 md:h-3 bg-white rounded-full"></div>
             </div>
           ))}
@@ -384,7 +327,7 @@ export default function Home() {
               <h2 className="text-6xl md:text-[90px] font-black text-brand-secondary leading-[0.9] tracking-tighter">عندنا ايه <br /> النهاردة؟</h2>
             </div>
             <Link to="/meals" className="btn-secondary group">
-              عرض الكل 
+              شوف المنيو كامل 
               <ArrowRight className="group-hover:translate-x-2 transition-transform" size={20} />
             </Link>
           </div>
@@ -471,11 +414,18 @@ export default function Home() {
               <motion.div 
                 key={meal.id} 
                 whileHover={{ y: -10 }}
-                className="bg-white rounded-[2.5rem] overflow-hidden shadow-xl border border-stone-100 group"
+                className="bg-white rounded-[2.5rem] overflow-hidden shadow-xl border border-stone-100 group relative"
               >
                 <div className="aspect-[4/3] overflow-hidden relative">
                   <img src={meal.img} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt={meal.name} />
-                  <div className="absolute top-6 right-6 bg-white/90 backdrop-blur-md px-4 py-2 rounded-full font-black text-brand-primary shadow-lg">
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                  
+                  {/* Attention Grabbing Badge */}
+                  <div className="absolute top-4 right-4 bg-red-600 text-white px-4 py-1.5 rounded-full text-sm font-black shadow-lg flex items-center gap-1.5 animate-pulse">
+                    <Flame size={16} className="fill-current" /> الأكثر مبيعاً
+                  </div>
+
+                  <div className="absolute bottom-4 left-4 bg-white/95 backdrop-blur-md px-4 py-2 rounded-2xl font-black text-brand-primary shadow-lg text-lg">
                     {meal.price} ج.م
                   </div>
                 </div>
@@ -513,22 +463,83 @@ export default function Home() {
       </section>
 
       {/* Final CTA Section */}
-      <section className="py-24 bg-stone-950 relative overflow-hidden">
-        <div className="absolute inset-0 opacity-60">
-          <img src="https://images.unsplash.com/photo-1514327605112-b887c0e61c0a?auto=format&fit=crop&q=80&w=2000" alt="Artistic Spices and Ingredients" className="w-full h-full object-cover" />
-        </div>
+      <section className="py-32 bg-brand-peach relative overflow-hidden border-y border-stone-200">
         <div className="max-w-7xl mx-auto px-4 relative z-10 text-center">
-          <h2 className="text-5xl md:text-8xl font-black text-white mb-12 leading-tight">
-            سواء كنت تعبان من المطبخ، <br />
-            <span className="text-brand-primary italic font-serif">طبلية هنا.</span>
+          <h2 className="text-4xl md:text-6xl font-black text-brand-secondary mb-8 leading-tight">
+            سواء كنت تعبان من المطبخ، بعيد عن أهلك، <br />
+            <span className="text-brand-primary">أو عندك عزومة على آخر دقيقة — طبلية هنا.</span>
           </h2>
-          <div className="flex flex-col md:flex-row items-center justify-center gap-8">
-            <Link to="/meals" className="bg-brand-primary text-white px-12 py-6 rounded-full font-black text-2xl hover:scale-105 transition-transform shadow-2xl shadow-brand-primary/40">
+          <div className="flex flex-col md:flex-row items-center justify-center gap-6 mt-12">
+            <Link to="/meals" className="btn-primary text-2xl px-12 py-6">
               اطلب أكلتك دلوقتي
             </Link>
-            <a href="https://wa.me/201234567890" className="text-white font-bold text-xl border-b-2 border-brand-primary pb-1 hover:text-brand-primary transition-colors">
+            <a href="https://wa.me/201234567890" className="px-12 py-6 rounded-[16px] border-2 border-stone-300 text-brand-secondary font-bold text-2xl hover:border-brand-primary hover:text-brand-primary transition-all bg-white">
               واتساب / تليفون
             </a>
+          </div>
+        </div>
+      </section>
+
+      {/* Interactive Experience Promo */}
+      <section className="py-24 bg-brand-secondary relative overflow-hidden">
+        <div className="absolute inset-0 opacity-20">
+          <div className="w-full h-full" style={{ 
+            backgroundImage: 'radial-gradient(circle at 50% 50%, #E14F33 0%, transparent 50%)',
+            filter: 'blur(100px)'
+          }}></div>
+        </div>
+        <div className="max-w-7xl mx-auto px-4 relative z-10">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            <div className="text-right">
+              <span className="text-brand-primary font-black tracking-[0.3em] uppercase text-sm mb-6 block">تجربة فريدة</span>
+              <h2 className="text-5xl md:text-8xl font-black text-white mb-8 leading-tight">
+                تحكم في <span className="text-brand-primary italic font-serif">النجوم</span> <br /> بحركة يدك
+              </h2>
+              <p className="text-xl md:text-2xl text-white/70 mb-12 font-medium leading-relaxed">
+                جرب تقنية طبلية الجديدة للتحكم التفاعلي. استخدم كاميرا موبايلك وحرك إيدك في الهوا عشان تتحكم في سديم طبلية الذهبي. تجربة سحرية مش هتلاقيها غير عندنا.
+              </p>
+              <Link to="/interactive" className="btn-primary text-2xl px-12 py-6 inline-flex items-center gap-4 group">
+                ابدأ التجربة السحرية
+                <Sparkles className="group-hover:rotate-12 transition-transform" size={28} />
+              </Link>
+            </div>
+            <div className="relative">
+              <motion.div 
+                animate={{ y: [0, -20, 0], rotate: [0, 2, 0] }}
+                transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+                className="aspect-square rounded-[60px] bg-gradient-to-br from-brand-primary/20 to-transparent border border-white/10 backdrop-blur-3xl flex items-center justify-center p-12 overflow-hidden"
+              >
+                <div className="relative w-full h-full">
+                  {[...Array(20)].map((_, i) => (
+                    <motion.div
+                      key={i}
+                      animate={{ 
+                        scale: [1, 1.5, 1],
+                        opacity: [0.3, 0.8, 0.3],
+                        x: [0, (Math.random() - 0.5) * 100, 0],
+                        y: [0, (Math.random() - 0.5) * 100, 0]
+                      }}
+                      transition={{ 
+                        duration: 3 + Math.random() * 2, 
+                        repeat: Infinity,
+                        delay: Math.random() * 2
+                      }}
+                      className="absolute bg-brand-primary rounded-full blur-sm"
+                      style={{
+                        width: Math.random() * 10 + 5 + 'px',
+                        height: Math.random() * 10 + 5 + 'px',
+                        left: Math.random() * 100 + '%',
+                        top: Math.random() * 100 + '%'
+                      }}
+                    />
+                  ))}
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="w-48 h-48 bg-brand-primary rounded-full blur-[80px] opacity-30"></div>
+                    <span className="text-9xl">☝️</span>
+                  </div>
+                </div>
+              </motion.div>
+            </div>
           </div>
         </div>
       </section>

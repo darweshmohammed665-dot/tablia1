@@ -4,7 +4,7 @@ import { db } from '../firebase';
 import { Meal } from '../types';
 import { handleFirestoreError, OperationType } from '../lib/firestore-errors';
 import { motion, AnimatePresence } from 'motion/react';
-import { Search, Filter, Star, Clock, X, ChevronDown, SlidersHorizontal, ArrowUpDown, ShoppingCart, ShoppingBag, UtensilsCrossed, Coffee, Pizza, IceCream, Sandwich } from 'lucide-react';
+import { Search, Filter, Star, Clock, X, ChevronDown, SlidersHorizontal, ArrowUpDown, ShoppingCart, ShoppingBag, UtensilsCrossed, Coffee, Pizza, IceCream, Sandwich, Flame, Award, Sparkles, BadgeCheck } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { toast } from 'sonner';
@@ -104,12 +104,21 @@ export default function Meals() {
   };
 
   return (
-    <div className="bg-brand-cream min-h-screen py-[100px]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="bg-brand-cream min-h-screen py-[100px] relative">
+      {/* Background Grain Overlay */}
+      <div className="fixed inset-0 pointer-events-none z-[99] opacity-[0.03] bg-grain"></div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="mb-20 text-center">
           <span className="text-brand-primary font-black tracking-[0.3em] uppercase text-sm mb-6 block">المنيو</span>
           <h1 className="text-6xl md:text-[100px] font-black text-brand-secondary leading-[0.9] tracking-tighter mb-8">أشهى الأكلات <br /> <span className="text-brand-primary italic font-serif">البيتي</span></h1>
-          <p className="text-stone-500 text-2xl max-w-2xl mx-auto font-medium">كل اللي نفسك فيه وأكتر.. أكل بيتي سخن وطازة بيوصلك لحد الباب.</p>
+          <p className="text-stone-500 text-2xl max-w-2xl mx-auto font-medium mb-8">كل اللي نفسك فيه وأكتر.. أكل بيتي سخن وطازة بيوصلك لحد الباب.</p>
+          
+          <div className="inline-block px-8 py-4 bg-red-50 border-2 border-red-500 border-dashed rounded-2xl">
+            <p className="text-lg font-bold text-red-600">
+              صفحة المنيو (لسه هنضيف الوجبات بعد م ناخد التفاصيل من الطباخات)
+            </p>
+          </div>
         </div>
 
         {/* Filters & Search */}
@@ -146,10 +155,10 @@ export default function Meals() {
                   onClick={() => setSelectedCategories([cat.label])}
                   className="flex flex-col items-center gap-4 min-w-[100px] group"
                 >
-                  <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center text-4xl shadow-lg group-hover:scale-110 transition-transform border border-stone-50">
+                  <div className={`w-20 h-20 rounded-full flex items-center justify-center text-4xl shadow-lg transition-all border ${selectedCategories.includes(cat.label) ? 'bg-brand-primary border-brand-primary scale-110' : 'bg-white border-stone-50 group-hover:scale-110'}`}>
                     {cat.icon}
                   </div>
-                  <span className="font-black text-stone-600 group-hover:text-brand-primary transition-colors">{cat.label}</span>
+                  <span className={`font-black transition-colors ${selectedCategories.includes(cat.label) ? 'text-brand-primary' : 'text-stone-600 group-hover:text-brand-primary'}`}>{cat.label}</span>
                 </button>
               ))}
             </div>
@@ -371,6 +380,8 @@ export default function Meals() {
                   <Link to={`/meal/${meal.id}`} className="block h-full">
                     <img src={meal.image} alt={meal.title} className="w-full h-full object-cover group-hover/img:scale-110 transition-transform duration-700" referrerPolicy="no-referrer" />
                   </Link>
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover/img:opacity-100 transition-opacity duration-300"></div>
+                  
                   <div className="absolute inset-0 bg-black/20 opacity-0 group-hover/img:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                     <button 
                       onClick={(e) => {
@@ -391,14 +402,27 @@ export default function Meals() {
                       <ShoppingBag size={24} />
                     </button>
                   </div>
-                  <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-4 py-1.5 rounded-full text-sm font-black text-brand-primary shadow-sm">
-                    {meal.price} ج.م
-                  </div>
-                  {meal.featured && (
-                    <div className="absolute top-4 right-4 bg-brand-accent text-white px-3 py-1 rounded-full text-xs font-black uppercase tracking-widest shadow-sm">
-                      مميز
+
+                  {/* Dynamic Attention Badges based on index for visual flair */}
+                  {i % 3 === 0 && (
+                    <div className="absolute top-4 right-4 bg-red-600 text-white px-3 py-1 rounded-full text-xs font-black shadow-lg flex items-center gap-1">
+                      <Flame size={14} className="fill-current" /> الأكثر طلباً
                     </div>
                   )}
+                  {i % 3 === 1 && (
+                    <div className="absolute top-4 right-4 bg-amber-500 text-white px-3 py-1 rounded-full text-xs font-black shadow-lg flex items-center gap-1">
+                      <Award size={14} className="fill-current" /> اختيار الشيف
+                    </div>
+                  )}
+                  {i % 3 === 2 && (
+                    <div className="absolute top-4 right-4 bg-emerald-600 text-white px-3 py-1 rounded-full text-xs font-black shadow-lg flex items-center gap-1">
+                      <Sparkles size={14} className="fill-current" /> طازج 100%
+                    </div>
+                  )}
+
+                  <div className="absolute bottom-4 left-4 bg-white/95 backdrop-blur-sm px-4 py-1.5 rounded-2xl text-sm font-black text-brand-primary shadow-lg">
+                    {meal.price} ج.م
+                  </div>
                 </div>
                 <div className="p-6 flex flex-col flex-grow">
                   <div className="flex justify-between items-start mb-3">

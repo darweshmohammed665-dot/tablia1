@@ -5,7 +5,10 @@ import { CHEF_IMAGE_URL } from '../constants';
 
 export default function About() {
   return (
-    <div className="bg-brand-cream min-h-screen">
+    <div className="bg-brand-cream min-h-screen relative">
+      {/* Background Grain Overlay */}
+      <div className="fixed inset-0 pointer-events-none z-[99] opacity-[0.03] bg-grain"></div>
+      
       {/* Hero Section - Editorial Style */}
       <section className="relative min-h-[80vh] flex items-center overflow-hidden bg-brand-secondary">
         <div className="absolute inset-0 z-0">
@@ -129,13 +132,7 @@ export default function About() {
               <p className="text-stone-500">التغليف نظيف ومحكم ومناسب للتوصيل لضمان وصول الوجبة في أفضل حالة.</p>
             </div>
 
-            <div className="food-card p-[20px] group">
-              <div className="w-16 h-16 bg-brand-primary/10 rounded-2xl flex items-center justify-center text-brand-primary mb-6 group-hover:bg-brand-primary group-hover:text-white transition-colors">
-                <Star size={32} />
-              </div>
-              <h3 className="text-2xl font-bold mb-4 text-brand-secondary">تقييم مستمر</h3>
-              <p className="text-stone-500">نتابع تقييمات العملاء باستمرار بعد كل طلب لضمان استمرار الجودة.</p>
-            </div>
+
           </div>
         </div>
       </section>

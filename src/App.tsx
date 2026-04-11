@@ -75,6 +75,7 @@ import About from './pages/About';
 import FAQ from './pages/FAQ';
 import DriverTracking from './pages/DriverTracking';
 import JoinUs from './pages/JoinUs';
+import InteractiveExperience from './pages/InteractiveExperience';
 
 // Components
 import Navbar from './components/Navbar';
@@ -117,6 +118,7 @@ const AnimatedRoutes = ({ profile }: { profile: UserProfile | null }) => {
           <Route path="/faq" element={<PageWrapper><FAQ /></PageWrapper>} />
           <Route path="/driver-tracking" element={<PageWrapper><DriverTracking /></PageWrapper>} />
           <Route path="/join-us" element={<PageWrapper><JoinUs /></PageWrapper>} />
+          <Route path="/interactive" element={<InteractiveExperience />} />
           
           {/* Protected Chef Route */}
           <Route 
@@ -202,6 +204,8 @@ export default function App() {
                     <p className="font-bold text-lg leading-tight">إعداد قاعدة البيانات مطلوب (Firestore Setup Required)</p>
                     <p className="text-white/90 text-sm">
                       يبدو أن قاعدة البيانات لم يتم تفعيلها بعد. يرجى الذهاب إلى لوحة تحكم Firebase وتفعيل Cloud Firestore في "Test Mode".
+                      <br />
+                      <span className="font-bold">ملاحظة هامة:</span> إذا قمت بتفعيلها بالفعل، فقد يكون السبب هو إضافة مانع الإعلانات (AdBlocker) أو متصفح Brave. يرجى إيقافهما والمحاولة مرة أخرى.
                     </p>
                   </div>
                 </div>

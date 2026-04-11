@@ -3,13 +3,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
 
 @theme {
-  --color-brand-primary: #E63946;    /* Vibrant Red/Coral */
-  --color-brand-secondary: #1D3557;  /* Deep Navy */
-  --color-brand-accent: #A8DADC;     /* Soft Blue */
-  --color-brand-cream: #F1FAEE;      /* Minty Cream */
-  --color-brand-peach: #F8EDEB;      /* Soft Peach */
+  --color-brand-primary: #E14F33;    /* Shef Orange/Red */
+  --color-brand-secondary: #2D2D2D;  /* Soft Black */
+  --color-brand-accent: #FDEFEA;     /* Light Tint */
+  --color-brand-cream: #FFFFFF;      /* Pure White */
+  --color-brand-peach: #F9F9F9;      /* Off White */
   --color-brand-wood: #4A3728;       /* Deep Wood */
-  --color-brand-text: #1D3557;       /* Dark Navy text */
+  --color-brand-text: #2D2D2D;       /* Dark text */
   
   --font-sans: "Outfit", ui-sans-serif, system-ui, sans-serif;
   --font-serif: "Playfair Display", ui-serif, Georgia, serif;
@@ -18,12 +18,6 @@
 @layer base {
   body {
     @apply bg-brand-cream text-brand-text selection:bg-brand-primary selection:text-white font-sans relative;
-  }
-
-  body::before {
-    content: "";
-    @apply fixed inset-0 z-[-1] opacity-[0.04] pointer-events-none;
-    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%231D3557' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
   }
 
   .tablia-wood {
