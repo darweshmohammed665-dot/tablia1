@@ -110,7 +110,7 @@ export default function Meals() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="mb-20 text-center">
-          <span className="text-brand-primary font-black tracking-[0.3em] uppercase text-sm mb-6 block">المنيو</span>
+          <span className="text-brand-primary font-black tracking-[0.3em] uppercase text-sm mb-6 block">تصفح الاكلات</span>
           <h1 className="text-6xl md:text-[100px] font-black text-brand-secondary leading-[0.9] tracking-tighter mb-8">أشهى الأكلات <br /> <span className="text-brand-primary italic font-serif">البيتي</span></h1>
           <p className="text-stone-500 text-2xl max-w-2xl mx-auto font-medium mb-8">كل اللي نفسك فيه وأكتر.. أكل بيتي سخن وطازة بيوصلك لحد الباب.</p>
           
@@ -122,7 +122,7 @@ export default function Meals() {
           
           <div className="inline-block px-8 py-4 bg-red-50 border-2 border-red-500 border-dashed rounded-2xl">
             <p className="text-lg font-bold text-red-600">
-              صفحة المنيو (لسه هنضيف الوجبات بعد م ناخد التفاصيل من الطباخات)
+              صفحة تصفح الاكلات (لسه هنضيف الوجبات بعد م ناخد التفاصيل من الطباخات)
             </p>
           </div>
         </div>
@@ -363,6 +363,9 @@ export default function Meals() {
           )}
         </AnimatePresence>
 
+import { MealCard } from '../components/MealCard';
+
+// ... inside the component ...
         {loading ? (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[1, 2, 3, 4, 5, 6].map(i => (
@@ -372,102 +375,25 @@ export default function Meals() {
         ) : filteredAndSortedMeals.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {filteredAndSortedMeals.map((meal, i) => (
-              <motion.div 
-                key={meal.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.05 }}
-                className="bg-white rounded-[2rem] overflow-hidden flex flex-col shadow-[0_8px_30px_rgba(0,0,0,0.05)] hover:shadow-[0_20px_40px_rgba(0,0,0,0.1)] transition-all duration-300 border border-stone-100"
-              >
-                <div className="relative h-64 overflow-hidden group/img">
-                  <Link to={`/meal/${meal.id}`} className="block h-full">
-                    <img src={meal.image} alt={meal.title} className="w-full h-full object-cover group-hover/img:scale-110 transition-transform duration-700" referrerPolicy="no-referrer" />
-                  </Link>
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover/img:opacity-100 transition-opacity duration-300"></div>
-                  
-                  <div className="absolute inset-0 bg-black/20 opacity-0 group-hover/img:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                    <button 
-                      onClick={(e) => {
-                        e.preventDefault();
-                        addToCart({
-                          id: meal.id,
-                          title: meal.title,
-                          price: meal.price,
-                          quantity: 1,
-                          image: meal.image,
-                          chefId: meal.chefId,
-                          chefName: meal.chefName
-                        });
-                        toast.success(`تم إضافة ${meal.title} إلى السلة`);
-                      }}
-                      className="bg-white text-brand-primary p-4 rounded-full shadow-2xl hover:scale-110 transition-transform"
-                    >
-                      <ShoppingBag size={24} />
-                    </button>
+              <div key={meal.id} className="relative">
+                <MealCard meal={meal} index={i} />
+                {/* Dynamic Attention Badges based on index for visual flair */}
+                {i % 3 === 0 && (
+                  <div className="absolute top-4 right-4 bg-red-600 text-white px-3 py-1 rounded-full text-xs font-black shadow-lg flex items-center gap-1 pointer-events-none z-20">
+                    <Flame size={14} className="fill-current" /> الأكثر طلباً
                   </div>
-
-                  {/* Dynamic Attention Badges based on index for visual flair */}
-                  {i % 3 === 0 && (
-                    <div className="absolute top-4 right-4 bg-red-600 text-white px-3 py-1 rounded-full text-xs font-black shadow-lg flex items-center gap-1">
-                      <Flame size={14} className="fill-current" /> الأكثر طلباً
-                    </div>
-                  )}
-                  {i % 3 === 1 && (
-                    <div className="absolute top-4 right-4 bg-amber-500 text-white px-3 py-1 rounded-full text-xs font-black shadow-lg flex items-center gap-1">
-                      <Award size={14} className="fill-current" /> اختيار الشيف
-                    </div>
-                  )}
-                  {i % 3 === 2 && (
-                    <div className="absolute top-4 right-4 bg-emerald-600 text-white px-3 py-1 rounded-full text-xs font-black shadow-lg flex items-center gap-1">
-                      <Sparkles size={14} className="fill-current" /> طازج 100%
-                    </div>
-                  )}
-
-                  <div className="absolute bottom-4 left-4 bg-white/95 backdrop-blur-sm px-4 py-1.5 rounded-2xl text-sm font-black text-brand-primary shadow-lg">
-                    {meal.price} ج.م
+                )}
+                {i % 3 === 1 && (
+                  <div className="absolute top-4 right-4 bg-amber-500 text-white px-3 py-1 rounded-full text-xs font-black shadow-lg flex items-center gap-1 pointer-events-none z-20">
+                    <Award size={14} className="fill-current" /> اختيار الشيف
                   </div>
-                </div>
-                <div className="p-6 flex flex-col flex-grow">
-                  <div className="flex justify-between items-start mb-3">
-                    <Link to={`/meal/${meal.id}`} className="text-2xl font-black text-brand-accent hover:text-brand-primary transition-colors leading-tight">{meal.title}</Link>
-                    <div className="flex items-center gap-1 bg-brand-primary/10 px-2 py-1 rounded-lg text-brand-primary">
-                      <Star size={14} className="fill-brand-primary" />
-                      <span className="text-xs font-black">{meal.rating}</span>
-                    </div>
+                )}
+                {i % 3 === 2 && (
+                  <div className="absolute top-4 right-4 bg-emerald-600 text-white px-3 py-1 rounded-full text-xs font-black shadow-lg flex items-center gap-1 pointer-events-none z-20">
+                    <Sparkles size={14} className="fill-current" /> طازج 100%
                   </div>
-                  <p className="text-stone-500 mb-6 flex items-center gap-2 text-sm font-bold">
-                    بواسطة <Link to={`/chef/${meal.chefId}`} className="text-brand-accent hover:underline">{meal.chefName}</Link>
-                  </p>
-                  <div className="mt-auto flex items-center justify-between pt-6 border-t border-stone-100">
-                    <div className="flex items-center gap-2 text-stone-400 text-sm font-black">
-                      <Clock size={16} /> {meal.deliveryTime || 45} دقيقة
-                    </div>
-                    <div className="flex gap-2">
-                      <Link to={`/meal/${meal.id}`} className="bg-stone-100 text-stone-600 p-3 rounded-2xl hover:bg-stone-200 transition-colors">
-                        عرض
-                      </Link>
-                      <button 
-                        onClick={() => {
-                          addToCart({
-                            id: meal.id,
-                            title: meal.title,
-                            price: meal.price,
-                            quantity: 1,
-                            image: meal.image,
-                            chefId: meal.chefId,
-                            chefName: meal.chefName
-                          });
-                          toast.success(`تم إضافة ${meal.title} إلى السلة`);
-                        }}
-                        className="bg-brand-primary text-white py-3 px-6 rounded-2xl text-sm font-black hover:bg-brand-accent transition-colors shadow-lg shadow-brand-primary/20 flex items-center gap-2"
-                      >
-                        <ShoppingCart size={18} />
-                        أضف للسلة
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
+                )}
+              </div>
             ))}
           </div>
         ) : (

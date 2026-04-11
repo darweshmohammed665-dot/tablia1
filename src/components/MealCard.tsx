@@ -1,0 +1,96 @@
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import { Star, Clock, ShoppingCart, Plus } from 'lucide-react';
+import { useCart } from '../context/CartContext';
+import { toast } from 'sonner';
+
+interface MealCardProps {
+  meal: {
+    id: string | number;
+    title: string;
+    price: number;
+    image: string;
+    chefId: string;
+    chefName: string;
+    rating?: number;
+    deliveryTime?: number;
+    description?: string;
+  };
+  index?: number;
+}
+
+export const MealCard: React.FC<MealCardProps> = ({ meal, index = 0 }) => {
+  const { addToCart } = useCart();
+
+  const handleQuickAdd = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    addToCart({
+      id: meal.id.toString(),
+      title: meal.title,
+      price: meal.price,
+      quantity: 1,
+      image: meal.image,
+      chefId: meal.chefId,
+      chefName: meal.chefName
+    });
+    toast.success(`تم إضافة ${meal.title} إلى السلة`);
+  };
+
+  return (
+    <motion.div 
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: index * 0.05 }}
+      whileHover={{ y: -8 }}
+      className="bg-white rounded-[2rem] overflow-hidden flex flex-col shadow-[0_8px_30px_rgba(0,0,0,0.05)] hover:shadow-[0_20px_40px_rgba(0,0,0,0.1)] transition-all duration-300 border border-stone-100 group"
+    >
+      <div className="relative h-64 overflow-hidden group/img">
+        <Link to={`/meal/${meal.id}`} className="block h-full">
+          <img src={meal.image} alt={meal.title} className="w-full h-full object-cover group-hover/img:scale-110 transition-transform duration-700" referrerPolicy="no-referrer" />
+        </Link>
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover/img:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
+        
+        {/* Quick Add to Cart Button directly on the image */}
+        <button 
+          onClick={handleQuickAdd}
+          className="absolute bottom-4 right-4 bg-brand-primary text-white p-3 rounded-full shadow-lg hover:scale-110 hover:bg-brand-accent transition-all z-10 flex items-center justify-center"
+          title="إضافة سريعة للسلة"
+        >
+          <Plus size={24} strokeWidth={3} />
+        </button>
+
+        <div className="absolute bottom-4 left-4 bg-white/95 backdrop-blur-sm px-4 py-1.5 rounded-2xl text-sm font-black text-brand-primary shadow-lg pointer-events-none">
+          {meal.price} ج.م
+        </div>
+      </div>
+      <div className="p-6 flex flex-col flex-grow">
+        <div className="flex justify-between items-start mb-3">
+          <Link to={`/meal/${meal.id}`} className="text-2xl font-black text-brand-accent hover:text-brand-primary transition-colors leading-tight line-clamp-1">{meal.title}</Link>
+          <div className="flex items-center gap-1 bg-brand-primary/10 px-2 py-1 rounded-lg text-brand-primary shrink-0">
+            <Star size={14} className="fill-brand-primary" />
+            <span className="text-xs font-black">{meal.rating || 4.5}</span>
+          </div>
+        </div>
+        <p className="text-stone-500 mb-6 flex items-center gap-2 text-sm font-bold">
+          بواسطة <Link to={`/chef/${meal.chefId}`} className="text-brand-accent hover:underline">{meal.chefName}</Link>
+        </p>
+        <div className="mt-auto flex items-center justify-between pt-6 border-t border-stone-100">
+          <div className="flex items-center gap-2 text-stone-400 text-sm font-black">
+            <Clock size={16} /> {meal.deliveryTime || 45} دقيقة
+          </div>
+          <div className="flex gap-2">
+            <button 
+              onClick={handleQuickAdd}
+              className="w-full bg-stone-900 text-white py-2.5 px-5 rounded-2xl text-sm font-black hover:bg-brand-primary transition-colors shadow-lg flex items-center justify-center gap-2"
+            >
+              <ShoppingCart size={18} />
+              أضف للسلة
+            </button>
+          </div>
+        </div>
+      </div>
+    </motion.div>
+  );
+};

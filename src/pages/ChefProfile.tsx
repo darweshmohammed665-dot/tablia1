@@ -7,6 +7,7 @@ import { CHEF_IMAGE_URL } from '../constants';
 import { motion, AnimatePresence } from 'motion/react';
 import { MapPin, Star, ChefHat, Clock, Edit3, UtensilsCrossed, Share2, Users, ShoppingBag } from 'lucide-react';
 import ChefProfileForm from '../components/ChefProfileForm';
+import { MealCard } from '../components/MealCard';
 import { useCart } from '../context/CartContext';
 import { toast } from 'sonner';
 
@@ -176,62 +177,25 @@ export default function ChefProfile() {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {popularMeals.map((meal, i) => (
-                <motion.div
-                  key={`popular-${meal.id}`}
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.1 }}
-                  className="relative group"
-                >
-                  <div className="absolute -inset-1 bg-gradient-to-r from-brand-accent to-brand-primary rounded-[2.5rem] blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
-                  <div className="relative bg-brand-cream rounded-[2.5rem] overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300">
-                    <Link to={`/meal/${meal.id}`} className="block relative h-64 overflow-hidden">
-                      <img 
-                        src={meal.image} 
-                        alt={meal.title} 
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" 
-                        referrerPolicy="no-referrer" 
-                      />
-                      <div className="absolute top-4 right-4 bg-brand-accent text-stone-900 px-4 py-1 rounded-full text-sm font-black shadow-lg">
-                        الأكثر طلباً
-                      </div>
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
-                        <p className="text-white text-sm line-clamp-2">{meal.description}</p>
-                      </div>
-                    </Link>
-                    <div className="p-6">
-                      <div className="flex justify-between items-start mb-4">
-                        <Link to={`/meal/${meal.id}`} className="text-xl font-bold text-stone-900 hover:text-brand-primary transition-colors">{meal.title}</Link>
-                        <span className="text-brand-primary font-black text-lg">{meal.price} ج.م</span>
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-1 text-brand-accent">
-                          <Star size={16} className="fill-brand-accent" />
-                          <span className="font-bold">{meal.rating}</span>
-                        </div>
-                        <button 
-                          onClick={() => {
-                            addToCart({
-                              id: meal.id,
-                              title: meal.title,
-                              price: meal.price,
-                              quantity: 1,
-                              image: meal.image,
-                              chefId: chef.uid,
-                              chefName: chef.displayName
-                            });
-                            toast.success(`تم إضافة ${meal.title} إلى السلة`);
-                          }}
-                          className="btn-primary py-2 px-6 text-sm shadow-md hover:shadow-brand-primary/20 flex items-center gap-2"
-                        >
-                          <ShoppingBag size={16} />
-                          أضف للسلة
-                        </button>
-                      </div>
-                    </div>
+                <div key={`popular-${meal.id}`} className="relative">
+                  <MealCard 
+                    meal={{
+                      id: meal.id,
+                      title: meal.title,
+                      price: meal.price,
+                      image: meal.image,
+                      chefId: chef.uid,
+                      chefName: chef.displayName,
+                      rating: meal.rating,
+                      deliveryTime: 45,
+                      description: meal.description
+                    }}
+                    index={i}
+                  />
+                  <div className="absolute top-4 right-4 bg-brand-accent text-stone-900 px-4 py-1 rounded-full text-sm font-black shadow-lg pointer-events-none z-20">
+                    الأكثر طلباً
                   </div>
-                </motion.div>
+                </div>
               ))}
             </div>
           </div>
@@ -311,52 +275,27 @@ export default function ChefProfile() {
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {meals.length > 0 ? meals.map((meal, i) => (
-              <motion.div 
-                key={meal.id}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-                className="food-card overflow-hidden flex flex-col"
-              >
-                <Link to={`/meal/${meal.id}`} className="block relative h-56 overflow-hidden">
-                  <img src={meal.image} alt={meal.title} className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" referrerPolicy="no-referrer" />
-                  <div className="absolute top-4 left-4 bg-brand-cream/90 backdrop-blur-sm px-3 py-1 rounded-full text-sm font-bold text-brand-primary">
-                    {meal.price} ج.م
+              <div key={meal.id} className="relative">
+                <MealCard 
+                  meal={{
+                    id: meal.id,
+                    title: meal.title,
+                    price: meal.price,
+                    image: meal.image,
+                    chefId: chef.uid,
+                    chefName: chef.displayName,
+                    rating: meal.rating,
+                    deliveryTime: 45,
+                    description: meal.description
+                  }}
+                  index={i}
+                />
+                {meal.featured && (
+                  <div className="absolute top-4 right-4 bg-brand-accent text-white px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest pointer-events-none z-20">
+                    مميز
                   </div>
-                  {meal.featured && (
-                    <div className="absolute top-4 right-4 bg-brand-accent text-white px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest">
-                      مميز
-                    </div>
-                  )}
-                </Link>
-                <div className="p-[20px] flex flex-col flex-grow">
-                  <Link to={`/meal/${meal.id}`} className="text-xl font-bold text-brand-accent mb-4 hover:text-brand-primary transition-colors block">{meal.title}</Link>
-                  <div className="mt-auto flex items-center justify-between">
-                    <div className="flex items-center gap-2 text-stone-400 text-sm font-bold">
-                      <Clock size={16} /> 45 دقيقة
-                    </div>
-                    <button 
-                      onClick={() => {
-                        addToCart({
-                          id: meal.id,
-                          title: meal.title,
-                          price: meal.price,
-                          quantity: 1,
-                          image: meal.image,
-                          chefId: chef.uid,
-                          chefName: chef.displayName
-                        });
-                        toast.success(`تم إضافة ${meal.title} إلى السلة`);
-                      }}
-                      className="btn-primary py-2 px-6 text-sm flex items-center gap-2"
-                    >
-                      <ShoppingBag size={16} />
-                      أضف للسلة
-                    </button>
-                  </div>
-                </div>
-              </motion.div>
+                )}
+              </div>
             )) : (
               <div className="col-span-full text-center py-12 text-stone-400">
                 لا توجد وجبات متاحة حالياً.

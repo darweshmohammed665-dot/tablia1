@@ -2,6 +2,7 @@ import { motion, useScroll, useTransform } from 'motion/react';
 import { ShoppingBag, Clock, ArrowRight, MessageCircle, Utensils, Heart, Star, ShieldCheck, ChevronLeft, MapPin, Flame, Award, Sparkles } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import ChefMap from '../components/ChefMap';
+import { MealCard } from '../components/MealCard';
 import { useRef } from 'react';
 import { CHEF_IMAGE_URL } from '../constants';
 import { useCart } from '../context/CartContext';
@@ -222,7 +223,7 @@ export default function Home() {
                     <Star size={16} fill="currentColor" />
                     <span className="font-bold text-stone-800">4.9</span>
                   </div>
-                  <Link to="/chef/1" className="text-brand-primary font-bold text-sm">عرض المنيو</Link>
+                  <Link to="/chef/1" className="text-brand-primary font-bold text-sm">تصفح الاكلات</Link>
                 </div>
               </motion.div>
             ))}
@@ -261,11 +262,11 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row justify-between items-end mb-20 gap-8">
             <div className="text-right">
-              <span className="text-brand-primary font-black tracking-[0.3em] uppercase text-sm mb-6 block">لمحة من المنيو</span>
+              <span className="text-brand-primary font-black tracking-[0.3em] uppercase text-sm mb-6 block">لمحة من الاكلات</span>
               <h2 className="text-6xl md:text-[90px] font-black text-brand-secondary leading-[0.9] tracking-tighter">عندنا ايه <br /> النهاردة؟</h2>
             </div>
             <Link to="/meals" className="btn-secondary group">
-              شوف المنيو كامل 
+              تصفح الاكلات 
               <ArrowRight className="group-hover:translate-x-2 transition-transform" size={20} />
             </Link>
           </div>
@@ -366,7 +367,7 @@ export default function Home() {
               <p className="text-stone-500 text-xl">وجبات بيتي حقيقية بتدوب في البق</p>
             </div>
             <Link to="/meals" className="text-brand-primary font-bold flex items-center gap-2 hover:gap-4 transition-all">
-              تصفح المنيو كامل <ArrowRight size={20} />
+              تصفح الاكلات كامل <ArrowRight size={20} />
             </Link>
           </div>
 
@@ -376,40 +377,21 @@ export default function Home() {
               { id: 2, name: "فطير مشلتت بالسمن", price: 120, img: "https://images.unsplash.com/photo-1626074353765-517a681e40be?auto=format&fit=crop&q=80&w=800" },
               { id: 3, name: "بط محمر بالمرتة", price: 450, img: "https://images.unsplash.com/photo-1518492104633-130d0cc84637?auto=format&fit=crop&q=80&w=800" },
               { id: 4, name: "مكرونة بالبشاميل", price: 150, img: "https://images.unsplash.com/photo-1614961909053-2e69107699e1?auto=format&fit=crop&q=80&w=800" }
-            ].map((meal) => (
-              <motion.div 
-                key={meal.id} 
-                whileHover={{ y: -8 }}
-                className="bg-white rounded-3xl overflow-hidden shadow-sm border border-stone-100 group"
-              >
-                <div className="aspect-square overflow-hidden relative">
-                  <img src={meal.img} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt={meal.name} />
-                  <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-sm font-bold text-brand-primary shadow-sm">
-                    {meal.price} ج.م
-                  </div>
-                </div>
-                <div className="p-6">
-                  <h3 className="text-xl font-bold text-stone-900 mb-4">{meal.name}</h3>
-                  <button 
-                    onClick={() => {
-                      addToCart({
-                        id: meal.id.toString(),
-                        title: meal.name,
-                        price: meal.price,
-                        quantity: 1,
-                        image: meal.img,
-                        chefId: "chef1",
-                        chefName: "شيف طبلية"
-                      });
-                      toast.success(`تم إضافة ${meal.name} إلى السلة`);
-                    }}
-                    className="w-full bg-stone-900 text-white py-3 rounded-xl font-bold hover:bg-brand-primary transition-colors flex items-center justify-center gap-2"
-                  >
-                    <ShoppingBag size={18} />
-                    أضف للسلة
-                  </button>
-                </div>
-              </motion.div>
+            ].map((meal, i) => (
+              <MealCard 
+                key={meal.id}
+                meal={{
+                  id: meal.id,
+                  title: meal.name,
+                  price: meal.price,
+                  image: meal.img,
+                  chefId: "chef1",
+                  chefName: "شيف طبلية",
+                  rating: 4.9,
+                  deliveryTime: 45
+                }}
+                index={i}
+              />
             ))}
           </div>
         </div>
@@ -430,7 +412,7 @@ export default function Home() {
               اطلب على واتساب
             </a>
             <Link to="/meals" className="bg-transparent border-2 border-white text-white px-12 py-6 rounded-full font-black text-2xl hover:bg-white hover:text-brand-primary transition-all">
-              تصفح المنيو
+              تصفح الاكلات
             </Link>
           </div>
         </div>
