@@ -23,78 +23,51 @@ export default function Navbar({ user, profile }: NavbarProps) {
   };
 
   return (
-    <nav className="bg-white/80 backdrop-blur-2xl sticky top-0 z-50 border-b border-brand-secondary/5 shadow-sm">
+    <nav className="bg-white sticky top-0 z-50 border-b border-stone-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-20 items-center">
+        <div className="flex justify-between h-16 items-center">
           {/* Logo */}
-          <Link to="/" className="flex items-center">
-            <motion.div 
-              whileHover={{ scale: 1.05 }}
-              className="w-[100px] h-[50px] flex items-center justify-center overflow-hidden"
-            >
-              <img 
-                src="https://i.ibb.co/B2Fm90cV/Whats-Ap-Image-2026-04-02-at-13-09-41-1.jpg" 
-                alt="طبلية" 
-                className="w-full h-auto object-contain"
-                referrerPolicy="no-referrer"
-              />
-            </motion.div>
+          <Link to="/" className="flex items-center gap-2">
+            <div className="w-8 h-8 bg-brand-primary rounded-full flex items-center justify-center text-white font-serif italic text-xl">T</div>
+            <span className="text-2xl font-serif font-bold text-brand-secondary tracking-tight">طبلية</span>
           </Link>
 
           {/* Desktop Nav */}
-          <div className="hidden md:flex items-center gap-10">
-            <div className="flex items-center gap-8">
-              <Link to="/" className="relative text-brand-secondary hover:text-brand-primary transition-all font-bold text-sm uppercase tracking-wider group">
-                الرئيسية
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-brand-primary transition-all duration-300 group-hover:w-full"></span>
-              </Link>
-              <Link to="/meals" className="relative text-brand-secondary hover:text-brand-primary transition-all font-bold text-sm uppercase tracking-wider group">
-                الأكلات
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-brand-primary transition-all duration-300 group-hover:w-full"></span>
-              </Link>
-              <Link to="/chefs" className="relative text-brand-secondary hover:text-brand-primary transition-all font-bold text-sm uppercase tracking-wider group">
-                الطهاة
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-brand-primary transition-all duration-300 group-hover:w-full"></span>
-              </Link>
-              <Link to="/about" className="relative text-brand-secondary hover:text-brand-primary transition-all font-bold text-sm uppercase tracking-wider group">
-                من نحن
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-brand-primary transition-all duration-300 group-hover:w-full"></span>
-              </Link>
-            </div>
+          <div className="hidden md:flex items-center gap-8">
+            <Link to="/meals" className="text-stone-600 hover:text-brand-primary transition-colors font-medium text-sm">الأكلات</Link>
+            <Link to="/chefs" className="text-stone-600 hover:text-brand-primary transition-colors font-medium text-sm">الطهاة</Link>
+            <Link to="/about" className="text-stone-600 hover:text-brand-primary transition-colors font-medium text-sm">كيف يعمل؟</Link>
             
-            <div className="flex items-center gap-5 mr-4 border-r border-brand-secondary/10 pr-5">
-              <Link to="/cart" className="p-2.5 text-brand-secondary hover:text-brand-primary relative bg-stone-50 rounded-xl transition-all border border-stone-100 shadow-sm">
-                <ShoppingCart size={20} />
-                {cartCount > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-brand-primary text-white text-[10px] w-4.5 h-4.5 flex items-center justify-center rounded-full font-black shadow-lg shadow-brand-primary/30">
-                    {cartCount}
-                  </span>
-                )}
-              </Link>
-
-              {user ? (
-                <div className="flex items-center gap-4">
-                  {profile?.role === 'chef' && (
-                    <Link to="/dashboard" className="bg-brand-secondary text-white px-5 py-2 rounded-xl font-bold text-sm hover:bg-brand-secondary/90 transition-all shadow-md">لوحة التحكم</Link>
-                  )}
-                  <Link to="/profile" className="w-10 h-10 rounded-xl bg-stone-50 flex items-center justify-center text-brand-secondary overflow-hidden border border-stone-100 shadow-sm hover:border-brand-primary transition-all">
-                    {profile?.photoURL ? (
-                      <img src={profile.photoURL} alt="Profile" className="w-full h-full object-cover" />
-                    ) : (
-                      <UserIcon size={20} />
-                    )}
-                  </Link>
-                  <button onClick={handleLogout} className="p-2 text-stone-400 hover:text-brand-primary transition-colors">
-                    <LogOut size={18} />
-                  </button>
-                </div>
-              ) : (
-                <div className="flex items-center gap-5">
-                  <Link to="/login" className="text-brand-secondary hover:text-brand-primary font-bold text-sm uppercase tracking-wider">دخول</Link>
-                  <Link to="/register" className="bg-brand-primary text-white px-6 py-2.5 rounded-xl font-bold text-sm hover:bg-brand-primary/90 transition-all shadow-md">سجل الآن</Link>
-                </div>
+            <div className="h-6 w-px bg-stone-200 mx-2"></div>
+            
+            <Link to="/cart" className="p-2 text-stone-600 hover:text-brand-primary relative">
+              <ShoppingCart size={20} />
+              {cartCount > 0 && (
+                <span className="absolute -top-1 -right-1 bg-brand-primary text-white text-[10px] w-4 h-4 flex items-center justify-center rounded-full font-bold">
+                  {cartCount}
+                </span>
               )}
-            </div>
+            </Link>
+
+            {user ? (
+              <div className="flex items-center gap-4">
+                <Link to="/profile" className="w-8 h-8 rounded-full bg-stone-100 flex items-center justify-center text-stone-600 overflow-hidden border border-stone-200">
+                  {profile?.photoURL ? (
+                    <img src={profile.photoURL} alt="Profile" className="w-full h-full object-cover" />
+                  ) : (
+                    <UserIcon size={16} />
+                  )}
+                </Link>
+                <button onClick={handleLogout} className="text-stone-400 hover:text-red-500 transition-colors">
+                  <LogOut size={18} />
+                </button>
+              </div>
+            ) : (
+              <div className="flex items-center gap-4">
+                <Link to="/login" className="text-stone-600 hover:text-brand-primary font-medium text-sm">دخول</Link>
+                <Link to="/register" className="bg-brand-primary text-white px-5 py-2 rounded-full font-bold text-sm hover:bg-brand-primary/90 transition-all">سجل الآن</Link>
+              </div>
+            )}
           </div>
 
           {/* Mobile Menu Toggle */}

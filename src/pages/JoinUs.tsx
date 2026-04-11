@@ -55,11 +55,11 @@ export default function JoinUs() {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-8">
             {[
-              { icon: Heart, title: "دخل إضافي من بيتك", desc: "استغلي موهبتك في زيادة دخلك" },
-              { icon: Clock, title: "أنتِ اللي بتحددي مواعيدك", desc: "حرية كاملة في اختيار أوقات العمل" },
-              { icon: Utensils, title: "إحنا بنتعامل مع التوصيل", desc: "ركزي في الطبخ وسيبيلنا التوصيل" },
-              { icon: ShieldCheck, title: "تدريب مجاني", desc: "تدريب على التغليف ومعايير الجودة" },
-              { icon: MessageCircle, title: "دعم تسويقي", desc: "هنوصل أكلك لآلاف العملاء في طنطا" }
+              { icon: Heart, title: "دخل إضافي من بيتك", desc: "استغلي موهبتك في زيادة دخلك من مطبخك" },
+              { icon: Clock, title: "أنتِ اللي بتحددي مواعيدك", desc: "حرية كاملة في اختيار أوقات العمل المناسبة لكِ" },
+              { icon: Utensils, title: "إحنا بنتعامل مع التوصيل", desc: "ركزي في الطبخ وسيبيلنا التوصيل لحد باب العميل" },
+              { icon: ShieldCheck, title: "تدريب مجاني", desc: "تدريب مجاني على التغليف ومعايير الجودة والنظافة" },
+              { icon: MessageCircle, title: "دعم تسويقي", desc: "هنوصل أكلك لآلاف العملاء في طنطا وندعم مشروعك" }
             ].map((benefit, idx) => (
               <motion.div
                 key={idx}

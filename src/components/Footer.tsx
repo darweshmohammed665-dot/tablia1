@@ -27,27 +27,40 @@ export default function Footer() {
   ];
 
   return (
-    <footer className="bg-brand-secondary text-brand-cream pt-24 pb-12 relative overflow-hidden text-right">
-      {/* Decorative Background Elements */}
-      <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-brand-primary/30 to-transparent"></div>
-      <div className="absolute -top-40 -right-40 w-[600px] h-[600px] bg-brand-primary/5 rounded-full blur-[120px]"></div>
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-16 mb-24">
-          <div className="md:col-span-5">
-            <Link to="/" className="flex items-center mb-8 group">
-              <div className="w-[110px] h-[60px] flex items-center justify-center group-hover:scale-105 transition-transform duration-500 overflow-hidden">
-                <img 
-                  src="https://i.ibb.co/B2Fm90cV/Whats-Ap-Image-2026-04-02-at-13-09-41-1.jpg" 
-                  alt="طبلية" 
-                  className="w-full h-auto object-contain"
-                  referrerPolicy="no-referrer"
-                />
-              </div>
+    <footer className="bg-white text-stone-900 pt-24 pb-12 border-t border-stone-100 text-right">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-20">
+          <div className="col-span-1 md:col-span-1">
+            <Link to="/" className="flex items-center gap-2 mb-6">
+              <div className="w-8 h-8 bg-brand-primary rounded-full flex items-center justify-center text-white font-serif italic text-xl">T</div>
+              <span className="text-2xl font-serif font-bold text-brand-secondary tracking-tight">طبلية</span>
             </Link>
-            <p className="text-xl text-brand-cream/70 leading-relaxed max-w-md mb-10 font-medium">
-              طنطا كلها بتطلب من طبلية.. دوقي النفس الفلاحي اللي بيعدل المزاج وبيخلص الكلام. اطلبي دلوقتي قبل ما الكمية تخلص!
+            <p className="text-stone-500 leading-relaxed font-medium">
+              أكل بيتي حقيقي من مطابخ ستات بيوت طنطا، بيوصلك لحد بابك بكل حب ونضافة.
             </p>
+          </div>
+
+          <div>
+            <h4 className="font-bold text-stone-900 mb-6">المنصة</h4>
+            <ul className="space-y-4">
+              <li><Link to="/meals" className="text-stone-500 hover:text-brand-primary transition-colors">تصفح الأكلات</Link></li>
+              <li><Link to="/chefs" className="text-stone-500 hover:text-brand-primary transition-colors">قابل الطهاة</Link></li>
+              <li><Link to="/about" className="text-stone-500 hover:text-brand-primary transition-colors">كيف يعمل؟</Link></li>
+              <li><Link to="/join-us" className="text-stone-500 hover:text-brand-primary transition-colors">انضم كشيف</Link></li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 className="font-bold text-stone-900 mb-6">الدعم</h4>
+            <ul className="space-y-4">
+              <li><Link to="/faq" className="text-stone-500 hover:text-brand-primary transition-colors">الأسئلة الشائعة</Link></li>
+              <li><Link to="/contact" className="text-stone-500 hover:text-brand-primary transition-colors">اتصل بنا</Link></li>
+              <li><Link to="/terms" className="text-stone-500 hover:text-brand-primary transition-colors">الشروط والأحكام</Link></li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 className="font-bold text-stone-900 mb-6">تابعنا</h4>
             <div className="flex gap-4">
               {socialLinks.map(({ Icon, href }, i) => (
                 <a 
@@ -55,58 +68,22 @@ export default function Footer() {
                   href={href} 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center hover:bg-brand-primary hover:text-white transition-all duration-300 border border-white/5 shadow-lg"
+                  className="w-10 h-10 rounded-full bg-stone-100 flex items-center justify-center text-stone-600 hover:bg-brand-primary hover:text-white transition-all"
                 >
-                  <Icon size={22} />
+                  <Icon size={18} />
                 </a>
               ))}
             </div>
           </div>
-
-          <div className="md:col-span-2">
-            <h4 className="text-brand-primary font-bold text-xs mb-8 uppercase tracking-widest">المنصة</h4>
-            <ul className="space-y-4">
-              <li><Link to="/" className="text-brand-cream/60 hover:text-brand-primary transition-colors font-bold text-base">الرئيسية</Link></li>
-              <li><Link to="/about" className="text-brand-cream/60 hover:text-brand-primary transition-colors font-bold text-base">من نحن</Link></li>
-              <li><Link to="/meals" className="text-brand-cream/60 hover:text-brand-primary transition-colors font-bold text-base">تصفح الأكلات</Link></li>
-              <li><Link to="/chefs" className="text-brand-cream/60 hover:text-brand-primary transition-colors font-bold text-base">سوق الطهاة</Link></li>
-            </ul>
-          </div>
-
-          <div className="md:col-span-2">
-            <h4 className="text-brand-primary font-bold text-xs mb-8 uppercase tracking-widest">المساعدة</h4>
-            <ul className="space-y-4">
-              <li><Link to="/faq" className="text-brand-cream/60 hover:text-brand-primary transition-colors font-bold text-base">الأسئلة الشائعة</Link></li>
-              <li><Link to="/contact" className="text-brand-cream/60 hover:text-brand-primary transition-colors font-bold text-base">اتصل بنا</Link></li>
-              <li><Link to="/terms" className="text-brand-cream/60 hover:text-brand-primary transition-colors font-bold text-base">الشروط</Link></li>
-            </ul>
-          </div>
-
-          <div className="md:col-span-3">
-            <h4 className="text-brand-primary font-bold text-xs mb-8 uppercase tracking-widest">النشرة الإخبارية</h4>
-            <p className="text-brand-cream/70 mb-6 font-bold text-base">اشترك لتعرف أحدث العروض والخصومات الحصرية.</p>
-            <div className="relative">
-              <input 
-                type="email" 
-                placeholder="بريدك الإلكتروني" 
-                className="w-full bg-white/5 border border-white/10 rounded-xl py-4 px-6 focus:outline-none focus:border-brand-primary transition-all text-white font-bold text-base"
-              />
-              <button className="absolute left-2 top-2 bottom-2 bg-brand-primary text-white px-6 rounded-lg font-bold hover:bg-brand-primary/90 transition-all shadow-md">
-                إرسال
-              </button>
-            </div>
-          </div>
         </div>
 
-        <div className="pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-8">
-          <p className="text-xs font-bold text-brand-cream/40 tracking-widest">
+        <div className="pt-8 border-t border-stone-100 flex flex-col md:flex-row justify-between items-center gap-4">
+          <p className="text-sm text-stone-400">
             © {new Date().getFullYear()} طبلية طنطا. جميع الحقوق محفوظة.
           </p>
-          <div className="flex items-center gap-8">
-            <p className="text-xs font-bold text-brand-cream/40 flex items-center gap-2 tracking-widest">
-              صُنع بكل <Heart size={14} className="text-brand-primary fill-brand-primary" /> في طنطا - مصر
-            </p>
-          </div>
+          <p className="text-sm text-stone-400 flex items-center gap-1">
+            صُنع بكل <Heart size={14} className="text-brand-primary fill-brand-primary" /> في طنطا
+          </p>
         </div>
       </div>
     </footer>

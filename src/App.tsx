@@ -75,7 +75,6 @@ import About from './pages/About';
 import FAQ from './pages/FAQ';
 import DriverTracking from './pages/DriverTracking';
 import JoinUs from './pages/JoinUs';
-import InteractiveExperience from './pages/InteractiveExperience';
 
 // Components
 import Navbar from './components/Navbar';
@@ -118,7 +117,6 @@ const AnimatedRoutes = ({ profile }: { profile: UserProfile | null }) => {
           <Route path="/faq" element={<PageWrapper><FAQ /></PageWrapper>} />
           <Route path="/driver-tracking" element={<PageWrapper><DriverTracking /></PageWrapper>} />
           <Route path="/join-us" element={<PageWrapper><JoinUs /></PageWrapper>} />
-          <Route path="/interactive" element={<InteractiveExperience />} />
           
           {/* Protected Chef Route */}
           <Route 
@@ -132,6 +130,8 @@ const AnimatedRoutes = ({ profile }: { profile: UserProfile | null }) => {
     </AnimatePresence>
   );
 };
+
+import firebaseConfig from '../firebase-applet-config.json';
 
 export default function App() {
   const [user, setUser] = useState<User | null>(null);
@@ -211,7 +211,7 @@ export default function App() {
                 </div>
                 <div className="flex items-center gap-3 w-full md:w-auto">
                   <a 
-                    href="https://console.firebase.google.com/project/tablia1/firestore" 
+                    href={`https://console.firebase.google.com/project/${firebaseConfig.projectId}/firestore`} 
                     target="_blank" 
                     rel="noopener noreferrer"
                     className="flex-1 md:flex-none bg-white text-red-600 px-6 py-2 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-red-50 transition-colors whitespace-nowrap"

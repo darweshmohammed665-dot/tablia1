@@ -22,299 +22,175 @@ export default function Home() {
       {/* Background Grain Overlay */}
       <div className="fixed inset-0 pointer-events-none z-[99] opacity-[0.03] bg-grain"></div>
 
-      {/* Hero Section */}
-      <section className="relative pt-20 pb-20 lg:pt-32 lg:pb-32 overflow-hidden bg-brand-cream flex items-center egyptian-pattern">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-            <div className="text-right lg:col-span-5 lg:order-1 order-2">
-              <motion.div
-                initial={{ opacity: 0, x: 50 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-              >
-                <h1 className="text-[50px] md:text-[80px] font-black text-brand-secondary leading-[1.1] tracking-[-0.02em] mb-6">
-                  تعبت من <br />
-                  <motion.span 
-                    animate={{ color: ['#E14F33', '#2D2D2D', '#E14F33'] }}
-                    transition={{ duration: 4, repeat: Infinity }}
-                    className="italic font-serif"
-                  >أكل الشارع؟</motion.span>
-                </h1>
-                
-                <p className="text-xl md:text-2xl text-stone-600 max-w-lg ml-auto mb-6 font-medium leading-relaxed">
-                  طبلية بيوصلك أكل بيت حقيقي، من مطبخ ست شاطرة، بأحسن جودة وأقل سعر ولحد باب بيتك في طنطا.
-                </p>
-
-                <p className="text-lg md:text-xl text-brand-primary max-w-lg ml-auto mb-10 font-bold leading-relaxed border-r-4 border-brand-primary pr-4">
-                  أول منصة في طنطا للأكل البيتي، مكونات مضمونة، ونضافة، وسعر على قد الإيد.
-                </p>
-
-                <div className="flex flex-col sm:flex-row-reverse items-center gap-4 justify-start">
-                  <Link 
-                    to="/meals" 
-                    className="btn-primary text-xl px-10 py-5 w-full sm:w-auto group"
-                  >
-                    اطلب دلوقتي!
-                    <ArrowRight className="group-hover:translate-x-2 transition-transform" size={24} />
-                  </Link>
-                  
-                  <a 
-                    href="https://wa.me/201234567890"
-                    className="px-10 py-5 rounded-[16px] border-2 border-stone-200 text-brand-secondary font-bold text-xl hover:border-brand-primary hover:text-brand-primary transition-all w-full sm:w-auto text-center flex items-center justify-center gap-2 bg-white/50 backdrop-blur-sm"
-                  >
-                    اتصل بينا - واتساب
-                  </a>
-                </div>
-              </motion.div>
-            </div>
-
-            <div className="lg:col-span-7 lg:order-2 order-1">
-              <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-                className="relative"
-              >
-                <div className="aspect-[4/3] md:aspect-[4/3] rounded-[3rem] overflow-hidden shadow-2xl border-8 border-white">
-                   <img 
-                    src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&q=80&w=1200" 
-                    className="w-full h-full object-cover animate-subtle-zoom"
-                    alt="Home Cooked Food"
-                    referrerPolicy="no-referrer"
-                  />
-                </div>
-                {/* Floating Badges */}
-                <motion.div 
-                  animate={{ y: [0, -10, 0] }}
-                  transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                  className="absolute -top-6 -left-6 bg-white p-4 rounded-2xl shadow-xl border border-stone-100 hidden md:flex items-center gap-3"
-                >
-                  <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center text-green-600">
-                    <ShieldCheck size={20} />
-                  </div>
-                  <span className="font-bold text-stone-800">نضافة مضمونة 100%</span>
-                </motion.div>
-              </motion.div>
-            </div>
-          </div>
+      {/* Hero Section - Shef Style */}
+      <section className="relative h-[85vh] flex items-center justify-center overflow-hidden">
+        <div className="absolute inset-0 z-0">
+          <img 
+            src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&q=80&w=2000" 
+            className="w-full h-full object-cover"
+            alt="Egyptian Home Cooking"
+            referrerPolicy="no-referrer"
+          />
+          <div className="absolute inset-0 bg-black/40"></div>
         </div>
-      </section>
 
-      {/* Introduction Section */}
-      <section className="relative py-24 md:py-40 bg-white z-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-            <motion.div
-              initial={{ opacity: 0, x: -30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8 }}
-            >
-              <span className="text-brand-primary font-bold tracking-[0.3em] uppercase text-sm mb-4 block">قصة طبلية</span>
-              <h2 className="text-4xl md:text-7xl font-black text-stone-900 mb-8 leading-tight">
-                من قلب طنطا <br />
-                <span className="text-brand-primary italic font-serif">لكل بيت</span>
-              </h2>
-              <p className="text-lg md:text-xl text-stone-600 mb-10 leading-relaxed font-medium">
-                في طنطا، كل شارع فيه بيت ريحة أكله بتجوع الجيران، وفي كل بيت ست شاطرة نفسها أكلها وحلاوة نفسها يوصلوا للناس. وفي نفس الشارع.. موظف راجع مهدود، أو أم وراها ألف حاجة، ونفسهم في لقمة بيتي ترم العظم من غير فرهدة المطبخ أو أسعار الدليفري اللي بتخلص المرتب.
-                <br /><br />
-                من هنا بدأت طبلية.. قررنا نكون حلقة الوصل اللي بتريح الطرفين. قفلنا دايرة التعب، وفتحنا مطابخ أشطر ستات في طنطا عشان تجبلك أكل بيتي بجودة عالية ونضافة وسعر على قد الإيد، وعلشان تساعد كل ست بيت نفسها تفتح مشروعها الخاص من مطبخها.
-              </p>
-              <div className="flex flex-wrap gap-8">
-                <div className="flex flex-col">
-                  <span className="text-4xl font-black text-brand-primary">150+</span>
-                  <span className="text-stone-500 font-medium">شيف منزلي</span>
-                </div>
-                <div className="flex flex-col">
-                  <span className="text-4xl font-black text-brand-primary">12k+</span>
-                  <span className="text-stone-500 font-medium">عميل سعيد</span>
-                </div>
-
-              </div>
-            </motion.div>
-
-            <div className="relative">
-              <motion.div 
-                initial={{ opacity: 0, scale: 0.9 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                className="grid grid-cols-2 gap-4"
-              >
-                <div className="space-y-4">
-                  <div className="aspect-[4/5] rounded-3xl overflow-hidden shadow-xl">
-                    <img src={CHEF_IMAGE_URL} alt="Chef 1" className="w-full h-full object-cover object-[10%_50%] hover:scale-110 transition-transform duration-700" referrerPolicy="no-referrer" />
-                  </div>
-                  <div className="aspect-square rounded-3xl overflow-hidden shadow-xl">
-                    <img src={CHEF_IMAGE_URL} alt="Chef 2" className="w-full h-full object-cover object-[50%_50%] hover:scale-110 transition-transform duration-700" referrerPolicy="no-referrer" />
-                  </div>
-                </div>
-                <div className="pt-12 space-y-4">
-                  <div className="aspect-square rounded-3xl overflow-hidden shadow-xl">
-                    <img src={CHEF_IMAGE_URL} alt="Chef 3" className="w-full h-full object-cover object-[90%_50%] hover:scale-110 transition-transform duration-700" referrerPolicy="no-referrer" />
-                  </div>
-                  <div className="aspect-[4/5] rounded-3xl overflow-hidden shadow-xl">
-                    <img src={CHEF_IMAGE_URL} alt="Chef 4" className="w-full h-full object-cover object-[30%_50%] hover:scale-110 transition-transform duration-700" referrerPolicy="no-referrer" />
-                  </div>
-                </div>
-              </motion.div>
-              {/* Decorative Element */}
-              <div className="absolute -z-10 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-brand-primary/5 rounded-full blur-3xl"></div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Trust Banner */}
-      <div className="bg-brand-peach py-6 text-brand-secondary overflow-hidden border-y border-stone-200">
-        <div className="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-center items-center gap-4 md:gap-12 text-sm md:text-lg font-bold">
-          <div className="flex items-center gap-3">
-            <ShieldCheck size={24} className="text-brand-primary" />
-            <span>طازج يومياً</span>
-          </div>
-          <div className="hidden md:block w-px h-6 bg-stone-300"></div>
-          <div className="flex items-center gap-3">
-            <Utensils size={24} className="text-brand-primary" />
-            <span>مطبوخ بأيادي أشطر ستات بيوت</span>
-          </div>
-          <div className="hidden md:block w-px h-6 bg-stone-300"></div>
-          <div className="flex items-center gap-3">
-            <ShieldCheck size={24} className="text-brand-primary" />
-            <span>نضيف ومضمون</span>
-          </div>
-          <div className="hidden md:block w-px h-6 bg-stone-300"></div>
-          <div className="flex items-center gap-3">
-            <Clock size={24} className="text-brand-primary" />
-            <span>توصيل سريع في طنطا</span>
-          </div>
-        </div>
-      </div>
-
-      {/* Features Section */}
-      <section className="py-32 bg-brand-peach/30 egyptian-pattern">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-3xl mx-auto mb-20">
-            <h2 className="text-4xl md:text-6xl font-black text-stone-900 mb-6">ليه طبلية مش زي غيره؟</h2>
-            <div className="w-24 h-1 bg-brand-primary mx-auto rounded-full"></div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-5 gap-8">
-            {[
-              { icon: Utensils, title: "طازة مش مجمد", desc: "كل أكلة بتتطبخ من الأول عشانك" },
-              { icon: Heart, title: "أيادي ستات شاطرة", desc: "أختارنا الطباخات بعناية" },
-              { icon: ShieldCheck, title: "نضافة مضمونة", desc: "معايير نظافة صارمة ومتابعة دورية" },
-              { icon: ShoppingBag, title: "سعر على قد الإيد", desc: "أكلات بجودة عالية مقابل سعر على قد الإيد" },
-              { icon: Clock, title: "توصيل سريع في طنطا", desc: "وجبتك هتوصلك سخنة وفي ميعادها" }
-            ].map((feature, idx) => (
-              <motion.div 
-                key={idx}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: idx * 0.1 }}
-                className="group p-8 rounded-[32px] bg-white hover:bg-brand-primary hover:text-white transition-all duration-500 shadow-xl shadow-stone-200/50 hover:shadow-brand-primary/30"
-              >
-                <div className="w-16 h-16 mb-8 text-brand-primary group-hover:text-white transition-colors bg-brand-primary/5 group-hover:bg-white/20 rounded-2xl flex items-center justify-center">
-                  <feature.icon size={32} />
-                </div>
-                <h3 className="text-2xl font-black mb-4">{feature.title}</h3>
-                <p className="text-stone-600 group-hover:text-white/80 transition-colors leading-relaxed font-medium">
-                  {feature.desc}
-                </p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-
-      {/* Trending Marquee - Global Style */}
-      <div className="bg-brand-primary py-6 md:py-8 overflow-hidden z-30 relative">
-        <div className="flex whitespace-nowrap animate-marquee">
-          {[...Array(10)].map((_, i) => (
-            <div key={i} className="flex items-center gap-10 md:gap-20 mx-5 md:mx-10">
-              <span className="text-2xl md:text-4xl font-black text-white/30 uppercase tracking-tighter">TABLIYA TANTA</span>
-              <div className="w-2 h-2 md:w-3 md:h-3 bg-white rounded-full"></div>
-              <span className="text-2xl md:text-4xl font-black text-white uppercase tracking-tighter">أقوى أكل بيتي في مصر</span>
-              <div className="w-2 h-2 md:w-3 md:h-3 bg-brand-secondary rounded-full"></div>
-              <span className="text-2xl md:text-4xl font-black text-brand-secondary uppercase tracking-tighter">طنطا بتطبخ صح</span>
-              <div className="w-2 h-2 md:w-3 md:h-3 bg-white rounded-full"></div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* How it Works Section */}
-      <section className="py-24 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-20">
-            <h2 className="text-4xl md:text-6xl font-black text-stone-900 mb-4">
-              طاهٍ شخصي في <br className="md:hidden" />
-              <span className="text-brand-primary">4 خطوات بسيطة</span>
-            </h2>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {[
-              {
-                step: "1",
-                text: "يقوم فريقنا بالعثور على أفضل الطهاة المنزليين في منطقتك والتحقق من جودة مطابخهم.",
-                img: "https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&q=80&w=800"
-              },
-              {
-                step: "2",
-                text: "شاركنا تفضيلاتك وقم بمزج وتنسيق الوجبات من الطهاة المحليين كل أسبوع.",
-                img: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&q=80&w=800"
-              },
-              {
-                step: "3",
-                text: "يقوم طهاتكم بإعداد وجبات طازجة بكميات صغيرة لـ 5-10 أسر يومياً.",
-                img: "https://images.unsplash.com/photo-1594212699903-ec8a3eca50f5?auto=format&fit=crop&q=80&w=800"
-              },
-              {
-                step: "4",
-                text: "نحن نوصل إليك الطعام - ما عليك سوى تسخينه والاستمتاع بوجبات منزلية الصنع بدون أي عناء!",
-                img: "https://images.unsplash.com/photo-1547573854-74d2a71d0826?auto=format&fit=crop&q=80&w=800"
-              }
-            ].map((item, idx) => (
-              <motion.div
-                key={idx}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: idx * 0.1 }}
-                className="relative group"
-              >
-                <div className="aspect-[3/4] rounded-[2.5rem] overflow-hidden shadow-2xl mb-6">
-                  <img 
-                    src={item.img} 
-                    alt={`Step ${item.step}`} 
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                    referrerPolicy="no-referrer"
-                  />
-                </div>
-                <div className="absolute bottom-4 left-4 right-4 bg-white p-6 rounded-3xl shadow-xl border border-stone-100 translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
-                  <div className="flex gap-4 items-start">
-                    <span className="text-5xl font-black text-brand-primary leading-none">{item.step}</span>
-                    <p className="text-stone-700 font-bold leading-relaxed text-sm md:text-base">
-                      {item.text}
-                    </p>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-
+        <div className="relative z-10 text-center px-4 max-w-4xl mx-auto">
+          <motion.h1 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-5xl md:text-8xl font-serif font-bold text-white mb-8 leading-tight"
+          >
+            تعبت من أكل الشارع؟ <br />
+            <span className="italic italic-arabic text-brand-primary">طبلية بيوصلك أكل بيت حقيقي</span>
+          </motion.h1>
+          
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="text-2xl md:text-3xl text-white/90 mb-12 font-medium leading-relaxed"
+          >
+            من مطبخ ست شاطرة، بأحسن جودة وأقل سعر ولحد باب بيتك في طنطا.
+          </motion.p>
+          
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="mt-20 text-center"
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="bg-white p-2 rounded-full shadow-2xl flex items-center max-w-2xl mx-auto mb-12"
           >
-            <Link to="/meals" className="inline-flex items-center gap-3 bg-brand-primary text-white px-12 py-5 rounded-full font-black text-xl hover:scale-105 transition-transform shadow-xl">
-              استكشف خدمة التوصيل الأسبوعي
-              <ArrowRight size={24} />
+            <div className="flex-grow flex items-center px-6 gap-3 border-l border-stone-200">
+              <MapPin className="text-brand-primary" size={24} />
+              <input 
+                type="text" 
+                placeholder="دخل منطقتك في طنطا..." 
+                className="w-full py-4 outline-none text-xl font-medium text-stone-800"
+              />
+            </div>
+            <Link to="/meals" className="bg-brand-primary text-white px-10 py-4 rounded-full font-black text-xl hover:bg-brand-primary/90 transition-all">
+              اكتشف الأكل
             </Link>
           </motion.div>
+
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
+            {[
+              "طازج يومياً",
+              "مطبوخ بأيادي أشطر ستات بيوت",
+              "نضيف ومضمون",
+              "توصيل سريع في طنطا"
+            ].map((badge, i) => (
+              <div key={i} className="bg-white/10 backdrop-blur-md border border-white/20 px-4 py-2 rounded-full text-white text-sm font-bold flex items-center justify-center gap-2">
+                <ShieldCheck size={16} className="text-brand-primary" />
+                {badge}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Story Section */}
+      <section className="py-24 bg-white overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            <motion.div
+              initial={{ opacity: 0, x: 50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+            >
+              <h2 className="text-4xl md:text-6xl font-serif font-bold text-brand-secondary mb-8">قصة طبلية</h2>
+              <div className="space-y-6 text-stone-600 text-xl leading-relaxed font-medium">
+                <p>
+                  في طنطا، كل شارع فيه بيت ريحة أكله بتجوع الجيران، وفي كل بيت ست شاطرة نفسها أكلها وحلاوة نفسها يوصلوا للناس.
+                </p>
+                <p>
+                  وفي نفس الشارع.. موظف راجع مهدود، أو أم وراها ألف حاجة، ونفسهم في لقمة بيتي ترم العضم من غير فرهدة المطبخ أو أسعار الدليفري اللي بتخلص المرتب.
+                </p>
+                <p>
+                  من هنا بدأت طبلية.. قررنا نكون حلقة الوصل اللي بتريح الطرفين. قفلنا دايرة التعب، وفتحنا مطابخ أشطر ستات في طنطا عشان تجبلك أكل بيتي بجودة عالية ونضافة وسعر على قد الإيد، وعلشان تساعد كل ست بيت نفسها تفتح مشروعها الخاص من مطبخها.
+                </p>
+              </div>
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              className="relative rounded-[40px] overflow-hidden shadow-2xl aspect-square"
+            >
+              <img 
+                src="https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&q=80&w=1000" 
+                className="w-full h-full object-cover"
+                alt="Egyptian Kitchen"
+                referrerPolicy="no-referrer"
+              />
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* Meet the Chefs Section */}
+      <section className="py-24 bg-white overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="flex justify-between items-end mb-12">
+            <div className="text-right">
+              <h2 className="text-4xl md:text-5xl font-serif font-bold text-brand-secondary mb-4">قابل حريفة طنطا</h2>
+              <p className="text-stone-500 text-xl">أشطر ستات بيوت بيطبخوا بحب</p>
+            </div>
+            <Link to="/chefs" className="text-brand-primary font-bold flex items-center gap-2 hover:gap-4 transition-all">
+              عرض كل الطهاة <ArrowRight size={20} />
+            </Link>
+          </div>
+
+          <div className="flex gap-8 overflow-x-auto pb-8 no-scrollbar">
+            {[1, 2, 3, 4, 5].map((i) => (
+              <motion.div 
+                key={i}
+                whileHover={{ y: -10 }}
+                className="min-w-[300px] bg-stone-50 rounded-[32px] overflow-hidden shadow-lg border border-stone-100"
+              >
+                <div className="h-48 relative">
+                  <img src={CHEF_IMAGE_URL} className="w-full h-full object-cover" alt="Chef" referrerPolicy="no-referrer" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                  <div className="absolute bottom-4 right-4 text-white">
+                    <h3 className="font-bold text-xl">شيف فاطمة</h3>
+                    <p className="text-sm opacity-80">متخصصة في المحاشي</p>
+                  </div>
+                </div>
+                <div className="p-6 flex justify-between items-center">
+                  <div className="flex items-center gap-1 text-yellow-500">
+                    <Star size={16} fill="currentColor" />
+                    <span className="font-bold text-stone-800">4.9</span>
+                  </div>
+                  <Link to="/chef/1" className="text-brand-primary font-bold text-sm">عرض المنيو</Link>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* How it Works - Shef Style */}
+      <section className="py-24 bg-brand-cream/50">
+        <div className="max-w-7xl mx-auto px-4 text-center">
+          <h2 className="text-4xl md:text-6xl font-serif font-bold text-brand-secondary mb-20">إزاي طبلية بتشتغل؟</h2>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-16">
+            {[
+              { step: "1", title: "اختار وجبتك", desc: "تصفح مئات الوجبات البيتي من طهاة قريبين منك.", icon: Utensils },
+              { step: "2", title: "اطلب أسبوعك", desc: "حدد الوجبات اللي محتاجها للأسبوع كله في طلب واحد.", icon: Clock },
+              { step: "3", title: "استمتع بالأكل", desc: "وجباتك هتوصلك طازجة، سخن واستمتع بطعم البيت.", icon: Heart }
+            ].map((item, idx) => (
+              <div key={idx} className="relative">
+                <div className="w-24 h-24 bg-white rounded-full shadow-xl flex items-center justify-center mx-auto mb-8 text-brand-primary">
+                  <item.icon size={40} />
+                </div>
+                <h3 className="text-2xl font-bold mb-4">{item.title}</h3>
+                <p className="text-stone-600 text-lg leading-relaxed">{item.desc}</p>
+                {idx < 2 && (
+                  <div className="hidden lg:block absolute top-12 -left-8 w-16 h-px bg-stone-300"></div>
+                )}
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -392,69 +268,84 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Trending Meals */}
-      <section className="py-32 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
+      {/* Why Tablia Section */}
+      <section className="py-24 bg-white">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-serif font-bold text-brand-secondary">ليه طبلية مش زي غيره؟</h2>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-5 gap-8">
+            {[
+              { title: "طازة مش مجمد", desc: "كل أكلة بتتطبخ من الأول عشانك يوم بيوم.", icon: Utensils },
+              { title: "أيادي ستات شاطرة", desc: "أختارنا الطباخات بعناية لضمان النفس الحلو.", icon: Award },
+              { title: "نضافة مضمونة", desc: "بنفتش على كل مطبخ وبنتأكد من أعلى معايير النضافة.", icon: ShieldCheck },
+              { title: "سعر على قد الإيد", desc: "أكلات بجودة عالية مقابل سعر يناسب ميزانيتك.", icon: Sparkles },
+              { title: "توصيل سريع في طنطا", desc: "فريق توصيل مدرب بيوصلك الأكل سخن ومحفوظ صح.", icon: Clock }
+            ].map((item, i) => (
+              <div key={i} className="text-center group">
+                <div className="w-20 h-20 bg-brand-cream rounded-3xl flex items-center justify-center mx-auto mb-6 text-brand-primary group-hover:bg-brand-primary group-hover:text-white transition-all duration-500">
+                  <item.icon size={36} />
+                </div>
+                <h3 className="text-xl font-bold mb-3">{item.title}</h3>
+                <p className="text-stone-500 font-medium leading-relaxed">{item.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Trending Meals - Shef Grid Style */}
+      <section className="py-24 bg-stone-50">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="flex justify-between items-end mb-12">
             <div className="text-right">
-              <span className="text-brand-primary font-bold tracking-widest uppercase text-sm mb-4 block">الأكثر طلباً</span>
-              <h2 className="text-5xl md:text-7xl font-black text-stone-900">تريند النهاردة 🔥</h2>
+              <h2 className="text-4xl md:text-5xl font-serif font-bold text-brand-secondary mb-4">أشهر الأكلات النهاردة</h2>
+              <p className="text-stone-500 text-xl">وجبات بيتي حقيقية بتدوب في البق</p>
             </div>
             <Link to="/meals" className="text-brand-primary font-bold flex items-center gap-2 hover:gap-4 transition-all">
-              عرض كل الوجبات <ArrowRight size={20} />
+              تصفح المنيو كامل <ArrowRight size={20} />
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8">
             {[
-              { id: 1, name: "صينية محشي مشكل", price: "180", img: "https://images.unsplash.com/photo-1541518763669-27fef04b14ea?auto=format&fit=crop&q=80&w=800" },
-              { id: 2, name: "فطير مشلتت بالسمن", price: "120", img: "https://images.unsplash.com/photo-1626074353765-517a681e40be?auto=format&fit=crop&q=80&w=800" },
-              { id: 3, name: "بط محمر بالمرتة", price: "450", img: "https://images.unsplash.com/photo-1518492104633-130d0cc84637?auto=format&fit=crop&q=80&w=800" }
+              { id: 1, name: "صينية محشي مشكل", price: 180, img: "https://images.unsplash.com/photo-1541518763669-27fef04b14ea?auto=format&fit=crop&q=80&w=800" },
+              { id: 2, name: "فطير مشلتت بالسمن", price: 120, img: "https://images.unsplash.com/photo-1626074353765-517a681e40be?auto=format&fit=crop&q=80&w=800" },
+              { id: 3, name: "بط محمر بالمرتة", price: 450, img: "https://images.unsplash.com/photo-1518492104633-130d0cc84637?auto=format&fit=crop&q=80&w=800" },
+              { id: 4, name: "مكرونة بالبشاميل", price: 150, img: "https://images.unsplash.com/photo-1614961909053-2e69107699e1?auto=format&fit=crop&q=80&w=800" }
             ].map((meal) => (
               <motion.div 
                 key={meal.id} 
-                whileHover={{ y: -10 }}
-                className="bg-white rounded-[2.5rem] overflow-hidden shadow-xl border border-stone-100 group relative"
+                whileHover={{ y: -8 }}
+                className="bg-white rounded-3xl overflow-hidden shadow-sm border border-stone-100 group"
               >
-                <div className="aspect-[4/3] overflow-hidden relative">
-                  <img src={meal.img} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt={meal.name} />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                  
-                  {/* Attention Grabbing Badge */}
-                  <div className="absolute top-4 right-4 bg-red-600 text-white px-4 py-1.5 rounded-full text-sm font-black shadow-lg flex items-center gap-1.5 animate-pulse">
-                    <Flame size={16} className="fill-current" /> الأكثر مبيعاً
-                  </div>
-
-                  <div className="absolute bottom-4 left-4 bg-white/95 backdrop-blur-md px-4 py-2 rounded-2xl font-black text-brand-primary shadow-lg text-lg">
+                <div className="aspect-square overflow-hidden relative">
+                  <img src={meal.img} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt={meal.name} />
+                  <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-sm font-bold text-brand-primary shadow-sm">
                     {meal.price} ج.م
                   </div>
                 </div>
-                <div className="p-8">
-                  <h3 className="text-2xl font-black text-stone-900 mb-6">{meal.name}</h3>
-                  <div className="flex justify-between items-center">
-                    <div className="flex items-center gap-2 text-stone-500 font-medium">
-                      <Clock size={18} />
-                      <span>45-60 دقيقة</span>
-                    </div>
-                    <button 
-                      onClick={() => {
-                        addToCart({
-                          id: meal.id.toString(),
-                          title: meal.name,
-                          price: parseInt(meal.price),
-                          quantity: 1,
-                          image: meal.img,
-                          chefId: "chef1", // Placeholder
-                          chefName: "شيف طبلية" // Placeholder
-                        });
-                        toast.success(`تم إضافة ${meal.name} إلى السلة`);
-                      }}
-                      className="bg-brand-primary text-white px-8 py-3 rounded-full font-bold hover:scale-105 transition-transform shadow-lg shadow-brand-primary/30 flex items-center gap-2"
-                    >
-                      <ShoppingBag size={18} />
-                      أضف للسلة
-                    </button>
-                  </div>
+                <div className="p-6">
+                  <h3 className="text-xl font-bold text-stone-900 mb-4">{meal.name}</h3>
+                  <button 
+                    onClick={() => {
+                      addToCart({
+                        id: meal.id.toString(),
+                        title: meal.name,
+                        price: meal.price,
+                        quantity: 1,
+                        image: meal.img,
+                        chefId: "chef1",
+                        chefName: "شيف طبلية"
+                      });
+                      toast.success(`تم إضافة ${meal.name} إلى السلة`);
+                    }}
+                    className="w-full bg-stone-900 text-white py-3 rounded-xl font-bold hover:bg-brand-primary transition-colors flex items-center justify-center gap-2"
+                  >
+                    <ShoppingBag size={18} />
+                    أضف للسلة
+                  </button>
                 </div>
               </motion.div>
             ))}
@@ -462,129 +353,50 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Final CTA Section */}
-      <section className="py-32 bg-brand-peach relative overflow-hidden border-y border-stone-200">
-        <div className="max-w-7xl mx-auto px-4 relative z-10 text-center">
-          <h2 className="text-4xl md:text-6xl font-black text-brand-secondary mb-8 leading-tight">
-            سواء كنت تعبان من المطبخ، بعيد عن أهلك، <br />
-            <span className="text-brand-primary">أو عندك عزومة على آخر دقيقة — طبلية هنا.</span>
+      {/* Final CTA Section - Shef Style */}
+      <section className="py-32 bg-brand-primary relative overflow-hidden">
+        <div className="max-w-4xl mx-auto px-4 relative z-10 text-center text-white">
+          <h2 className="text-4xl md:text-7xl font-serif font-bold mb-8 leading-tight">
+            سواء كنت تعبان من المطبخ، بعيد عن أهلك، أو عندك عزومة على آخر دقيقة — طبلية هنا.
           </h2>
-          <div className="flex flex-col md:flex-row items-center justify-center gap-6 mt-12">
-            <Link to="/meals" className="btn-primary text-2xl px-12 py-6">
-              اطلب أكلتك دلوقتي
-            </Link>
-            <a href="https://wa.me/201234567890" className="px-12 py-6 rounded-[16px] border-2 border-stone-300 text-brand-secondary font-bold text-2xl hover:border-brand-primary hover:text-brand-primary transition-all bg-white">
-              واتساب / تليفون
+          <p className="text-xl md:text-2xl mb-12 opacity-90 font-medium">
+            اطلب أكلتك دلوقتي — واتساب / تليفون
+          </p>
+          <div className="flex flex-col md:flex-row items-center justify-center gap-6">
+            <a href="https://wa.me/201234567890" target="_blank" rel="noopener noreferrer" className="bg-white text-brand-primary px-12 py-6 rounded-full font-black text-2xl hover:scale-105 transition-transform shadow-2xl flex items-center gap-3">
+              <MessageCircle size={28} />
+              اطلب على واتساب
             </a>
+            <Link to="/meals" className="bg-transparent border-2 border-white text-white px-12 py-6 rounded-full font-black text-2xl hover:bg-white hover:text-brand-primary transition-all">
+              تصفح المنيو
+            </Link>
           </div>
         </div>
       </section>
 
-      {/* Interactive Experience Promo */}
-      <section className="py-24 bg-brand-secondary relative overflow-hidden">
-        <div className="absolute inset-0 opacity-20">
-          <div className="w-full h-full" style={{ 
-            backgroundImage: 'radial-gradient(circle at 50% 50%, #E14F33 0%, transparent 50%)',
-            filter: 'blur(100px)'
-          }}></div>
-        </div>
-        <div className="max-w-7xl mx-auto px-4 relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-            <div className="text-right">
-              <span className="text-brand-primary font-black tracking-[0.3em] uppercase text-sm mb-6 block">تجربة فريدة</span>
-              <h2 className="text-5xl md:text-8xl font-black text-white mb-8 leading-tight">
-                تحكم في <span className="text-brand-primary italic font-serif">النجوم</span> <br /> بحركة يدك
-              </h2>
-              <p className="text-xl md:text-2xl text-white/70 mb-12 font-medium leading-relaxed">
-                جرب تقنية طبلية الجديدة للتحكم التفاعلي. استخدم كاميرا موبايلك وحرك إيدك في الهوا عشان تتحكم في سديم طبلية الذهبي. تجربة سحرية مش هتلاقيها غير عندنا.
-              </p>
-              <Link to="/interactive" className="btn-primary text-2xl px-12 py-6 inline-flex items-center gap-4 group">
-                ابدأ التجربة السحرية
-                <Sparkles className="group-hover:rotate-12 transition-transform" size={28} />
-              </Link>
-            </div>
-            <div className="relative">
-              <motion.div 
-                animate={{ y: [0, -20, 0], rotate: [0, 2, 0] }}
-                transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-                className="aspect-square rounded-[60px] bg-gradient-to-br from-brand-primary/20 to-transparent border border-white/10 backdrop-blur-3xl flex items-center justify-center p-12 overflow-hidden"
-              >
-                <div className="relative w-full h-full">
-                  {[...Array(20)].map((_, i) => (
-                    <motion.div
-                      key={i}
-                      animate={{ 
-                        scale: [1, 1.5, 1],
-                        opacity: [0.3, 0.8, 0.3],
-                        x: [0, (Math.random() - 0.5) * 100, 0],
-                        y: [0, (Math.random() - 0.5) * 100, 0]
-                      }}
-                      transition={{ 
-                        duration: 3 + Math.random() * 2, 
-                        repeat: Infinity,
-                        delay: Math.random() * 2
-                      }}
-                      className="absolute bg-brand-primary rounded-full blur-sm"
-                      style={{
-                        width: Math.random() * 10 + 5 + 'px',
-                        height: Math.random() * 10 + 5 + 'px',
-                        left: Math.random() * 100 + '%',
-                        top: Math.random() * 100 + '%'
-                      }}
-                    />
-                  ))}
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="w-48 h-48 bg-brand-primary rounded-full blur-[80px] opacity-30"></div>
-                    <span className="text-9xl">☝️</span>
-                  </div>
-                </div>
-              </motion.div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* FAQ Section */}
+      {/* FAQ Section - Shef Style */}
       <section className="py-24 bg-white">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-4xl mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-6xl font-black text-stone-900 mb-4">الأسئلة الشائعة</h2>
-            <p className="text-stone-500 text-xl">كل ما تحتاج معرفته عن تجربة طبلية</p>
+            <h2 className="text-4xl md:text-5xl font-serif font-bold text-brand-secondary mb-4">عندك استفسار؟</h2>
+            <p className="text-stone-500 text-xl">كل اللي محتاج تعرفه عن طبلية</p>
           </div>
 
-          <div className="space-y-4">
+          <div className="space-y-6">
             {[
-              { q: "كيف تعمل منصة طبلية؟", a: "طبلية هي منصة رائدة تربطكم بنخبة من أمهر الطهاة المنزليين في طنطا، حيث يتم إعداد وجباتكم طازجة وبأعلى معايير الجودة." },
-              { q: "ما هي خيارات التوصيل المتاحة؟", a: "نحن نوفر خيارات توصيل مرنة تشمل التوصيل الفوري أو الجدولة المسبقة لوجبات الأسبوع بالكامل لتناسب جدولكم المزدحم." },
-              { q: "كيف نضمن جودة الطهاة؟", a: "نطبق معايير اختيار دقيقة تشمل فحص المهارات والالتزام الصارم ببروتوكولات النظافة والسلامة الغذائية في كافة المطابخ." },
-              { q: "هل يمكنني تخصيص طلبي؟", a: "بالتأكيد، تمنحكم طبلية حرية اختيار وتنسيق وجبات من طهاة مختلفين، مع إمكانية التواصل المباشر لمناقشة أي تفضيلات خاصة." }
+              { q: "إزاي بضمن إن الأكل نضيف؟", a: "كل شيف في طبلية بيعدي بمراحل تفتيش دقيقة على مطبخه، وبنتابع معاهم معايير النضافة العالمية بشكل دوري." },
+              { q: "ممكن أطلب من أكتر من شيف في نفس المرة؟", a: "طبعاً! طبلية بتسمحلك تجمع وجباتك المفضلة من كذا شيف ويوصلولك كلهم في ميعاد واحد." },
+              { q: "الأكل بيوصل سخن؟", a: "أكيد، فريق التوصيل بتاعنا بيستخدم شنط حرارية مخصوصة عشان الأكل يوصلك كأنه لسه طالع من الفرن." }
             ].map((faq, idx) => (
-              <motion.div 
-                key={idx}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: idx * 0.1 }}
-                className="bg-brand-cream/30 rounded-3xl p-8 border border-stone-100"
-              >
-                <h3 className="text-xl font-bold text-brand-accent mb-4">{faq.q}</h3>
-                <p className="text-stone-600 leading-relaxed">{faq.a}</p>
-              </motion.div>
+              <div key={idx} className="p-8 bg-stone-50 rounded-3xl border border-stone-100">
+                <h3 className="text-xl font-bold text-stone-900 mb-4">{faq.q}</h3>
+                <p className="text-stone-600 font-medium leading-relaxed">{faq.a}</p>
+              </div>
             ))}
           </div>
-
-          <div className="mt-12 text-center flex flex-col items-center gap-6">
-            <Link to="/faq" className="inline-flex items-center gap-2 text-brand-primary font-bold hover:gap-4 transition-all">
-              عرض كل الأسئلة <ArrowRight size={20} />
-            </Link>
-            
-            <div className="mt-8 p-8 bg-brand-cream/50 rounded-[2rem] border border-stone-100 max-w-lg w-full">
-              <p className="text-stone-500 font-bold mb-4 uppercase tracking-wider">لسه عندك أسئلة؟</p>
-              <button className="w-full flex items-center justify-center gap-3 bg-white border-2 border-stone-100 text-brand-accent py-4 rounded-2xl font-bold hover:border-brand-primary hover:text-brand-primary transition-all shadow-sm">
-                <MessageCircle size={20} />
-                تحدث معنا الآن
-              </button>
-            </div>
+          
+          <div className="mt-12 text-center">
+            <Link to="/faq" className="text-brand-primary font-bold hover:underline">عرض كل الأسئلة الشائعة</Link>
           </div>
         </div>
       </section>

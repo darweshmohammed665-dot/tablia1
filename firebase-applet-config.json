@@ -1,9 +1,10 @@
 {
-  "projectId": "tablia1",
-  "appId": "1:200294393742:web:90ee1f789ec7555e9466df",
-  "apiKey": "AIzaSyBH4EdSShprQx0TRzvDYD7l-V6siw-RGdc",
-  "authDomain": "tablia1.firebaseapp.com",
-  "storageBucket": "tablia1.firebasestorage.app",
-  "messagingSenderId": "200294393742",
-  "measurementId": "G-FLWXGQ2CPZ"
+  "projectId": "gen-lang-client-0024315906",
+  "appId": "1:758296187274:web:1a1c618b5bfc8e74feb873",
+  "apiKey": "AIzaSyDQHUWL7_dajJ7V0__8TBvwecS9uiyiFWc",
+  "authDomain": "gen-lang-client-0024315906.firebaseapp.com",
+  "firestoreDatabaseId": "ai-studio-94469f20-71e9-404b-abc8-2b8bc56334cd",
+  "storageBucket": "gen-lang-client-0024315906.firebasestorage.app",
+  "messagingSenderId": "758296187274",
+  "measurementId": ""
 }

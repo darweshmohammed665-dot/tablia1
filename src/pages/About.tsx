@@ -1,5 +1,5 @@
 import { motion } from 'motion/react';
-import { Heart, ShieldCheck, Utensils, Users, MapPin, Star } from 'lucide-react';
+import { Heart, ShieldCheck, Utensils, Users, MapPin, Star, Flame } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { CHEF_IMAGE_URL } from '../constants';
 
@@ -99,40 +99,22 @@ export default function About() {
             <p className="text-stone-500 text-xl">نحن نلتزم بأعلى المعايير لضمان تجربة طعام آمنة ومميزة</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="food-card p-[20px] group">
-              <div className="w-16 h-16 bg-brand-primary/10 rounded-2xl flex items-center justify-center text-brand-primary mb-6 group-hover:bg-brand-primary group-hover:text-white transition-colors">
-                <Users size={32} />
+          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-8">
+            {[
+              { title: "اختيار دقيق للطهاة", desc: "كل طباخة بتعدي على مقابلة شخصية ومراجعة نظافة مطبخها.", icon: Users },
+              { title: "مكونات طازجة يومياً", desc: "المكونات بتتجاب طازجة كل يوم — مفيش مجمد أو قديم.", icon: Utensils },
+              { title: "طهي عند الطلب", desc: "مفيش أكل جاهز — كل أكلة بتتطبخ بعد الطلب لضمان النفس.", icon: Flame },
+              { title: "تغليف محكم ونظيف", desc: "التغليف نظيف ومحكم ومناسب للتوصيل لضمان الجودة.", icon: ShieldCheck },
+              { title: "تقييم مستمر", desc: "تقييم مستمر من العملاء بعد كل طلب لضمان استمرار التميز.", icon: Star }
+            ].map((item, i) => (
+              <div key={i} className="food-card p-[20px] group text-center">
+                <div className="w-16 h-16 bg-brand-primary/10 rounded-2xl flex items-center justify-center text-brand-primary mx-auto mb-6 group-hover:bg-brand-primary group-hover:text-white transition-colors">
+                  <item.icon size={32} />
+                </div>
+                <h3 className="text-xl font-bold mb-4 text-brand-secondary">{item.title}</h3>
+                <p className="text-stone-500 text-sm">{item.desc}</p>
               </div>
-              <h3 className="text-2xl font-bold mb-4 text-brand-secondary">اختيار دقيق للطهاة</h3>
-              <p className="text-stone-500">كل طباخة بتعدي على مقابلة شخصية ومراجعة نظافة مطبخها قبل الانضمام إلينا.</p>
-            </div>
-
-            <div className="food-card p-[20px] group">
-              <div className="w-16 h-16 bg-brand-secondary/10 rounded-2xl flex items-center justify-center text-brand-secondary mb-6 group-hover:bg-brand-secondary group-hover:text-white transition-colors">
-                <Utensils size={32} />
-              </div>
-              <h3 className="text-2xl font-bold mb-4 text-brand-secondary">مكونات طازجة يومياً</h3>
-              <p className="text-stone-500">المكونات بتتجاب طازجة كل يوم — مفيش مجمد أو قديم في مطابخنا.</p>
-            </div>
-
-            <div className="food-card p-[20px] group">
-              <div className="w-16 h-16 bg-brand-primary/10 rounded-2xl flex items-center justify-center text-brand-primary mb-6 group-hover:bg-brand-primary group-hover:text-white transition-colors">
-                <ShieldCheck size={32} />
-              </div>
-              <h3 className="text-2xl font-bold mb-4 text-brand-secondary">طهي عند الطلب</h3>
-              <p className="text-stone-500">مفيش أكل جاهز — كل أكلة بتتطبخ بعد الطلب لضمان وصولها طازجة تماماً.</p>
-            </div>
-
-            <div className="food-card p-[20px] group">
-              <div className="w-16 h-16 bg-brand-secondary/10 rounded-2xl flex items-center justify-center text-brand-secondary mb-6 group-hover:bg-brand-secondary group-hover:text-white transition-colors">
-                <ShieldCheck size={32} />
-              </div>
-              <h3 className="text-2xl font-bold mb-4 text-brand-secondary">تغليف محكم ونظيف</h3>
-              <p className="text-stone-500">التغليف نظيف ومحكم ومناسب للتوصيل لضمان وصول الوجبة في أفضل حالة.</p>
-            </div>
-
-
+            ))}
           </div>
         </div>
       </section>

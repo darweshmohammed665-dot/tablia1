@@ -7,7 +7,7 @@ import firebaseConfig from '../firebase-applet-config.json';
 // Initialize Firebase SDK
 const app = initializeApp(firebaseConfig);
 
-export const db = getFirestore(app);
+export const db = getFirestore(app, firebaseConfig.firestoreDatabaseId);
 
 export const auth = getAuth(app);
 export const analytics = typeof window !== 'undefined' ? getAnalytics(app) : null;
@@ -33,7 +33,7 @@ async function testConnection() {
     onStatusChange?.('connected');
   } catch (error) {
     if (error instanceof Error && (error.message.includes('the client is offline') || error.message.includes('Could not reach Cloud Firestore backend') || error.message.includes('Missing or insufficient permissions'))) {
-      console.error("🔥 FIRESTORE NOT ENABLED: Please go to the Firebase Console (https://console.firebase.google.com/project/tablia1/firestore), click 'Create database', and start in Test Mode.");
+      console.error(`🔥 FIRESTORE NOT ENABLED: Please go to the Firebase Console (https://console.firebase.google.com/project/${firebaseConfig.projectId}/firestore), click 'Create database', and start in Test Mode.`);
       connectionStatus = 'error';
       onStatusChange?.('error');
     } else {

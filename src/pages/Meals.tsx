@@ -94,7 +94,7 @@ export default function Meals() {
     return result;
   }, [meals, searchTerm, selectedCategories, priceRange, minRating, maxDeliveryTime, sortBy]);
 
-  const categories = ['الكل', 'محاشي', 'مشويات', 'مكرونات', 'حلويات', 'مخبوزات', 'أكل صحي'];
+  const categories = ['الكل', 'أكلات رئيسية', 'شوربة وأطباق جانبية', 'حلويات', 'الوجبات الأسبوعية'];
 
   const resetFilters = () => {
     setPriceRange([0, 1000]);
@@ -113,6 +113,12 @@ export default function Meals() {
           <span className="text-brand-primary font-black tracking-[0.3em] uppercase text-sm mb-6 block">المنيو</span>
           <h1 className="text-6xl md:text-[100px] font-black text-brand-secondary leading-[0.9] tracking-tighter mb-8">أشهى الأكلات <br /> <span className="text-brand-primary italic font-serif">البيتي</span></h1>
           <p className="text-stone-500 text-2xl max-w-2xl mx-auto font-medium mb-8">كل اللي نفسك فيه وأكتر.. أكل بيتي سخن وطازة بيوصلك لحد الباب.</p>
+          
+          <div className="inline-block px-8 py-4 bg-brand-primary/10 border-2 border-brand-primary border-dashed rounded-2xl mb-8">
+            <p className="text-lg font-bold text-brand-primary">
+              الوجبات الأسبوعية — للطلاب والموظفين: اشترك في الباقة الأسبوعية ووفر أكتر!
+            </p>
+          </div>
           
           <div className="inline-block px-8 py-4 bg-red-50 border-2 border-red-500 border-dashed rounded-2xl">
             <p className="text-lg font-bold text-red-600">
@@ -142,13 +148,10 @@ export default function Meals() {
             <h3 className="text-2xl font-black text-brand-accent">ماذا تشتهي اليوم؟</h3>
             <div className="flex gap-8 overflow-x-auto pb-4 scrollbar-hide">
               {[
-                { id: 'burger', label: 'البرجر', icon: '🍔' },
-                { id: 'shawarma', label: 'شاورما', icon: '🌯' },
-                { id: 'coffee', label: 'شاي وقهوة', icon: '☕' },
-                { id: 'chicken', label: 'دجاج مقلي', icon: '🍗' },
-                { id: 'sweets', label: 'الحلويات', icon: '🍰' },
-                { id: 'pizza', label: 'بيتزا', icon: '🍕' },
-                { id: 'pasta', label: 'مكرونة', icon: '🍝' }
+                { id: 'main', label: 'أكلات رئيسية', icon: '🥘' },
+                { id: 'soup', label: 'شوربة وأطباق جانبية', icon: '🥣' },
+                { id: 'sweets', label: 'حلويات', icon: '🍰' },
+                { id: 'weekly', label: 'الوجبات الأسبوعية', icon: '📅' }
               ].map((cat) => (
                 <button 
                   key={cat.id}
