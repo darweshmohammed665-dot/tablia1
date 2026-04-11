@@ -65,7 +65,7 @@ export default function LoadingScreen() {
           transition={{ delay: 0.3 }}
           className="text-center"
         >
-          <h2 className="text-3xl font-black text-brand-accent mb-2">طبلية</h2>
+          <img src="https://i.ibb.co/3y9wLQc5/1775915563891.png" alt="طبلية" className="h-16 w-auto mx-auto mb-4" referrerPolicy="no-referrer" />
           <div className="flex gap-1 justify-center">
             {[0, 1, 2].map((i) => (
               <motion.div

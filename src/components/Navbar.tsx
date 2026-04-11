@@ -28,8 +28,7 @@ export default function Navbar({ user, profile }: NavbarProps) {
         <div className="flex justify-between h-16 items-center">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-brand-primary rounded-full flex items-center justify-center text-white font-serif italic text-xl">T</div>
-            <span className="text-2xl font-serif font-bold text-brand-secondary tracking-tight">طبلية</span>
+            <img src="https://i.ibb.co/3y9wLQc5/1775915563891.png" alt="طبلية" className="h-10 w-auto" referrerPolicy="no-referrer" />
           </Link>
 
           {/* Desktop Nav */}

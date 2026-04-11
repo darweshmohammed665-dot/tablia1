@@ -32,8 +32,7 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-20">
           <div className="col-span-1 md:col-span-1">
             <Link to="/" className="flex items-center gap-2 mb-6">
-              <div className="w-8 h-8 bg-brand-primary rounded-full flex items-center justify-center text-white font-serif italic text-xl">T</div>
-              <span className="text-2xl font-serif font-bold text-brand-secondary tracking-tight">طبلية</span>
+              <img src="https://i.ibb.co/3y9wLQc5/1775915563891.png" alt="طبلية" className="h-12 w-auto" referrerPolicy="no-referrer" />
             </Link>
             <p className="text-stone-500 leading-relaxed font-medium">
               أكل بيتي حقيقي من مطابخ ستات بيوت طنطا، بيوصلك لحد بابك بكل حب ونضافة.
