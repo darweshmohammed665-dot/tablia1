@@ -88,6 +88,68 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Categories & Search Tags Section */}
+      <section className="py-12 bg-white border-b border-stone-100">
+        <div className="max-w-7xl mx-auto px-4">
+          {/* What are you craving today? */}
+          <div className="mb-12">
+            <h2 className="text-2xl font-black text-stone-900 mb-6 text-right">ماذا تشتهي اليوم؟</h2>
+            <div className="flex gap-6 overflow-x-auto pb-4 no-scrollbar justify-start md:justify-end flex-row-reverse">
+              {[
+                { name: "حلويات", img: "https://images.unsplash.com/photo-1551024601-bec78aea704b?auto=format&fit=crop&q=80&w=200" },
+                { name: "مخبوزات", img: "https://images.unsplash.com/photo-1626074353765-517a681e40be?auto=format&fit=crop&q=80&w=200" },
+                { name: "طواجن", img: "https://images.unsplash.com/photo-1541518763669-27fef04b14ea?auto=format&fit=crop&q=80&w=200" },
+                { name: "مشويات", img: "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&q=80&w=200" },
+                { name: "محاشي", img: "https://images.unsplash.com/photo-1547592166-23ac45744acd?auto=format&fit=crop&q=80&w=200" }
+              ].map((cat, i) => (
+                <Link to={`/meals?category=${cat.name}`} key={i} className="flex flex-col items-center gap-3 min-w-[90px] group">
+                  <div className="w-24 h-24 rounded-full overflow-hidden shadow-sm border-4 border-transparent group-hover:border-brand-primary transition-all duration-300">
+                    <img src={cat.img} alt={cat.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                  </div>
+                  <span className="font-bold text-stone-800 text-sm group-hover:text-brand-primary transition-colors">{cat.name}</span>
+                </Link>
+              ))}
+            </div>
+          </div>
+
+          {/* Most Searched */}
+          <div>
+            <h2 className="text-2xl font-black text-stone-900 mb-6 text-right">الأكثر بحثاً على طبلية</h2>
+            <div className="flex flex-wrap gap-3 justify-end">
+              {['بيتزا', 'كشري', 'مشويات', 'حلويات النصر', 'كريب', 'برجر'].map((tag, i) => (
+                <Link to={`/meals?search=${tag}`} key={i} className="px-5 py-2.5 bg-stone-50 rounded-full border border-stone-200 text-stone-700 font-bold text-sm hover:bg-brand-primary hover:text-white hover:border-brand-primary transition-colors flex items-center gap-2 shadow-sm">
+                  <span className="text-brand-primary bg-white rounded-full w-6 h-6 flex items-center justify-center text-xs shadow-sm">📈</span> {tag}
+                </Link>
+              ))}
+            </div>
+          </div>
+
+          {/* Big Stores Near You */}
+          <div className="mt-12">
+            <h2 className="text-2xl font-black text-stone-900 mb-6 text-right">أشهر الطباخين بالقرب منك</h2>
+            <div className="flex gap-4 overflow-x-auto pb-4 no-scrollbar justify-end flex-row-reverse">
+              {[
+                { name: "شيف فاطمة", img: "https://images.unsplash.com/photo-1577219491135-ce391730fb2c?auto=format&fit=crop&q=80&w=200", time: "30 دقيقة" },
+                { name: "مطبخ الست غالية", img: "https://images.unsplash.com/photo-1583394838336-acd977736f90?auto=format&fit=crop&q=80&w=200", time: "45 دقيقة" },
+                { name: "أكلات زمان", img: "https://images.unsplash.com/photo-1600565193348-f74bd3c7ccdf?auto=format&fit=crop&q=80&w=200", time: "25 دقيقة" },
+                { name: "شيف حسن", img: "https://images.unsplash.com/photo-1581299894007-aaa50297cf16?auto=format&fit=crop&q=80&w=200", time: "40 دقيقة" },
+                { name: "مطبخ أم علي", img: "https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&q=80&w=200", time: "35 دقيقة" }
+              ].map((store, i) => (
+                <Link to="/chefs" key={i} className="min-w-[120px] bg-white rounded-2xl p-3 border border-stone-100 shadow-sm hover:shadow-md transition-all group text-center">
+                  <div className="w-16 h-16 mx-auto rounded-xl overflow-hidden mb-3 border border-stone-100">
+                    <img src={store.img} alt={store.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform" />
+                  </div>
+                  <h4 className="font-bold text-stone-800 text-sm mb-1 truncate">{store.name}</h4>
+                  <p className="text-xs text-stone-500 flex items-center justify-center gap-1">
+                    <Clock size={12} /> {store.time}
+                  </p>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Story Section */}
       <section className="py-24 bg-white overflow-hidden">
         <div className="max-w-7xl mx-auto px-4">

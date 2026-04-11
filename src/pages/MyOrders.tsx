@@ -15,6 +15,7 @@ export default function MyOrders() {
   const [loading, setLoading] = useState(true);
   const [trackingOrderId, setTrackingOrderId] = useState<string | null>(null);
   const [driverLocations, setDriverLocations] = useState<Record<string, { lat: number; lng: number }>>({});
+  const [activeTab, setActiveTab] = useState<'upcoming' | 'previous'>('upcoming');
 
   useEffect(() => {
     if (!auth.currentUser) return;
@@ -43,19 +44,44 @@ export default function MyOrders() {
     );
   }
 
+  const upcomingOrders = orders.filter(o => ['pending', 'preparing', 'out_for_delivery'].includes(o.status));
+  const previousOrders = orders.filter(o => ['delivered', 'cancelled'].includes(o.status));
+  const displayedOrders = activeTab === 'upcoming' ? upcomingOrders : previousOrders;
+
   return (
     <div className="bg-brand-cream min-h-screen py-[100px]">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center mb-12">
-          <h1 className="text-[56px] font-bold text-brand-accent">طلباتي</h1>
+        <div className="flex justify-between items-center mb-8">
+          <h1 className="text-[56px] font-bold text-brand-accent">الطلبات</h1>
           <Link to="/meals" className="text-brand-primary font-bold flex items-center gap-2 hover:underline">
             اطلب المزيد <ChevronLeft size={20} />
           </Link>
         </div>
 
-        {orders.length > 0 ? (
+        <div className="flex gap-4 mb-12 border-b border-stone-200 pb-px">
+          <button 
+            onClick={() => setActiveTab('upcoming')}
+            className={`pb-4 px-4 font-bold text-lg transition-colors relative ${activeTab === 'upcoming' ? 'text-brand-primary' : 'text-stone-500 hover:text-stone-700'}`}
+          >
+            الطلبات القادمة
+            {activeTab === 'upcoming' && (
+              <motion.div layoutId="activeTab" className="absolute bottom-0 left-0 right-0 h-1 bg-brand-primary rounded-t-full" />
+            )}
+          </button>
+          <button 
+            onClick={() => setActiveTab('previous')}
+            className={`pb-4 px-4 font-bold text-lg transition-colors relative ${activeTab === 'previous' ? 'text-brand-primary' : 'text-stone-500 hover:text-stone-700'}`}
+          >
+            الطلبات السابقة
+            {activeTab === 'previous' && (
+              <motion.div layoutId="activeTab" className="absolute bottom-0 left-0 right-0 h-1 bg-brand-primary rounded-t-full" />
+            )}
+          </button>
+        </div>
+
+        {displayedOrders.length > 0 ? (
           <div className="space-y-8">
-            {orders.map((order, i) => (
+            {displayedOrders.map((order, i) => (
               <motion.div 
                 key={order.id}
                 initial={{ opacity: 0, y: 30 }}
@@ -123,12 +149,12 @@ export default function MyOrders() {
           </div>
         ) : (
           <div className="text-center py-20 food-card">
-            <div className="bg-brand-cream w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-6 text-stone-300">
-              <ShoppingBag size={40} />
+            <div className="bg-brand-cream w-32 h-32 rounded-full flex items-center justify-center mx-auto mb-6 text-stone-300">
+              <img src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&q=80&w=200" alt="Empty Orders" className="w-full h-full object-cover rounded-full opacity-50 grayscale" />
             </div>
-            <h3 className="text-2xl font-bold text-brand-accent mb-2">لا توجد طلبات بعد</h3>
-            <p className="text-stone-500 mb-8">لم تقم بإجراء أي طلبات حتى الآن.</p>
-            <Link to="/meals" className="btn-primary px-10 py-4">ابدأ التسوق الآن</Link>
+            <h3 className="text-2xl font-bold text-brand-accent mb-2">لا توجد طلبات</h3>
+            <p className="text-stone-500 mb-8">لم تقم بأي طلبات سابقة. يمكنك تصفح الوجبات للبدء.</p>
+            <Link to="/meals" className="btn-primary px-10 py-4">تصفح الوجبات</Link>
           </div>
         )}
       </div>

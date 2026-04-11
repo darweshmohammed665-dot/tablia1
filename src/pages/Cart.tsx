@@ -214,9 +214,14 @@ export default function Cart() {
                 </div>
               )}
 
-              <Link to="/checkout" className="btn-primary w-full py-4 text-lg flex items-center justify-center gap-2">
-                تابع للدفع <ChevronLeft size={20} />
-              </Link>
+              <div className="flex flex-col gap-3">
+                <Link to="/checkout" className="btn-primary w-full py-4 text-lg flex items-center justify-center gap-2">
+                  تابع للدفع <ChevronLeft size={20} />
+                </Link>
+                <Link to="/meals" className="bg-white border border-brand-primary text-brand-primary w-full py-4 rounded-xl font-bold text-lg flex items-center justify-center hover:bg-brand-cream transition-colors">
+                  أضف المزيد
+                </Link>
+              </div>
 
               <div className="mt-4 p-4 bg-brand-secondary/5 rounded-2xl border border-brand-secondary/10 flex items-center gap-3 text-sm text-brand-secondary">
                 <div className="w-2 h-2 bg-brand-secondary rounded-full animate-pulse"></div>

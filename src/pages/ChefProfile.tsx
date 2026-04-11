@@ -261,6 +261,53 @@ export default function ChefProfile() {
             <h2 className="text-3xl font-bold text-stone-900">قائمة الأكلات</h2>
             <div className="h-1 flex-grow mx-8 bg-stone-100 rounded-full hidden md:block"></div>
           </div>
+
+          {/* Menu Categories */}
+          <div className="flex gap-3 overflow-x-auto pb-6 no-scrollbar mb-6">
+            {['الكل', 'عروض لحظية', 'أطباق رئيسية', 'مشويات', 'طواجن', 'حلويات', 'مشروبات'].map((cat, i) => (
+              <button 
+                key={i} 
+                className={`px-6 py-2.5 rounded-full font-bold text-sm whitespace-nowrap transition-colors ${i === 0 ? 'bg-brand-primary text-white shadow-md' : 'bg-white text-stone-600 border border-stone-200 hover:border-brand-primary hover:text-brand-primary'}`}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
+
+          {/* Choices to your taste (Horizontal Scroll) */}
+          <div className="mb-12">
+            <h3 className="text-xl font-bold text-stone-900 mb-6">اختيارات على ذوقك</h3>
+            <div className="flex gap-4 overflow-x-auto pb-6 no-scrollbar">
+              {meals.slice(0, 4).map((meal, i) => (
+                <div key={`taste-${meal.id}`} className="min-w-[280px] bg-white rounded-3xl p-4 border border-stone-100 shadow-sm flex gap-4 items-center group">
+                  <div className="w-24 h-24 rounded-2xl overflow-hidden shrink-0">
+                    <img src={meal.image} alt={meal.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform" />
+                  </div>
+                  <div className="flex flex-col flex-grow">
+                    <h4 className="font-bold text-stone-900 text-sm mb-1 line-clamp-2">{meal.title}</h4>
+                    <p className="text-brand-primary font-black text-sm mb-2">{meal.price} ج.م</p>
+                    <button 
+                      onClick={() => {
+                        addToCart({
+                          id: meal.id,
+                          title: meal.title,
+                          price: meal.price,
+                          quantity: 1,
+                          image: meal.image,
+                          chefId: chef.uid,
+                          chefName: chef.displayName
+                        });
+                        toast.success(`تم إضافة ${meal.title} إلى السلة`);
+                      }}
+                      className="w-8 h-8 bg-brand-cream rounded-full flex items-center justify-center text-brand-primary hover:bg-brand-primary hover:text-white transition-all self-end"
+                    >
+                      <Plus size={16} />
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {meals.length > 0 ? meals.map((meal, i) => (
@@ -318,6 +365,25 @@ export default function ChefProfile() {
           </div>
         </div>
       </div>
+
+      {/* Floating Cart Bar */}
+      <AnimatePresence>
+        <motion.div 
+          initial={{ y: 100, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          exit={{ y: 100, opacity: 0 }}
+          className="fixed bottom-0 left-0 right-0 p-4 z-50 md:hidden"
+        >
+          <div className="bg-brand-primary text-white rounded-2xl p-4 shadow-2xl flex items-center justify-between">
+            <div className="flex flex-col">
+              <span className="text-sm opacity-90 font-medium">أضف منتجات بقيمة 50.00 ج.م لتبدأ الطلب</span>
+            </div>
+            <Link to="/cart" className="bg-white text-brand-primary px-6 py-2 rounded-xl font-bold text-sm">
+              عرض السلة
+            </Link>
+          </div>
+        </motion.div>
+      </AnimatePresence>
     </div>
   );
 }
