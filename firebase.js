@@ -1,0 +1,25 @@
+
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-analytics.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  const firebaseConfig = {
+    apiKey: "AIzaSyD52RpbYZfUWDuNAB7-ZpYfy5iNQh8X4mA",
+    authDomain: "tablia-df9fa.firebaseapp.com",
+    projectId: "tablia-df9fa",
+    storageBucket: "tablia-df9fa.firebasestorage.app",
+    messagingSenderId: "321638408054",
+    appId: "1:321638408054:web:d2787249618f5419ee2457",
+    measurementId: "G-KT6NX9Q8N5"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+  export const auth = getAuth(app);
+  export const db = getFirestore(app);
+
