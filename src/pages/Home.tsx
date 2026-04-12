@@ -1,4 +1,4 @@
-import { motion, useScroll, useTransform, useMotionValue, useSpring } from 'motion/react';
+import { motion, useScroll, useTransform } from 'motion/react';
 import { ShoppingBag, Clock, ArrowRight, MessageCircle, Utensils, Heart, Star, ShieldCheck, ChevronLeft, MapPin, Flame, Award, Sparkles, Dices } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import ChefMap from '../components/ChefMap';
@@ -18,27 +18,6 @@ export default function Home() {
   });
 
   const y = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
-
-  // Mouse Parallax Effect
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
-
-  const springConfig = { damping: 50, stiffness: 400 };
-  const smoothMouseX = useSpring(mouseX, springConfig);
-  const smoothMouseY = useSpring(mouseY, springConfig);
-
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      const { innerWidth, innerHeight } = window;
-      const x = (e.clientX / innerWidth - 0.5) * 2; // -1 to 1
-      const y = (e.clientY / innerHeight - 0.5) * 2; // -1 to 1
-      mouseX.set(x);
-      mouseY.set(y);
-    };
-
-    window.addEventListener("mousemove", handleMouseMove);
-    return () => window.removeEventListener("mousemove", handleMouseMove);
-  }, [mouseX, mouseY]);
 
   // Live Orders Ticker
   const [liveOrder, setLiveOrder] = useState<{name: string, meal: string, time: string} | null>(null);
@@ -98,43 +77,27 @@ export default function Home() {
 
       {/* Hero Section - Shef Style */}
       <section className="relative h-[75vh] flex items-center justify-center overflow-hidden">
-        <div className="absolute inset-0 z-0">
+        <motion.div 
+          animate={{ 
+            scale: [1, 1.1, 1],
+          }}
+          transition={{ 
+            duration: 30, 
+            repeat: Infinity,
+            ease: "linear" 
+          }}
+          className="absolute inset-0 z-0"
+        >
           <img 
             src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&q=80&w=2000" 
             className="w-full h-full object-cover"
             alt="Egyptian Home Cooking"
             referrerPolicy="no-referrer"
           />
-          <div className="absolute inset-0 bg-black/60 backdrop-blur-[2px]"></div>
-        </div>
-
-        {/* Floating Parallax Ingredients */}
-        <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
-          <motion.img 
-            style={{ x: useTransform(smoothMouseX, [-1, 1], [-50, 50]), y: useTransform(smoothMouseY, [-1, 1], [-50, 50]) }}
-            src="https://cdn3d.iconscout.com/3d/premium/thumb/tomato-4993655-4160030.png" 
-            className="absolute top-[15%] right-[10%] w-32 h-32 object-contain drop-shadow-2xl opacity-80 blur-[2px]"
-            alt="Tomato"
-          />
-          <motion.img 
-            style={{ x: useTransform(smoothMouseX, [-1, 1], [80, -80]), y: useTransform(smoothMouseY, [-1, 1], [80, -80]) }}
-            src="https://cdn3d.iconscout.com/3d/premium/thumb/garlic-4993660-4160035.png" 
-            className="absolute bottom-[20%] left-[15%] w-40 h-40 object-contain drop-shadow-2xl opacity-90"
-            alt="Garlic"
-          />
-          <motion.img 
-            style={{ x: useTransform(smoothMouseX, [-1, 1], [-30, 30]), y: useTransform(smoothMouseY, [-1, 1], [30, -30]) }}
-            src="https://cdn3d.iconscout.com/3d/premium/thumb/chili-pepper-4993662-4160037.png" 
-            className="absolute top-[30%] left-[5%] w-24 h-24 object-contain drop-shadow-2xl opacity-70 blur-[3px] rotate-45"
-            alt="Chili"
-          />
-          <motion.img 
-            style={{ x: useTransform(smoothMouseX, [-1, 1], [60, -60]), y: useTransform(smoothMouseY, [-1, 1], [-60, 60]) }}
-            src="https://cdn3d.iconscout.com/3d/premium/thumb/lemon-4993658-4160033.png" 
-            className="absolute bottom-[15%] right-[20%] w-28 h-28 object-contain drop-shadow-2xl opacity-80 -rotate-12"
-            alt="Lemon"
-          />
-        </div>
+        </motion.div>
+        
+        {/* Premium Gradient Overlay */}
+        <div className="absolute inset-0 z-0 bg-gradient-to-b from-black/80 via-black/40 to-brand-cream"></div>
 
         <div className="relative z-10 text-center px-4 max-w-4xl mx-auto mt-10">
           <motion.div
