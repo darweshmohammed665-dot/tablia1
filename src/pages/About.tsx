@@ -10,7 +10,7 @@ export default function About() {
       <div className="fixed inset-0 pointer-events-none z-[99] opacity-[0.03] bg-grain"></div>
       
       {/* Hero Section - Editorial Style */}
-      <section className="relative min-h-[80vh] flex items-center overflow-hidden bg-brand-secondary">
+      <section className="relative min-h-[60vh] flex items-center overflow-hidden bg-brand-secondary">
         <div className="absolute inset-0 z-0">
           <img 
             src="https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&q=80&w=1920" 
@@ -21,22 +21,22 @@ export default function About() {
           <div className="absolute inset-0 bg-gradient-to-b from-brand-secondary/80 via-brand-secondary/40 to-brand-secondary"></div>
         </div>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full text-right">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full text-right mt-10">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
-            <span className="inline-block px-6 py-2 rounded-full bg-brand-primary/20 border border-brand-primary/30 text-brand-primary text-sm font-black tracking-[0.3em] uppercase mb-10 backdrop-blur-xl">
+            <span className="inline-block px-6 py-2 rounded-full bg-brand-primary/20 border border-brand-primary/30 text-brand-primary text-sm font-black tracking-[0.3em] uppercase mb-8 backdrop-blur-xl">
               إرث الطهي الأصيل يبدأ من طبلية
             </span>
             
-            <h1 className="text-[60px] md:text-[140px] font-black text-white mb-10 leading-[0.85] tracking-[-0.04em]">
+            <h1 className="text-5xl md:text-[80px] font-black text-white mb-8 leading-[1] tracking-[-0.02em]">
               من نحن <br />
               <span className="text-brand-primary italic font-serif">طبلية طنطا</span>
             </h1>
             
-            <p className="text-xl md:text-4xl text-white/60 max-w-3xl ml-auto font-medium leading-tight">
+            <p className="text-lg md:text-3xl text-white/70 max-w-3xl ml-auto font-medium leading-tight">
               أول منصة في طنطا للأكل البيتي، مكونات مضمونة، ونضافة، وسعر على قد الإيد.
             </p>
           </motion.div>
@@ -82,7 +82,7 @@ export default function About() {
                     في عصر الأكل السريع والديليفري اللي ملوش طعم، كان لازم حد يتدخل. طبلية مش مجرد أبلكيشن، دي حركة لترجيع "النفس" الحقيقي لموائدنا. إحنا هنا عشان نثبت إن أكل البيت هو اللي بيكسب دايماً.
                   </p>
                   <p className="text-2xl text-stone-600 leading-relaxed font-medium">
-                    جمعنا "حريفة" طنطا في مكان واحد.. ستات البيوت اللي نفسهم "يوزن بلد" والناس اللي بتفهم في الأكل الصح. النتيجة؟ عظمة في كل طبق.
+                    جمعنا أمهر طهاة طنطا في مكان واحد.. ستات البيوت اللي نفسهم "يوزن بلد" والناس اللي بتفهم في الأكل الصح. النتيجة؟ عظمة في كل طبق.
                   </p>
                 </div>
               </motion.div>
@@ -125,7 +125,7 @@ export default function About() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-12 text-center">
             <div>
               <p className="text-5xl font-bold mb-2">+50</p>
-              <p className="text-brand-peach font-bold text-xl">شيف حريفة</p>
+              <p className="text-brand-peach font-bold text-xl">شيف محترف</p>
             </div>
             <div>
               <p className="text-5xl font-bold mb-2">+1000</p>
@@ -147,10 +147,10 @@ export default function About() {
       <section className="py-[100px] bg-brand-cream">
         <div className="max-w-5xl mx-auto px-4 text-center">
           <h2 className="text-[56px] font-bold text-brand-secondary mb-8">جاهز تدوق <span className="text-brand-primary italic">العظمة</span>؟</h2>
-          <p className="text-xl text-stone-500 mb-12">انضم لعيلة طبلية النهاردة.. سواء كنت حريف عاوز تفتح مطبخك أو أكيل بيدور على النفس الصح اللي بجد.</p>
+          <p className="text-xl text-stone-500 mb-12">انضم لعيلة طبلية النهاردة.. سواء كنت شيف عاوز تفتح مطبخك أو أكيل بيدور على النفس الصح اللي بجد.</p>
           <div className="flex flex-col sm:flex-row gap-6 justify-center">
             <Link to="/meals" className="btn-primary py-5 px-12 text-xl shadow-2xl">دوق دلوقتي</Link>
-            <Link to="/join-us" className="btn-secondary py-5 px-12 text-xl">انضم للحريفة</Link>
+            <Link to="/join-us" className="btn-secondary py-5 px-12 text-xl">انضم كطباخ</Link>
           </div>
         </div>
       </section>

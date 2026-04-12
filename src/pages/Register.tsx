@@ -4,7 +4,7 @@ import { createUserWithEmailAndPassword, updateProfile, signInWithPopup } from '
 import { doc, setDoc } from 'firebase/firestore';
 import { auth, db, googleProvider, appleProvider } from '../firebase';
 import { motion } from 'motion/react';
-import { Mail, Lock, User, ChefHat, ArrowRight, Chrome, CheckCircle2, Apple } from 'lucide-react';
+import { Mail, Lock, User, ChefHat, ArrowRight, Chrome, CheckCircle2, Apple, MapPin } from 'lucide-react';
 import { UserRole } from '../types';
 import { toast } from 'sonner';
 import { CHEF_IMAGE_URL } from '../constants';
@@ -30,13 +30,14 @@ export default function Register() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [location, setLocation] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Submitting registration form...', { email, role });
+    console.log('Submitting registration form...', { email, role, location });
     setLoading(true);
     setError('');
     try {
@@ -47,6 +48,7 @@ export default function Register() {
         uid: userCredential.user.uid,
         email,
         displayName: name,
+        location,
         role,
         createdAt: Date.now(),
       });
@@ -249,6 +251,21 @@ export default function Register() {
                   onChange={(e) => setPassword(e.target.value)}
                   className="w-full pr-12 pl-4 py-4 rounded-2xl border border-stone-200 bg-white focus:ring-4 focus:ring-brand-primary/10 focus:border-brand-primary outline-none transition-all text-lg"
                   placeholder="••••••••"
+                />
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-bold text-stone-700 mr-1">المنطقة / الموقع</label>
+              <div className="relative group">
+                <MapPin className="absolute right-4 top-1/2 -translate-y-1/2 text-stone-400 group-focus-within:text-brand-primary transition-colors" size={20} />
+                <input 
+                  type="text" 
+                  required 
+                  value={location}
+                  onChange={(e) => setLocation(e.target.value)}
+                  className="w-full pr-12 pl-4 py-4 rounded-2xl border border-stone-200 bg-white focus:ring-4 focus:ring-brand-primary/10 focus:border-brand-primary outline-none transition-all text-lg"
+                  placeholder="مثال: طنطا - حي القحافة"
                 />
               </div>
             </div>

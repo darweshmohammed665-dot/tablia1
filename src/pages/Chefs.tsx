@@ -39,7 +39,7 @@ export default function Chefs() {
     <div className="bg-brand-cream min-h-screen py-[100px]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-20 text-center">
-          <span className="text-brand-primary font-black tracking-[0.3em] uppercase text-sm mb-6 block">الحريفة</span>
+          <span className="text-brand-primary font-black tracking-[0.3em] uppercase text-sm mb-6 block">أفضل الطهاة</span>
           <h1 className="text-6xl md:text-[100px] font-black text-brand-secondary leading-[0.9] tracking-tighter mb-8">ملوك <br /> <span className="text-brand-primary italic font-serif">النفس</span> الفلاحي</h1>
           <p className="text-stone-500 text-2xl max-w-2xl mx-auto font-medium">قابلوا ملوك النفس الفلاحي والأكل البيتي اللي ملوش زي في طنطا.</p>
         </div>

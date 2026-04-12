@@ -24,7 +24,7 @@ export default function Home() {
       <div className="fixed inset-0 pointer-events-none z-[99] opacity-[0.03] bg-grain"></div>
 
       {/* Hero Section - Shef Style */}
-      <section className="relative h-[85vh] flex items-center justify-center overflow-hidden">
+      <section className="relative h-[65vh] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
           <img 
             src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&q=80&w=2000" 
@@ -32,14 +32,14 @@ export default function Home() {
             alt="Egyptian Home Cooking"
             referrerPolicy="no-referrer"
           />
-          <div className="absolute inset-0 bg-black/40"></div>
+          <div className="absolute inset-0 bg-black/50"></div>
         </div>
 
-        <div className="relative z-10 text-center px-4 max-w-4xl mx-auto">
+        <div className="relative z-10 text-center px-4 max-w-4xl mx-auto mt-10">
           <motion.h1 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-5xl md:text-8xl font-serif font-bold text-white mb-8 leading-tight"
+            className="text-4xl md:text-7xl font-serif font-bold text-white mb-6 leading-tight"
           >
             تعبت من أكل الشارع؟ <br />
             <span className="italic italic-arabic text-brand-primary">طبلية بيوصلك أكل بيت حقيقي</span>
@@ -49,7 +49,7 @@ export default function Home() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="text-2xl md:text-3xl text-white/90 mb-12 font-medium leading-relaxed"
+            className="text-lg md:text-2xl text-white/90 mb-10 font-medium leading-relaxed"
           >
             من مطبخ ست شاطرة، بأحسن جودة وأقل سعر ولحد باب بيتك في طنطا.
           </motion.p>
@@ -195,7 +195,7 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex justify-between items-end mb-12">
             <div className="text-right">
-              <h2 className="text-4xl md:text-5xl font-serif font-bold text-brand-secondary mb-4">قابل حريفة طنطا</h2>
+              <h2 className="text-4xl md:text-5xl font-serif font-bold text-brand-secondary mb-4">تعرف على أفضل طهاة طنطا</h2>
               <p className="text-stone-500 text-xl">أشطر ستات بيوت بيطبخوا بحب</p>
             </div>
             <Link to="/chefs" className="text-brand-primary font-bold flex items-center gap-2 hover:gap-4 transition-all">
@@ -258,12 +258,12 @@ export default function Home() {
       </section>
 
       {/* Bento Grid Categories */}
-      <section className="py-32 bg-brand-peach/10">
+      <section className="py-20 bg-brand-peach/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row justify-between items-end mb-20 gap-8">
+          <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-8">
             <div className="text-right">
-              <span className="text-brand-primary font-black tracking-[0.3em] uppercase text-sm mb-6 block">لمحة من الاكلات</span>
-              <h2 className="text-6xl md:text-[90px] font-black text-brand-secondary leading-[0.9] tracking-tighter">عندنا ايه <br /> النهاردة؟</h2>
+              <span className="text-brand-primary font-black tracking-[0.3em] uppercase text-sm mb-4 block">لمحة من الاكلات</span>
+              <h2 className="text-5xl md:text-[70px] font-black text-brand-secondary leading-[1] tracking-tighter">عندنا ايه <br /> النهاردة؟</h2>
             </div>
             <Link to="/meals" className="btn-secondary group">
               تصفح الاكلات 
@@ -271,7 +271,7 @@ export default function Home() {
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-8 auto-rows-[400px]">
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-6 auto-rows-[320px]">
             <motion.div 
               whileHover={{ y: -15 }}
               className="md:col-span-8 rounded-[40px] overflow-hidden relative group shadow-2xl"
@@ -398,20 +398,20 @@ export default function Home() {
       </section>
 
       {/* Final CTA Section - Shef Style */}
-      <section className="py-32 bg-brand-primary relative overflow-hidden">
+      <section className="py-24 bg-brand-primary relative overflow-hidden">
         <div className="max-w-4xl mx-auto px-4 relative z-10 text-center text-white">
-          <h2 className="text-4xl md:text-7xl font-serif font-bold mb-8 leading-tight">
+          <h2 className="text-3xl md:text-5xl font-serif font-bold mb-6 leading-tight">
             سواء كنت تعبان من المطبخ، بعيد عن أهلك، أو عندك عزومة على آخر دقيقة — طبلية هنا.
           </h2>
-          <p className="text-xl md:text-2xl mb-12 opacity-90 font-medium">
+          <p className="text-lg md:text-xl mb-10 opacity-90 font-medium">
             اطلب أكلتك دلوقتي — واتساب / تليفون
           </p>
-          <div className="flex flex-col md:flex-row items-center justify-center gap-6">
-            <a href="https://wa.me/201234567890" target="_blank" rel="noopener noreferrer" className="bg-white text-brand-primary px-12 py-6 rounded-full font-black text-2xl hover:scale-105 transition-transform shadow-2xl flex items-center gap-3">
-              <MessageCircle size={28} />
+          <div className="flex flex-col md:flex-row items-center justify-center gap-4">
+            <a href="https://wa.me/201234567890" target="_blank" rel="noopener noreferrer" className="bg-white text-brand-primary px-10 py-4 rounded-full font-black text-xl hover:scale-105 transition-transform shadow-xl flex items-center gap-3">
+              <MessageCircle size={24} />
               اطلب على واتساب
             </a>
-            <Link to="/meals" className="bg-transparent border-2 border-white text-white px-12 py-6 rounded-full font-black text-2xl hover:bg-white hover:text-brand-primary transition-all">
+            <Link to="/meals" className="bg-transparent border-2 border-white text-white px-10 py-4 rounded-full font-black text-xl hover:bg-white hover:text-brand-primary transition-all">
               تصفح الاكلات
             </Link>
           </div>

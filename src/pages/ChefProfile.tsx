@@ -5,7 +5,7 @@ import { db, auth } from '../firebase';
 import { UserProfile, Meal } from '../types';
 import { CHEF_IMAGE_URL } from '../constants';
 import { motion, AnimatePresence } from 'motion/react';
-import { MapPin, Star, ChefHat, Clock, Edit3, UtensilsCrossed, Share2, Users, ShoppingBag } from 'lucide-react';
+import { MapPin, Star, ChefHat, Clock, Edit3, UtensilsCrossed, Share2, Users, ShoppingBag, Heart, ShieldCheck } from 'lucide-react';
 import ChefProfileForm from '../components/ChefProfileForm';
 import { MealCard } from '../components/MealCard';
 import { useCart } from '../context/CartContext';
@@ -61,123 +61,146 @@ export default function ChefProfile() {
   };
 
   if (loading) return <div className="min-h-screen flex items-center justify-center"><div className="animate-spin rounded-full h-12 w-12 border-t-2 border-brand-primary"></div></div>;
-  if (!chef) return <div className="min-h-screen flex flex-col items-center justify-center"><h2 className="text-2xl font-bold mb-4">الشيف غير موجود</h2><Link to="/chefs" className="btn-primary">العودة لسوق الطهاة</Link></div>;
+  if (!chef) return <div className="min-h-screen flex flex-col items-center justify-center"><h2 className="text-2xl font-bold mb-4 text-brand-secondary">الشيف غير موجود</h2><Link to="/chefs" className="btn-primary">العودة لسوق الطهاة</Link></div>;
 
   return (
-    <div className="bg-brand-cream min-h-screen pb-[80px]">
-      {/* Header / Cover */}
-      <div className="h-64 bg-brand-secondary relative">
-        <div className="absolute inset-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/food.png')]"></div>
+    <div className="bg-brand-peach min-h-screen pb-[80px]">
+      {/* Professional Cover Header */}
+      <div className="h-[280px] relative overflow-hidden">
+        <img 
+          src="https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&q=80&w=2000" 
+          alt="Kitchen Cover" 
+          className="w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-brand-secondary/90 via-brand-secondary/40 to-transparent"></div>
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-24 relative z-10">
-        <div className="food-card p-8 md:p-12 mb-[80px]">
-          <div className="flex flex-col md:flex-row gap-8 items-center md:items-end">
-            <div className="relative w-40 h-40 -mt-20 md:-mt-32">
-              <div className="w-full h-full rounded-full bg-brand-secondary flex items-center justify-center border-8 border-white shadow-lg overflow-hidden">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="bg-white rounded-[32px] p-8 md:p-12 shadow-2xl mb-[80px] border border-stone-100"
+        >
+          <div className="flex flex-col md:flex-row gap-8 items-center md:items-start">
+            <div className="relative w-48 h-48 -mt-20 md:-mt-28 shrink-0">
+              <div className="w-full h-full rounded-full bg-brand-peach flex items-center justify-center border-[8px] border-white shadow-xl overflow-hidden">
                 <img 
-                  src={CHEF_IMAGE_URL} 
+                  src={chef.photoURL || CHEF_IMAGE_URL} 
                   alt={chef.displayName} 
-                  className="w-full h-full object-cover opacity-80"
+                  className="w-full h-full object-cover"
                   referrerPolicy="no-referrer"
                 />
               </div>
-              <div className="absolute bottom-2 right-2 bg-brand-accent text-stone-900 p-2 rounded-full shadow-lg">
-                <ChefHat size={20} />
+              <div className="absolute bottom-4 right-4 bg-brand-primary text-white p-2.5 rounded-full shadow-lg border-2 border-white">
+                <ShieldCheck size={20} />
               </div>
             </div>
             
-            <div className="flex-grow text-center md:text-right">
-              <div className="flex items-center justify-center md:justify-start gap-4 mb-2">
-                <h1 className="text-[56px] font-bold text-brand-accent">{chef.displayName}</h1>
-                {isOwner && (
+            <div className="flex-grow text-center md:text-right pt-2">
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
+                <div>
+                  <div className="flex items-center justify-center md:justify-start gap-4 mb-2">
+                    <h1 className="text-4xl md:text-5xl font-black text-brand-secondary">{chef.displayName}</h1>
+                    {isOwner && (
+                      <button 
+                        onClick={() => setShowEditModal(true)}
+                        className="p-2 bg-brand-peach text-brand-primary rounded-full hover:bg-brand-primary hover:text-white transition-all shadow-sm"
+                        title="تعديل الملف الشخصي"
+                      >
+                        <Edit3 size={18} />
+                      </button>
+                    )}
+                  </div>
+                  <div className="flex flex-wrap justify-center md:justify-start gap-4 text-stone-500 font-medium">
+                    <span className="flex items-center gap-1.5 bg-stone-50 px-3 py-1 rounded-full"><MapPin size={16} className="text-brand-primary" /> {chef.location || 'طنطا'}</span>
+                    <span className="flex items-center gap-1.5 bg-stone-50 px-3 py-1 rounded-full"><ChefHat size={16} className="text-brand-primary" /> طاهٍ محترف</span>
+                  </div>
+                </div>
+
+                <div className="flex flex-wrap justify-center gap-3">
                   <button 
-                    onClick={() => setShowEditModal(true)}
-                    className="p-2 bg-stone-100 text-stone-500 rounded-full hover:bg-brand-secondary hover:text-white transition-all"
+                    onClick={scrollToMenu}
+                    className="btn-primary px-8 shadow-brand-primary/30"
                   >
-                    <Edit3 size={18} />
+                    <UtensilsCrossed size={18} />
+                    تصفح الأكلات
                   </button>
-                )}
+                  {!isOwner && (
+                    <button className="p-4 bg-brand-peach text-brand-primary rounded-2xl hover:bg-brand-primary hover:text-white transition-all shadow-sm">
+                      <Heart size={20} />
+                    </button>
+                  )}
+                  <button className="p-4 bg-stone-50 text-stone-600 rounded-2xl hover:bg-stone-200 transition-all shadow-sm">
+                    <Share2 size={20} />
+                  </button>
+                </div>
               </div>
-              <div className="flex flex-wrap justify-center md:justify-start gap-4 text-stone-500">
-                <span className="flex items-center gap-1"><MapPin size={18} /> {chef.location || 'طنطا'}</span>
-              </div>
-            </div>
 
-            <div className="flex flex-wrap gap-3">
-              <button 
-                onClick={scrollToMenu}
-                className="btn-primary px-8 flex items-center gap-2"
-              >
-                <UtensilsCrossed size={18} />
-                عرض الأكلات
-              </button>
-              {!isOwner && <button className="btn-secondary px-8">متابعة</button>}
-              <button className="p-4 bg-stone-100 text-stone-600 rounded-full hover:bg-stone-200 transition-all">
-                <Share2 size={20} />
-              </button>
+              <div className="mt-6 text-stone-600 leading-relaxed max-w-3xl whitespace-pre-wrap text-lg bg-stone-50 p-6 rounded-2xl border border-stone-100">
+                {chef.bio || "طاهٍ منزلي متخصص في الأكلات المصرية التقليدية. أستخدم أفضل المكونات الطازجة وأتبع أعلى معايير النظافة والجودة لضمان وجبة شهية وصحية لعائلتك."}
+              </div>
             </div>
           </div>
 
-          {/* Stats Section */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-12 py-8 border-y border-stone-100">
-            <div className="text-center md:border-l border-stone-100 last:border-0">
-              <div className="flex items-center justify-center gap-2 text-brand-accent mb-1">
-                <Star size={24} className="fill-brand-accent" />
-                <span className="text-2xl font-black">{chef.rating || '4.9'}</span>
+          {/* Professional Stats Section */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-10">
+            <div className="bg-brand-peach/50 p-6 rounded-2xl border border-brand-accent/30 text-center transition-transform hover:-translate-y-1">
+              <div className="flex items-center justify-center gap-2 text-brand-primary mb-2">
+                <Star size={28} className="fill-brand-primary" />
               </div>
-              <p className="text-sm text-stone-500 font-medium">متوسط التقييم</p>
+              <span className="text-3xl font-black text-brand-secondary block mb-1">{chef.rating || '4.9'}</span>
+              <p className="text-sm text-stone-500 font-bold">متوسط التقييم</p>
             </div>
             
-            <div className="text-center md:border-l border-stone-100 last:border-0">
-              <div className="flex items-center justify-center gap-2 text-stone-800 mb-1">
-                <Users size={24} />
-                <span className="text-2xl font-black">{chef.reviewsCount || '120'}</span>
+            <div className="bg-stone-50 p-6 rounded-2xl border border-stone-100 text-center transition-transform hover:-translate-y-1">
+              <div className="flex items-center justify-center gap-2 text-stone-400 mb-2">
+                <Users size={28} />
               </div>
-              <p className="text-sm text-stone-500 font-medium">إجمالي التقييمات</p>
+              <span className="text-3xl font-black text-brand-secondary block mb-1">{chef.reviewsCount || '120'}</span>
+              <p className="text-sm text-stone-500 font-bold">إجمالي التقييمات</p>
             </div>
 
-            <div className="text-center md:border-l border-stone-100 last:border-0">
-              <div className="flex items-center justify-center gap-2 text-stone-800 mb-1">
-                <UtensilsCrossed size={24} />
-                <span className="text-2xl font-black">{meals.length}</span>
+            <div className="bg-stone-50 p-6 rounded-2xl border border-stone-100 text-center transition-transform hover:-translate-y-1">
+              <div className="flex items-center justify-center gap-2 text-stone-400 mb-2">
+                <UtensilsCrossed size={28} />
               </div>
-              <p className="text-sm text-stone-500 font-medium">وجبة متاحة</p>
+              <span className="text-3xl font-black text-brand-secondary block mb-1">{meals.length}</span>
+              <p className="text-sm text-stone-500 font-bold">وجبة متاحة</p>
             </div>
 
-            <div className="text-center last:border-0">
-              <div className="flex items-center justify-center gap-2 text-stone-800 mb-1">
-                <Clock size={24} />
-                <span className="text-2xl font-black">45</span>
+            <div className="bg-stone-50 p-6 rounded-2xl border border-stone-100 text-center transition-transform hover:-translate-y-1">
+              <div className="flex items-center justify-center gap-2 text-stone-400 mb-2">
+                <Clock size={28} />
               </div>
-              <p className="text-sm text-stone-500 font-medium">دقيقة (متوسط التوصيل)</p>
+              <span className="text-3xl font-black text-brand-secondary block mb-1">45</span>
+              <p className="text-sm text-stone-500 font-bold">دقيقة للتوصيل</p>
             </div>
           </div>
-
-          <div className="mt-10">
-            <h2 className="text-xl font-bold mb-4">عن الشيف</h2>
-            <p className="text-stone-600 leading-relaxed max-w-3xl whitespace-pre-wrap text-lg">
-              {chef.bio || "طاهٍ منزلي متخصص في الأكلات المصرية التقليدية. أستخدم أفضل المكونات الطازجة وأتبع أعلى معايير النظافة والجودة لضمان وجبة شهية وصحية لعائلتك."}
-            </p>
-          </div>
-        </div>
+        </motion.div>
 
         {/* Popular Meals Section */}
         {popularMeals.length > 0 && (
-          <div className="mb-16">
-            <div className="flex items-center gap-4 mb-8">
-              <div className="bg-brand-accent p-3 rounded-2xl text-stone-900">
-                <Star size={24} className="fill-stone-900" />
+          <div className="mb-20">
+            <div className="flex items-center gap-4 mb-10">
+              <div className="bg-brand-primary/10 p-4 rounded-2xl text-brand-primary">
+                <Star size={28} className="fill-brand-primary" />
               </div>
               <div>
-                <h2 className="text-3xl font-bold text-stone-900">أكثر الأكلات طلباً</h2>
-                <p className="text-stone-500">الأكثر تميزاً وشعبية لدى زبائن الشيف</p>
+                <h2 className="text-3xl font-black text-brand-secondary">أكثر الأكلات طلباً</h2>
+                <p className="text-stone-500 font-medium mt-1">الأكثر تميزاً وشعبية لدى زبائن الشيف</p>
               </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {popularMeals.map((meal, i) => (
-                <div key={`popular-${meal.id}`} className="relative">
+                <motion.div 
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.1 }}
+                  key={`popular-${meal.id}`} 
+                  className="relative"
+                >
                   <MealCard 
                     meal={{
                       id: meal.id,
@@ -192,10 +215,10 @@ export default function ChefProfile() {
                     }}
                     index={i}
                   />
-                  <div className="absolute top-4 right-4 bg-brand-accent text-stone-900 px-4 py-1 rounded-full text-sm font-black shadow-lg pointer-events-none z-20">
+                  <div className="absolute top-4 right-4 bg-brand-primary text-white px-4 py-1.5 rounded-full text-xs font-black shadow-lg pointer-events-none z-20 uppercase tracking-widest">
                     الأكثر طلباً
                   </div>
-                </div>
+                </motion.div>
               ))}
             </div>
           </div>
@@ -204,7 +227,7 @@ export default function ChefProfile() {
         {/* Edit Profile Modal */}
         <AnimatePresence>
           {showEditModal && (
-            <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+            <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-brand-secondary/80 backdrop-blur-sm">
               <div className="w-full max-w-2xl">
                 <ChefProfileForm 
                   profile={chef} 
@@ -221,56 +244,24 @@ export default function ChefProfile() {
 
         {/* Chef's Menu */}
         <div className="mb-12" ref={menuRef}>
-          <div className="flex items-center justify-between mb-8">
-            <h2 className="text-3xl font-bold text-stone-900">قائمة الأكلات</h2>
-            <div className="h-1 flex-grow mx-8 bg-stone-100 rounded-full hidden md:block"></div>
+          <div className="flex items-center justify-between mb-10">
+            <h2 className="text-3xl font-black text-brand-secondary flex items-center gap-3">
+              <UtensilsCrossed size={32} className="text-brand-primary" />
+              تصفح الأكلات
+            </h2>
+            <div className="h-px flex-grow mx-8 bg-stone-200 hidden md:block"></div>
           </div>
 
           {/* Menu Categories */}
-          <div className="flex gap-3 overflow-x-auto pb-6 no-scrollbar mb-6">
+          <div className="flex gap-3 overflow-x-auto pb-6 no-scrollbar mb-8">
             {['الكل', 'عروض لحظية', 'أطباق رئيسية', 'مشويات', 'طواجن', 'حلويات', 'مشروبات'].map((cat, i) => (
               <button 
                 key={i} 
-                className={`px-6 py-2.5 rounded-full font-bold text-sm whitespace-nowrap transition-colors ${i === 0 ? 'bg-brand-primary text-white shadow-md' : 'bg-white text-stone-600 border border-stone-200 hover:border-brand-primary hover:text-brand-primary'}`}
+                className={`px-6 py-3 rounded-full font-bold text-sm whitespace-nowrap transition-all ${i === 0 ? 'bg-brand-secondary text-white shadow-lg' : 'bg-white text-stone-600 border border-stone-200 hover:border-brand-primary hover:text-brand-primary hover:shadow-md'}`}
               >
                 {cat}
               </button>
             ))}
-          </div>
-
-          {/* Choices to your taste (Horizontal Scroll) */}
-          <div className="mb-12">
-            <h3 className="text-xl font-bold text-stone-900 mb-6">اختيارات على ذوقك</h3>
-            <div className="flex gap-4 overflow-x-auto pb-6 no-scrollbar">
-              {meals.slice(0, 4).map((meal, i) => (
-                <div key={`taste-${meal.id}`} className="min-w-[280px] bg-white rounded-3xl p-4 border border-stone-100 shadow-sm flex gap-4 items-center group">
-                  <div className="w-24 h-24 rounded-2xl overflow-hidden shrink-0">
-                    <img src={meal.image} alt={meal.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform" />
-                  </div>
-                  <div className="flex flex-col flex-grow">
-                    <h4 className="font-bold text-stone-900 text-sm mb-1 line-clamp-2">{meal.title}</h4>
-                    <p className="text-brand-primary font-black text-sm mb-2">{meal.price} ج.م</p>
-                    <button 
-                      onClick={() => {
-                        addToCart({
-                          id: meal.id,
-                          title: meal.title,
-                          price: meal.price,
-                          quantity: 1,
-                          image: meal.image,
-                          chefId: chef.uid,
-                          chefName: chef.displayName
-                        });
-                        toast.success(`تم إضافة ${meal.title} إلى السلة`);
-                      }}
-                      className="w-8 h-8 bg-brand-cream rounded-full flex items-center justify-center text-brand-primary hover:bg-brand-primary hover:text-white transition-all self-end"
-                    >
-                      <Plus size={16} />
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -291,14 +282,16 @@ export default function ChefProfile() {
                   index={i}
                 />
                 {meal.featured && (
-                  <div className="absolute top-4 right-4 bg-brand-accent text-white px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest pointer-events-none z-20">
+                  <div className="absolute top-4 right-4 bg-brand-secondary text-white px-3 py-1.5 rounded-full text-xs font-black uppercase tracking-widest pointer-events-none z-20 shadow-md">
                     مميز
                   </div>
                 )}
               </div>
             )) : (
-              <div className="col-span-full text-center py-12 text-stone-400">
-                لا توجد وجبات متاحة حالياً.
+              <div className="col-span-full text-center py-20 bg-white rounded-[32px] border border-stone-100 shadow-sm">
+                <UtensilsCrossed size={48} className="mx-auto text-stone-300 mb-4" />
+                <h3 className="text-xl font-bold text-brand-secondary mb-2">لا توجد وجبات متاحة حالياً</h3>
+                <p className="text-stone-500">يقوم الشيف بتجهيز قائمة طعام جديدة، يرجى العودة لاحقاً.</p>
               </div>
             )}
           </div>
@@ -313,11 +306,11 @@ export default function ChefProfile() {
           exit={{ y: 100, opacity: 0 }}
           className="fixed bottom-0 left-0 right-0 p-4 z-50 md:hidden"
         >
-          <div className="bg-brand-primary text-white rounded-2xl p-4 shadow-2xl flex items-center justify-between">
+          <div className="bg-brand-secondary text-white rounded-2xl p-4 shadow-2xl flex items-center justify-between border border-white/10">
             <div className="flex flex-col">
               <span className="text-sm opacity-90 font-medium">أضف منتجات بقيمة 50.00 ج.م لتبدأ الطلب</span>
             </div>
-            <Link to="/cart" className="bg-white text-brand-primary px-6 py-2 rounded-xl font-bold text-sm">
+            <Link to="/cart" className="bg-brand-primary text-white px-6 py-2.5 rounded-xl font-bold text-sm shadow-lg">
               عرض السلة
             </Link>
           </div>
