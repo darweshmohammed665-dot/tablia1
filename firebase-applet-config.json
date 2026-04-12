@@ -1,12 +1,12 @@
+const firebaseConfig = {
+  apiKey: "AIzaSyD52RpbYZfUWDuNAB7-ZpYfy5iNQh8X4mA",
+  authDomain: "tablia-df9fa.firebaseapp.com",
+  projectId: "tablia-df9fa",
+  storageBucket: "tablia-df9fa.firebasestorage.app",
+  messagingSenderId: "321638408054",
+  appId: "1:321638408054:web:d2787249618f5419ee2457",
+  measurementId: "G-KT6NX9Q8N5"
+};
 
-    apiKey: "AIzaSyD52RpbYZfUWDuNAB7-ZpYfy5iNQh8X4mA",
-    authDomain: "tablia-df9fa.firebaseapp.com",
-    projectId: "tablia-df9fa",
-    storageBucket: "tablia-df9fa.firebasestorage.app",
-    messagingSenderId: "321638408054",
-    appId: "1:321638408054:web:d2787249618f5419ee2457",
-    measurementId: "G-KT6NX9Q8N5"
-  };
-
-  // Initialize Firebase
-
+// تهيئة Firebase
+// firebase.initializeApp(firebaseConfig);
