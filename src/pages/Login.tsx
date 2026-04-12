@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
-import { auth, googleProvider, appleProvider } from '../firebase';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { auth, db, googleProvider, appleProvider } from '../firebase';
 import { motion } from 'motion/react';
 import { Mail, Lock, ArrowRight, Chrome, Apple } from 'lucide-react';
 import { toast } from 'sonner';
@@ -55,21 +56,50 @@ export default function Login() {
 
   const handleGoogleLogin = async () => {
     try {
-      await signInWithPopup(auth, googleProvider);
+      const result = await signInWithPopup(auth, googleProvider);
+      
+      // Check if user exists, if not create a basic customer profile
+      const userRef = doc(db, 'users', result.user.uid);
+      const userSnap = await getDoc(userRef);
+      if (!userSnap.exists()) {
+        await setDoc(userRef, {
+          uid: result.user.uid,
+          email: result.user.email || 'no-email@example.com',
+          displayName: result.user.displayName || 'مستخدم جديد',
+          role: 'customer',
+          createdAt: Date.now(),
+        });
+      }
+      
       toast.success('تم تسجيل الدخول بنجاح!');
       navigate('/');
     } catch (err: any) {
-      setError('فشل تسجيل الدخول باستخدام جوجل.');
+      console.error('Google login error:', err);
+      setError('فشل تسجيل الدخول باستخدام جوجل: ' + (err.message || 'خطأ غير معروف'));
     }
   };
 
   const handleAppleLogin = async () => {
     try {
-      await signInWithPopup(auth, appleProvider);
+      const result = await signInWithPopup(auth, appleProvider);
+      
+      const userRef = doc(db, 'users', result.user.uid);
+      const userSnap = await getDoc(userRef);
+      if (!userSnap.exists()) {
+        await setDoc(userRef, {
+          uid: result.user.uid,
+          email: result.user.email || 'no-email@example.com',
+          displayName: result.user.displayName || 'مستخدم جديد',
+          role: 'customer',
+          createdAt: Date.now(),
+        });
+      }
+      
       toast.success('تم تسجيل الدخول بنجاح!');
       navigate('/');
     } catch (err: any) {
-      setError('فشل تسجيل الدخول باستخدام أبل.');
+      console.error('Apple login error:', err);
+      setError('فشل تسجيل الدخول باستخدام أبل: ' + (err.message || 'خطأ غير معروف'));
     }
   };
 

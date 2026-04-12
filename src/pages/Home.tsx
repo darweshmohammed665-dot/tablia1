@@ -1,15 +1,16 @@
-import { motion, useScroll, useTransform } from 'motion/react';
-import { ShoppingBag, Clock, ArrowRight, MessageCircle, Utensils, Heart, Star, ShieldCheck, ChevronLeft, MapPin, Flame, Award, Sparkles } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { motion, useScroll, useTransform, useMotionValue, useSpring } from 'motion/react';
+import { ShoppingBag, Clock, ArrowRight, MessageCircle, Utensils, Heart, Star, ShieldCheck, ChevronLeft, MapPin, Flame, Award, Sparkles, Dices } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
 import ChefMap from '../components/ChefMap';
 import { MealCard } from '../components/MealCard';
-import { useRef } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import { CHEF_IMAGE_URL } from '../constants';
 import { useCart } from '../context/CartContext';
 import { toast } from 'sonner';
 
 export default function Home() {
   const { addToCart } = useCart();
+  const navigate = useNavigate();
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -18,13 +19,85 @@ export default function Home() {
 
   const y = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
 
+  // Mouse Parallax Effect
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+
+  const springConfig = { damping: 50, stiffness: 400 };
+  const smoothMouseX = useSpring(mouseX, springConfig);
+  const smoothMouseY = useSpring(mouseY, springConfig);
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      const { innerWidth, innerHeight } = window;
+      const x = (e.clientX / innerWidth - 0.5) * 2; // -1 to 1
+      const y = (e.clientY / innerHeight - 0.5) * 2; // -1 to 1
+      mouseX.set(x);
+      mouseY.set(y);
+    };
+
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
+  }, [mouseX, mouseY]);
+
+  // Live Orders Ticker
+  const [liveOrder, setLiveOrder] = useState<{name: string, meal: string, time: string} | null>(null);
+  
+  useEffect(() => {
+    const orders = [
+      { name: "أحمد م.", meal: "طاجن بامية باللحمة", time: "الآن" },
+      { name: "سارة ع.", meal: "محشي كرنب", time: "منذ دقيقتين" },
+      { name: "محمود س.", meal: "نص فرخة مشوية", time: "منذ 5 دقائق" },
+      { name: "منى ك.", meal: "مكرونة بشاميل", time: "منذ 10 دقائق" },
+      { name: "كريم ن.", meal: "فطير مشلتت", time: "الآن" }
+    ];
+    
+    let currentIndex = 0;
+    const interval = setInterval(() => {
+      setLiveOrder(orders[currentIndex]);
+      currentIndex = (currentIndex + 1) % orders.length;
+      
+      // Hide after 4 seconds
+      setTimeout(() => setLiveOrder(null), 4000);
+    }, 8000);
+    
+    return () => clearInterval(interval);
+  }, []);
+
+  const handleSurpriseMe = () => {
+    toast.success('جاري اختيار أكلة عشوائية لك...', { icon: '🎲' });
+    setTimeout(() => {
+      navigate('/meals');
+    }, 1500);
+  };
+
   return (
     <div ref={containerRef} className="relative bg-brand-cream overflow-hidden selection:bg-brand-primary selection:text-white">
       {/* Background Grain Overlay */}
       <div className="fixed inset-0 pointer-events-none z-[99] opacity-[0.03] bg-grain"></div>
 
+      {/* Live Orders Ticker */}
+      <div className="fixed bottom-24 left-4 z-50 pointer-events-none">
+        <motion.div
+          initial={{ opacity: 0, y: 50, scale: 0.9 }}
+          animate={liveOrder ? { opacity: 1, y: 0, scale: 1 } : { opacity: 0, y: 50, scale: 0.9 }}
+          transition={{ type: "spring", bounce: 0.4 }}
+          className="bg-white/90 backdrop-blur-md p-4 rounded-2xl shadow-2xl border border-stone-100 flex items-center gap-4"
+        >
+          <div className="w-12 h-12 bg-brand-peach rounded-full flex items-center justify-center text-2xl">
+            🍲
+          </div>
+          <div>
+            <p className="text-sm text-stone-500 font-bold mb-1">{liveOrder?.time}</p>
+            <p className="text-stone-800 font-medium">
+              <span className="font-black text-brand-primary">{liveOrder?.name}</span> طلب {liveOrder?.meal}
+            </p>
+          </div>
+        </motion.div>
+      </div>
+
       {/* Hero Section - Shef Style */}
-      <section className="relative h-[65vh] flex items-center justify-center overflow-hidden">
+      <section className="relative h-[75vh] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
           <img 
             src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&q=80&w=2000" 
@@ -32,24 +105,63 @@ export default function Home() {
             alt="Egyptian Home Cooking"
             referrerPolicy="no-referrer"
           />
-          <div className="absolute inset-0 bg-black/50"></div>
+          <div className="absolute inset-0 bg-black/60 backdrop-blur-[2px]"></div>
+        </div>
+
+        {/* Floating Parallax Ingredients */}
+        <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
+          <motion.img 
+            style={{ x: useTransform(smoothMouseX, [-1, 1], [-50, 50]), y: useTransform(smoothMouseY, [-1, 1], [-50, 50]) }}
+            src="https://cdn3d.iconscout.com/3d/premium/thumb/tomato-4993655-4160030.png" 
+            className="absolute top-[15%] right-[10%] w-32 h-32 object-contain drop-shadow-2xl opacity-80 blur-[2px]"
+            alt="Tomato"
+          />
+          <motion.img 
+            style={{ x: useTransform(smoothMouseX, [-1, 1], [80, -80]), y: useTransform(smoothMouseY, [-1, 1], [80, -80]) }}
+            src="https://cdn3d.iconscout.com/3d/premium/thumb/garlic-4993660-4160035.png" 
+            className="absolute bottom-[20%] left-[15%] w-40 h-40 object-contain drop-shadow-2xl opacity-90"
+            alt="Garlic"
+          />
+          <motion.img 
+            style={{ x: useTransform(smoothMouseX, [-1, 1], [-30, 30]), y: useTransform(smoothMouseY, [-1, 1], [30, -30]) }}
+            src="https://cdn3d.iconscout.com/3d/premium/thumb/chili-pepper-4993662-4160037.png" 
+            className="absolute top-[30%] left-[5%] w-24 h-24 object-contain drop-shadow-2xl opacity-70 blur-[3px] rotate-45"
+            alt="Chili"
+          />
+          <motion.img 
+            style={{ x: useTransform(smoothMouseX, [-1, 1], [60, -60]), y: useTransform(smoothMouseY, [-1, 1], [-60, 60]) }}
+            src="https://cdn3d.iconscout.com/3d/premium/thumb/lemon-4993658-4160033.png" 
+            className="absolute bottom-[15%] right-[20%] w-28 h-28 object-contain drop-shadow-2xl opacity-80 -rotate-12"
+            alt="Lemon"
+          />
         </div>
 
         <div className="relative z-10 text-center px-4 max-w-4xl mx-auto mt-10">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ type: "spring", bounce: 0.5, duration: 1 }}
+            className="inline-block mb-6"
+          >
+            <span className="bg-brand-primary/20 border border-brand-primary/50 text-white px-6 py-2 rounded-full text-sm font-bold tracking-widest uppercase backdrop-blur-md shadow-[0_0_30px_rgba(220,38,38,0.3)]">
+              ✨ تجربة طعام لا تُنسى
+            </span>
+          </motion.div>
+
           <motion.h1 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-4xl md:text-7xl font-serif font-bold text-white mb-6 leading-tight"
+            className="text-5xl md:text-[80px] font-serif font-black text-white mb-6 leading-[1.1] drop-shadow-2xl"
           >
             تعبت من أكل الشارع؟ <br />
-            <span className="italic italic-arabic text-brand-primary">طبلية بيوصلك أكل بيت حقيقي</span>
+            <span className="italic italic-arabic text-transparent bg-clip-text bg-gradient-to-r from-brand-primary to-orange-400">طبلية بيوصلك أكل بيت حقيقي</span>
           </motion.h1>
           
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="text-lg md:text-2xl text-white/90 mb-10 font-medium leading-relaxed"
+            className="text-xl md:text-3xl text-white/90 mb-12 font-medium leading-relaxed max-w-3xl mx-auto drop-shadow-lg"
           >
             من مطبخ ست شاطرة، بأحسن جودة وأقل سعر ولحد باب بيتك في طنطا.
           </motion.p>
@@ -58,19 +170,19 @@ export default function Home() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="bg-white p-2 rounded-full shadow-2xl flex items-center max-w-2xl mx-auto mb-12"
+            className="flex flex-col sm:flex-row items-center justify-center gap-4 max-w-2xl mx-auto mb-12"
           >
-            <div className="flex-grow flex items-center px-6 gap-3 border-l border-stone-200">
-              <MapPin className="text-brand-primary" size={24} />
-              <input 
-                type="text" 
-                placeholder="دخل منطقتك في طنطا..." 
-                className="w-full py-4 outline-none text-xl font-medium text-stone-800"
-              />
-            </div>
-            <Link to="/meals" className="bg-brand-primary text-white px-10 py-4 rounded-full font-black text-xl hover:bg-brand-primary/90 transition-all">
+            <Link to="/meals" className="w-full sm:w-auto bg-brand-primary text-white px-10 py-5 rounded-full font-black text-xl hover:bg-brand-primary/90 hover:scale-105 transition-all shadow-[0_10px_40px_rgba(220,38,38,0.4)] flex items-center justify-center gap-3">
+              <Utensils size={24} />
               اكتشف الأكل
             </Link>
+            <button 
+              onClick={handleSurpriseMe}
+              className="w-full sm:w-auto bg-white/10 backdrop-blur-md border border-white/30 text-white px-10 py-5 rounded-full font-black text-xl hover:bg-white/20 hover:scale-105 transition-all shadow-xl flex items-center justify-center gap-3"
+            >
+              <Dices size={24} className="text-brand-primary" />
+              محتار تاكل إيه؟
+            </button>
           </motion.div>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">

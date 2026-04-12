@@ -51,8 +51,8 @@ service cloud.firestore {
     // Users Collection
     match /users/{userId} {
       // Allow reading if it's a chef profile (public) OR if the user is the owner OR an admin
-      allow get: if resource.data.role == 'chef' || isOwner(userId) || isAdmin();
-      allow list: if resource.data.role == 'chef' || isAdmin();
+      allow get: if isOwner(userId) || isAdmin() || (resource != null && resource.data.role == 'chef');
+      allow list: if isAdmin() || (resource != null && resource.data.role == 'chef');
       
       allow create: if isOwner(userId) && isValidUser(request.resource.data);
       allow update: if isOwner(userId) && isValidUser(request.resource.data) && 

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { createUserWithEmailAndPassword, updateProfile, signInWithPopup } from 'firebase/auth';
-import { doc, setDoc } from 'firebase/firestore';
+import { doc, setDoc, getDoc } from 'firebase/firestore';
 import { auth, db, googleProvider, appleProvider } from '../firebase';
 import { motion } from 'motion/react';
 import { Mail, Lock, User, ChefHat, ArrowRight, Chrome, CheckCircle2, Apple, MapPin } from 'lucide-react';
@@ -76,34 +76,57 @@ export default function Register() {
   const handleGoogleLogin = async () => {
     try {
       const result = await signInWithPopup(auth, googleProvider);
-      await setDoc(doc(db, 'users', result.user.uid), {
-        uid: result.user.uid,
-        email: result.user.email,
-        displayName: result.user.displayName,
-        role: role,
-        createdAt: Date.now(),
-      }, { merge: true });
+      const userRef = doc(db, 'users', result.user.uid);
+      const userSnap = await getDoc(userRef);
+      
+      if (!userSnap.exists()) {
+        await setDoc(userRef, {
+          uid: result.user.uid,
+          email: result.user.email || 'no-email@example.com',
+          displayName: result.user.displayName || 'مستخدم جديد',
+          role: role,
+          createdAt: Date.now(),
+        });
+      } else {
+        // If user exists, don't overwrite role or createdAt
+        await setDoc(userRef, {
+          email: result.user.email || 'no-email@example.com',
+          displayName: result.user.displayName || 'مستخدم جديد',
+        }, { merge: true });
+      }
 
-      navigate(role === 'chef' ? '/dashboard' : '/');
+      navigate(userSnap.exists() && userSnap.data().role === 'chef' ? '/dashboard' : (role === 'chef' ? '/dashboard' : '/'));
     } catch (err: any) {
-      setError('فشل إنشاء الحساب باستخدام جوجل.');
+      console.error('Google login error:', err);
+      setError('فشل إنشاء الحساب باستخدام جوجل: ' + (err.message || 'خطأ غير معروف'));
     }
   };
 
   const handleAppleLogin = async () => {
     try {
       const result = await signInWithPopup(auth, appleProvider);
-      await setDoc(doc(db, 'users', result.user.uid), {
-        uid: result.user.uid,
-        email: result.user.email,
-        displayName: result.user.displayName,
-        role: role,
-        createdAt: Date.now(),
-      }, { merge: true });
+      const userRef = doc(db, 'users', result.user.uid);
+      const userSnap = await getDoc(userRef);
+      
+      if (!userSnap.exists()) {
+        await setDoc(userRef, {
+          uid: result.user.uid,
+          email: result.user.email || 'no-email@example.com',
+          displayName: result.user.displayName || 'مستخدم جديد',
+          role: role,
+          createdAt: Date.now(),
+        });
+      } else {
+        await setDoc(userRef, {
+          email: result.user.email || 'no-email@example.com',
+          displayName: result.user.displayName || 'مستخدم جديد',
+        }, { merge: true });
+      }
 
-      navigate(role === 'chef' ? '/dashboard' : '/');
+      navigate(userSnap.exists() && userSnap.data().role === 'chef' ? '/dashboard' : (role === 'chef' ? '/dashboard' : '/'));
     } catch (err: any) {
-      setError('فشل إنشاء الحساب باستخدام أبل.');
+      console.error('Apple login error:', err);
+      setError('فشل إنشاء الحساب باستخدام أبل: ' + (err.message || 'خطأ غير معروف'));
     }
   };
 
