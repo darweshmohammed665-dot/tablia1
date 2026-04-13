@@ -15,6 +15,10 @@ export default function Chefs() {
 
   useEffect(() => {
     const fetchChefs = async () => {
+      if (!db) {
+        setLoading(false);
+        return;
+      }
       const path = 'users';
       try {
         const q = query(collection(db, path), where('role', '==', 'chef'));

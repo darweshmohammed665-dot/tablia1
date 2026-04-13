@@ -1,21 +1,23 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth, GoogleAuthProvider, OAuthProvider } from 'firebase/auth';
 import { getFirestore, doc, getDocFromServer } from 'firebase/firestore';
+import { getDatabase } from 'firebase/database';
 import { getAnalytics } from 'firebase/analytics';
 import firebaseConfig from '../firebase-applet-config.json';
 
 // Initialize Firebase SDK
-const app = initializeApp(firebaseConfig);
+const app = firebaseConfig.apiKey ? initializeApp(firebaseConfig) : null;
 
-export const db = getFirestore(app);
+export const db = app ? getFirestore(app, firebaseConfig.firestoreDatabaseId) : null;
+export const rtdb = app ? getDatabase(app) : null;
 
-export const auth = getAuth(app);
-export const analytics = typeof window !== 'undefined' ? getAnalytics(app) : null;
+export const auth = app ? getAuth(app) : null;
+export const analytics = (app && typeof window !== 'undefined') ? getAnalytics(app) : null;
 export const googleProvider = new GoogleAuthProvider();
 export const appleProvider = new OAuthProvider('apple.com');
 
-export type ConnectionStatus = 'loading' | 'connected' | 'error';
-let connectionStatus: ConnectionStatus = 'loading';
+export type ConnectionStatus = 'loading' | 'connected' | 'error' | 'disconnected';
+let connectionStatus: ConnectionStatus = firebaseConfig.apiKey ? 'loading' : 'disconnected';
 let onStatusChange: ((status: ConnectionStatus) => void) | null = null;
 
 export const getConnectionStatus = () => connectionStatus;
@@ -26,6 +28,10 @@ export const subscribeToConnectionStatus = (cb: (status: ConnectionStatus) => vo
 };
 
 async function testConnection() {
+  if (!app || !db) {
+    console.warn('Firebase is disconnected. No configuration found.');
+    return;
+  }
   try {
     await getDocFromServer(doc(db, 'test', 'connection'));
     console.log('Firestore connection successful');

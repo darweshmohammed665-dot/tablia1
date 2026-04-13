@@ -26,7 +26,7 @@ const OrderTrackingMap: React.FC<OrderTrackingMapProps> = ({ orderId, initialLoc
   const [location, setLocation] = useState(initialLocation || { lat: 30.7917, lng: 30.9996 }); // Default to Tanta
 
   useEffect(() => {
-    const unsubscribe = onLocationUpdated((newLocation) => {
+    const unsubscribe = onLocationUpdated(orderId, (newLocation) => {
       setLocation(newLocation);
     });
     return unsubscribe;

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { joinOrderRoom, updateLocation } from '../services/socketService';
+import { updateLocation } from '../services/socketService';
 
 export default function DriverTracking() {
   const [orderId, setOrderId] = useState('');
@@ -9,7 +9,6 @@ export default function DriverTracking() {
 
   const startTracking = () => {
     if (!orderId) return;
-    joinOrderRoom(orderId);
     setIsTracking(true);
 
     if (navigator.geolocation) {

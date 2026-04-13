@@ -44,14 +44,16 @@ export default function Register() {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       await updateProfile(userCredential.user, { displayName: name });
       
-      await setDoc(doc(db, 'users', userCredential.user.uid), {
-        uid: userCredential.user.uid,
-        email,
-        displayName: name,
-        location,
-        role,
-        createdAt: Date.now(),
-      });
+      if (db) {
+        await setDoc(doc(db, 'users', userCredential.user.uid), {
+          uid: userCredential.user.uid,
+          email,
+          displayName: name,
+          location,
+          role,
+          createdAt: Date.now(),
+        });
+      }
 
       toast.success('تم إنشاء الحساب بنجاح!');
       navigate(role === 'chef' ? '/dashboard' : '/');
@@ -76,26 +78,29 @@ export default function Register() {
   const handleGoogleLogin = async () => {
     try {
       const result = await signInWithPopup(auth, googleProvider);
-      const userRef = doc(db, 'users', result.user.uid);
-      const userSnap = await getDoc(userRef);
-      
-      if (!userSnap.exists()) {
-        await setDoc(userRef, {
-          uid: result.user.uid,
-          email: result.user.email || 'no-email@example.com',
-          displayName: result.user.displayName || 'مستخدم جديد',
-          role: role,
-          createdAt: Date.now(),
-        });
+      if (db) {
+        const userRef = doc(db, 'users', result.user.uid);
+        const userSnap = await getDoc(userRef);
+        
+        if (!userSnap.exists()) {
+          await setDoc(userRef, {
+            uid: result.user.uid,
+            email: result.user.email || 'no-email@example.com',
+            displayName: result.user.displayName || 'مستخدم جديد',
+            role: role,
+            createdAt: Date.now(),
+          });
+        } else {
+          // If user exists, don't overwrite role or createdAt
+          await setDoc(userRef, {
+            email: result.user.email || 'no-email@example.com',
+            displayName: result.user.displayName || 'مستخدم جديد',
+          }, { merge: true });
+        }
+        navigate(userSnap.exists() && userSnap.data().role === 'chef' ? '/dashboard' : (role === 'chef' ? '/dashboard' : '/'));
       } else {
-        // If user exists, don't overwrite role or createdAt
-        await setDoc(userRef, {
-          email: result.user.email || 'no-email@example.com',
-          displayName: result.user.displayName || 'مستخدم جديد',
-        }, { merge: true });
+        navigate(role === 'chef' ? '/dashboard' : '/');
       }
-
-      navigate(userSnap.exists() && userSnap.data().role === 'chef' ? '/dashboard' : (role === 'chef' ? '/dashboard' : '/'));
     } catch (err: any) {
       console.error('Google login error:', err);
       setError('فشل إنشاء الحساب باستخدام جوجل: ' + (err.message || 'خطأ غير معروف'));
@@ -105,25 +110,29 @@ export default function Register() {
   const handleAppleLogin = async () => {
     try {
       const result = await signInWithPopup(auth, appleProvider);
-      const userRef = doc(db, 'users', result.user.uid);
-      const userSnap = await getDoc(userRef);
-      
-      if (!userSnap.exists()) {
-        await setDoc(userRef, {
-          uid: result.user.uid,
-          email: result.user.email || 'no-email@example.com',
-          displayName: result.user.displayName || 'مستخدم جديد',
-          role: role,
-          createdAt: Date.now(),
-        });
-      } else {
-        await setDoc(userRef, {
-          email: result.user.email || 'no-email@example.com',
-          displayName: result.user.displayName || 'مستخدم جديد',
-        }, { merge: true });
-      }
+      if (db) {
+        const userRef = doc(db, 'users', result.user.uid);
+        const userSnap = await getDoc(userRef);
+        
+        if (!userSnap.exists()) {
+          await setDoc(userRef, {
+            uid: result.user.uid,
+            email: result.user.email || 'no-email@example.com',
+            displayName: result.user.displayName || 'مستخدم جديد',
+            role: role,
+            createdAt: Date.now(),
+          });
+        } else {
+          await setDoc(userRef, {
+            email: result.user.email || 'no-email@example.com',
+            displayName: result.user.displayName || 'مستخدم جديد',
+          }, { merge: true });
+        }
 
-      navigate(userSnap.exists() && userSnap.data().role === 'chef' ? '/dashboard' : (role === 'chef' ? '/dashboard' : '/'));
+        navigate(userSnap.exists() && userSnap.data().role === 'chef' ? '/dashboard' : (role === 'chef' ? '/dashboard' : '/'));
+      } else {
+        navigate(role === 'chef' ? '/dashboard' : '/');
+      }
     } catch (err: any) {
       console.error('Apple login error:', err);
       setError('فشل إنشاء الحساب باستخدام أبل: ' + (err.message || 'خطأ غير معروف'));

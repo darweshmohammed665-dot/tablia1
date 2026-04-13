@@ -59,16 +59,18 @@ export default function Login() {
       const result = await signInWithPopup(auth, googleProvider);
       
       // Check if user exists, if not create a basic customer profile
-      const userRef = doc(db, 'users', result.user.uid);
-      const userSnap = await getDoc(userRef);
-      if (!userSnap.exists()) {
-        await setDoc(userRef, {
-          uid: result.user.uid,
-          email: result.user.email || 'no-email@example.com',
-          displayName: result.user.displayName || 'مستخدم جديد',
-          role: 'customer',
-          createdAt: Date.now(),
-        });
+      if (db) {
+        const userRef = doc(db, 'users', result.user.uid);
+        const userSnap = await getDoc(userRef);
+        if (!userSnap.exists()) {
+          await setDoc(userRef, {
+            uid: result.user.uid,
+            email: result.user.email || 'no-email@example.com',
+            displayName: result.user.displayName || 'مستخدم جديد',
+            role: 'customer',
+            createdAt: Date.now(),
+          });
+        }
       }
       
       toast.success('تم تسجيل الدخول بنجاح!');
@@ -83,16 +85,18 @@ export default function Login() {
     try {
       const result = await signInWithPopup(auth, appleProvider);
       
-      const userRef = doc(db, 'users', result.user.uid);
-      const userSnap = await getDoc(userRef);
-      if (!userSnap.exists()) {
-        await setDoc(userRef, {
-          uid: result.user.uid,
-          email: result.user.email || 'no-email@example.com',
-          displayName: result.user.displayName || 'مستخدم جديد',
-          role: 'customer',
-          createdAt: Date.now(),
-        });
+      if (db) {
+        const userRef = doc(db, 'users', result.user.uid);
+        const userSnap = await getDoc(userRef);
+        if (!userSnap.exists()) {
+          await setDoc(userRef, {
+            uid: result.user.uid,
+            email: result.user.email || 'no-email@example.com',
+            displayName: result.user.displayName || 'مستخدم جديد',
+            role: 'customer',
+            createdAt: Date.now(),
+          });
+        }
       }
       
       toast.success('تم تسجيل الدخول بنجاح!');

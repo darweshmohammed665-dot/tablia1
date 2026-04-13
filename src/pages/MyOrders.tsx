@@ -4,10 +4,11 @@ import { db, auth } from '../firebase';
 import { Order, UserProfile } from '../types';
 import { handleFirestoreError, OperationType } from '../lib/firestore-errors';
 import { motion } from 'motion/react';
-import { Package, Clock, ShoppingBag, ChevronLeft, Map, User, Settings, Edit3 } from 'lucide-react';
+import { Package, Clock, ShoppingBag, ChevronLeft, Map, User, Settings, Edit3, MessageCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import OrderStatusTracker from '../components/OrderStatusTracker';
 import OrderTrackingMap from '../components/OrderTrackingMap';
+import Chat from '../components/Chat';
 import { onLocationUpdated } from '../services/socketService';
 
 export default function MyOrders() {
@@ -15,14 +16,20 @@ export default function MyOrders() {
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [trackingOrderId, setTrackingOrderId] = useState<string | null>(null);
+  const [chatOrderId, setChatOrderId] = useState<string | null>(null);
+  const [chatRecipient, setChatRecipient] = useState<string>('');
   const [driverLocations, setDriverLocations] = useState<Record<string, { lat: number; lng: number }>>({});
   const [activeTab, setActiveTab] = useState<'upcoming' | 'previous'>('upcoming');
 
   useEffect(() => {
-    if (!auth.currentUser) return;
+    if (!auth?.currentUser || !db) {
+      setLoading(false);
+      return;
+    }
 
     // Fetch User Profile
     const fetchProfile = async () => {
+      if (!db) return;
       try {
         const docRef = doc(db, 'users', auth.currentUser!.uid);
         const docSnap = await getDoc(docRef);
@@ -169,6 +176,17 @@ export default function MyOrders() {
                         <Map size={16} /> {trackingOrderId === order.id ? 'إخفاء الخريطة' : 'تتبع السائق على الخريطة'}
                       </button>
                     )}
+                    {['pending', 'preparing', 'out_for_delivery'].includes(order.status) && (
+                      <button 
+                        onClick={() => {
+                          setChatOrderId(order.id);
+                          setChatRecipient('الشيف');
+                        }}
+                        className="text-sm text-brand-secondary hover:underline flex items-center gap-2 w-fit mt-3 font-bold bg-brand-secondary/5 px-4 py-2 rounded-full"
+                      >
+                        <MessageCircle size={16} /> محادثة مع الشيف
+                      </button>
+                    )}
                   </div>
                   <div className="text-left md:text-right">
                     <p className="text-2xl font-black text-brand-primary mb-1">{order.total} <span className="text-sm text-stone-500">ج.م</span></p>
@@ -215,6 +233,13 @@ export default function MyOrders() {
           </div>
         )}
       </div>
+
+      <Chat 
+        orderId={chatOrderId || ''} 
+        recipientName={chatRecipient} 
+        isOpen={!!chatOrderId} 
+        onClose={() => setChatOrderId(null)} 
+      />
     </div>
   );
 }

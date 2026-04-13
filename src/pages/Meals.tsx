@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Search, Filter, Star, Clock, X, ChevronDown, SlidersHorizontal, ArrowUpDown, ShoppingCart, ShoppingBag, UtensilsCrossed, Coffee, Pizza, IceCream, Sandwich, Flame, Award, Sparkles, BadgeCheck } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
+import { MealCard } from '../components/MealCard';
 import { toast } from 'sonner';
 
 export default function Meals() {
@@ -37,6 +38,10 @@ export default function Meals() {
 
   useEffect(() => {
     const fetchMeals = async () => {
+      if (!db) {
+        setLoading(false);
+        return;
+      }
       const path = 'meals';
       try {
         const q = query(collection(db, path), where('available', '==', true));

@@ -178,6 +178,11 @@ export default function Checkout() {
   const handleOrderCreation = async (paymentId?: string) => {
     setLoading(true);
     try {
+      if (!db) {
+        toast.error('قاعدة البيانات غير متصلة حالياً.');
+        setLoading(false);
+        return;
+      }
       const orderData = {
         customerId: auth.currentUser?.uid,
         customerName: auth.currentUser?.displayName || 'عميل طبلية',

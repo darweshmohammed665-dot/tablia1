@@ -4,10 +4,11 @@ import { db, auth } from '../firebase';
 import { Meal, UserProfile, Order } from '../types';
 import { handleFirestoreError, OperationType } from '../lib/firestore-errors';
 import { motion, AnimatePresence } from 'motion/react';
-import { Plus, Trash2, Package, DollarSign, Star, Utensils, Settings, Clock, ChevronDown, UserCheck, MapPin, Phone, Map } from 'lucide-react';
+import { Plus, Trash2, Package, DollarSign, Star, Utensils, Settings, Clock, ChevronDown, UserCheck, MapPin, Phone, Map, MessageCircle } from 'lucide-react';
 import OrderStatusTracker from '../components/OrderStatusTracker';
 import ChefProfileForm from '../components/ChefProfileForm';
 import OrderTrackingMap from '../components/OrderTrackingMap';
+import Chat from '../components/Chat';
 
 interface ChefDashboardProps {
   profile: UserProfile;
@@ -21,6 +22,8 @@ export default function ChefDashboard({ profile }: ChefDashboardProps) {
   const [mealToDelete, setMealToDelete] = useState<string | null>(null);
   const [updatingOrderId, setUpdatingOrderId] = useState<string | null>(null);
   const [trackingOrderId, setTrackingOrderId] = useState<string | null>(null);
+  const [chatOrderId, setChatOrderId] = useState<string | null>(null);
+  const [chatRecipient, setChatRecipient] = useState<string>('');
   const [orderFilter, setOrderFilter] = useState<'all' | 'pending' | 'preparing' | 'out_for_delivery'>('all');
   const [categoryFilter, setCategoryFilter] = useState('الكل');
   const [isProfileComplete, setIsProfileComplete] = useState(!!(profile.bio && profile.location && profile.photoURL));
@@ -36,7 +39,10 @@ export default function ChefDashboard({ profile }: ChefDashboardProps) {
   });
 
   useEffect(() => {
-    if (!auth.currentUser) return;
+    if (!auth?.currentUser || !db) {
+      setLoading(false);
+      return;
+    }
 
     // Real-time Orders Listener
     const ordersPath = 'orders';
@@ -312,9 +318,18 @@ export default function ChefDashboard({ profile }: ChefDashboardProps) {
                             </a>
                             <button 
                               onClick={() => setTrackingOrderId(trackingOrderId === order.id ? null : order.id)}
-                              className="text-sm text-brand-primary hover:underline flex items-center gap-2 w-fit mt-2"
+                              className="text-sm text-brand-primary hover:underline flex items-center gap-2 w-fit mt-2 font-bold"
                             >
                               <Map size={14} /> {trackingOrderId === order.id ? 'إخفاء الموقع' : 'تتبع السائق'}
+                            </button>
+                            <button 
+                              onClick={() => {
+                                setChatOrderId(order.id);
+                                setChatRecipient(order.customerName);
+                              }}
+                              className="text-sm text-brand-secondary hover:underline flex items-center gap-2 w-fit mt-2 font-bold"
+                            >
+                              <MessageCircle size={14} /> محادثة مع العميل
                             </button>
                           </div>
                         </div>
@@ -398,6 +413,13 @@ export default function ChefDashboard({ profile }: ChefDashboardProps) {
           </div>
         </div>
       </div>
+
+      <Chat 
+        orderId={chatOrderId || ''} 
+        recipientName={chatRecipient} 
+        isOpen={!!chatOrderId} 
+        onClose={() => setChatOrderId(null)} 
+      />
 
       {/* Delete Confirmation Modal */}
       <AnimatePresence>

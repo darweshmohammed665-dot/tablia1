@@ -1,22 +1,40 @@
-import { io, Socket } from 'socket.io-client';
-
-const socket: Socket = io('/', {
-  transports: ['websocket'],
-});
-
-export const joinOrderRoom = (orderId: string) => {
-  socket.emit('join-order', orderId);
-};
+import { ref, set, onValue, off } from 'firebase/database';
+import { rtdb } from '../firebase';
 
 export const updateLocation = (orderId: string, location: { lat: number; lng: number }) => {
-  socket.emit('update-location', { orderId, location });
+  if (!rtdb) return;
+  const locationRef = ref(rtdb, `locations/${orderId}`);
+  set(locationRef, {
+    ...location,
+    timestamp: Date.now()
+  });
 };
 
-export const onLocationUpdated = (callback: (location: { lat: number; lng: number }) => void) => {
-  socket.on('location-updated', callback);
+export const onLocationUpdated = (orderId: string, callback: (location: { lat: number; lng: number }) => void) => {
+  if (!rtdb) return () => {};
+  const locationRef = ref(rtdb, `locations/${orderId}`);
+  
+  const unsubscribe = onValue(locationRef, (snapshot) => {
+    const data = snapshot.val();
+    if (data) {
+      callback({ lat: data.lat, lng: data.lng });
+    }
+  });
+
   return () => {
-    socket.off('location-updated', callback);
+    off(locationRef, 'value', unsubscribe);
   };
+};
+
+// Placeholder for backward compatibility if needed, but we should prefer the named exports
+const socket = {
+  emit: (event: string, data: any) => {
+    console.warn(`Socket.io emit called for ${event}, but app is using Firebase RTDB.`);
+  },
+  on: (event: string, callback: any) => {
+    console.warn(`Socket.io on called for ${event}, but app is using Firebase RTDB.`);
+  },
+  off: (event: string, callback: any) => {}
 };
 
 export default socket;

@@ -24,7 +24,10 @@ export default function ChefProfile() {
   const isOwner = auth.currentUser?.uid === id;
 
   const fetchData = async () => {
-    if (!id) return;
+    if (!id || !db) {
+      setLoading(false);
+      return;
+    }
     try {
       const chefSnap = await getDoc(doc(db, 'users', id));
       if (chefSnap.exists()) {
