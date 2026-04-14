@@ -76,48 +76,48 @@ export default function Home() {
       </div>
 
       {/* Hero Section - Shef Style */}
-      <section className="relative h-[75vh] flex items-center justify-center overflow-hidden">
+      <section className="relative min-h-[85vh] flex items-center justify-center overflow-hidden pt-20">
         <motion.div 
           animate={{ 
-            scale: [1, 1.1, 1],
+            scale: [1, 1.05, 1],
           }}
           transition={{ 
-            duration: 30, 
+            duration: 20, 
             repeat: Infinity,
             ease: "linear" 
           }}
           className="absolute inset-0 z-0"
         >
           <img 
-            src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&q=80&w=2000" 
+            src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&q=80&w=2000" 
             className="w-full h-full object-cover"
-            alt="Egyptian Home Cooking"
+            alt="Egyptian Home Cooking Table"
             referrerPolicy="no-referrer"
           />
         </motion.div>
         
         {/* Premium Gradient Overlay */}
-        <div className="absolute inset-0 z-0 bg-gradient-to-b from-black/80 via-black/40 to-brand-cream"></div>
+        <div className="absolute inset-0 z-0 bg-gradient-to-b from-black/80 via-black/50 to-brand-cream"></div>
 
-        <div className="relative z-10 text-center px-4 max-w-4xl mx-auto mt-10">
+        <div className="relative z-10 text-center px-4 max-w-5xl mx-auto">
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ type: "spring", bounce: 0.5, duration: 1 }}
-            className="inline-block mb-6"
+            className="inline-block mb-8"
           >
-            <span className="bg-brand-primary/20 border border-brand-primary/50 text-white px-6 py-2 rounded-full text-sm font-bold tracking-widest uppercase backdrop-blur-md shadow-[0_0_30px_rgba(220,38,38,0.3)]">
-              ✨ تجربة طعام لا تُنسى
+            <span className="bg-brand-primary/20 border border-brand-primary/50 text-white px-8 py-3 rounded-full text-sm font-bold tracking-widest uppercase backdrop-blur-md shadow-[0_0_30px_rgba(220,38,38,0.3)]">
+              ✨ تجربة طعام لا تُنسى في طنطا
             </span>
           </motion.div>
 
           <motion.h1 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-4xl md:text-[80px] font-serif font-black text-white mb-6 leading-[1.1] drop-shadow-2xl px-2"
+            className="text-4xl md:text-[80px] font-serif font-black text-white mb-8 leading-tight md:leading-[1.2] drop-shadow-2xl px-2"
           >
             تعبت من أكل الشارع؟ <br />
-            <span className="italic italic-arabic text-transparent bg-clip-text bg-gradient-to-r from-brand-primary to-orange-400">طبلية بيوصلك أكل بيت حقيقي</span>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-primary to-orange-400 py-2 inline-block">طبلية بيوصلك أكل بيت حقيقي</span>
           </motion.h1>
           
           <motion.p
