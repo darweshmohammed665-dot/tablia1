@@ -151,7 +151,7 @@ export default function ChefProfile() {
               <div className="flex items-center justify-center gap-2 text-brand-primary mb-2">
                 <Star size={28} className="fill-brand-primary" />
               </div>
-              <span className="text-3xl font-black text-brand-secondary block mb-1">{chef.rating || '4.9'}</span>
+              <span className="text-3xl font-black text-brand-secondary block mb-1">{chef.rating || '0.0'}</span>
               <p className="text-sm text-stone-500 font-bold">متوسط التقييم</p>
             </div>
             
@@ -159,7 +159,7 @@ export default function ChefProfile() {
               <div className="flex items-center justify-center gap-2 text-stone-400 mb-2">
                 <Users size={28} />
               </div>
-              <span className="text-3xl font-black text-brand-secondary block mb-1">{chef.reviewsCount || '120'}</span>
+              <span className="text-3xl font-black text-brand-secondary block mb-1">{chef.reviewsCount || '0'}</span>
               <p className="text-sm text-stone-500 font-bold">إجمالي التقييمات</p>
             </div>
 
@@ -175,7 +175,7 @@ export default function ChefProfile() {
               <div className="flex items-center justify-center gap-2 text-stone-400 mb-2">
                 <Clock size={28} />
               </div>
-              <span className="text-3xl font-black text-brand-secondary block mb-1">45</span>
+              <span className="text-3xl font-black text-brand-secondary block mb-1">{meals.length > 0 ? Math.min(...meals.map(m => m.deliveryTime || 45)) : '--'}</span>
               <p className="text-sm text-stone-500 font-bold">دقيقة للتوصيل</p>
             </div>
           </div>

@@ -107,7 +107,7 @@ export default function About() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-8">
             {[
-              { title: "اختيار دقيق للطهاة", desc: "كل طباخة بتعدي على مقابلة شخصية ومراجعة نظافة مطبخها.", icon: Users },
+              { title: "اختيار دقيق للمطابخ", desc: "كل مطبخ بيعدي على مقابلة شخصية ومراجعة نظافة.", icon: Users },
               { title: "مكونات طازجة يومياً", desc: "المكونات بتتجاب طازجة كل يوم — مفيش مجمد أو قديم.", icon: Utensils },
               { title: "طهي عند الطلب", desc: "مفيش أكل جاهز — كل أكلة بتتطبخ بعد الطلب لضمان النفس.", icon: Flame },
               { title: "تغليف محكم ونظيف", desc: "التغليف نظيف ومحكم ومناسب للتوصيل لضمان الجودة.", icon: ShieldCheck },
@@ -131,7 +131,7 @@ export default function About() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-12 text-center">
             <div>
               <p className="text-5xl font-bold mb-2">+50</p>
-              <p className="text-brand-peach font-bold text-xl">شيف محترف</p>
+              <p className="text-brand-peach font-bold text-xl">مطبخ محترف</p>
             </div>
             <div>
               <p className="text-5xl font-bold mb-2">+1000</p>
@@ -156,7 +156,7 @@ export default function About() {
           <p className="text-xl text-stone-500 mb-12">انضم لعيلة طبلية النهاردة.. سواء كنت شيف عاوز تفتح مطبخك أو أكيل بيدور على النفس الصح اللي بجد.</p>
           <div className="flex flex-col sm:flex-row gap-6 justify-center">
             <Link to="/meals" className="btn-primary py-5 px-12 text-xl shadow-2xl">دوق دلوقتي</Link>
-            <Link to="/join-us" className="btn-secondary py-5 px-12 text-xl">انضم كطباخ</Link>
+            <Link to="/join-us" className="btn-secondary py-5 px-12 text-xl">انضم كمطبخ</Link>
           </div>
         </div>
       </section>

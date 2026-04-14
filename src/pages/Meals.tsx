@@ -121,7 +121,7 @@ export default function Meals() {
           
           <div className="inline-block px-8 py-4 bg-brand-primary/10 border-2 border-brand-primary border-dashed rounded-2xl mb-8">
             <p className="text-lg font-bold text-brand-primary">
-              الوجبات الأسبوعية — للطلاب والموظفين: اشترك في الباقة الأسبوعية ووفر أكتر!
+              الوجبات اليومية للطلاب والموظفين اطلب ووفر اكتر
             </p>
           </div>
         </div>
@@ -162,46 +162,6 @@ export default function Meals() {
                   </div>
                   <span className={`font-black transition-colors ${selectedCategories.includes(cat.label) ? 'text-brand-primary' : 'text-stone-600 group-hover:text-brand-primary'}`}>{cat.label}</span>
                 </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Most Searched Tags */}
-          <div className="space-y-6">
-            <h3 className="text-xl font-black text-brand-accent">الأكثر بحثاً على طبلية</h3>
-            <div className="flex flex-wrap gap-3">
-              {['بيتزا', 'كشري', 'مشويات', 'برجر', 'كريب', 'حلويات النصر'].map((tag) => (
-                <button 
-                  key={tag}
-                  onClick={() => setSearchTerm(tag)}
-                  className="px-6 py-3 bg-white rounded-2xl border border-stone-100 font-bold text-stone-600 hover:border-brand-primary hover:text-brand-primary transition-all shadow-sm flex items-center gap-2"
-                >
-                  <ArrowUpDown size={14} className="rotate-45" />
-                  {tag}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Stores Near You */}
-          <div className="space-y-8">
-            <h3 className="text-2xl font-black text-brand-accent">المتاجر الكبرى بالقرب منك</h3>
-            <div className="flex gap-6 overflow-x-auto pb-4 scrollbar-hide">
-              {[
-                { name: 'بيم', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/BIM_logo.svg/1200px-BIM_logo.svg.png' },
-                { name: 'حاج عرفة', logo: 'https://hajarafa.com/wp-content/uploads/2021/04/Haj-Arafa-Logo.png' },
-                { name: 'خير زمان', logo: 'https://khairzaman.com.eg/wp-content/uploads/2021/06/KZ-Logo.png' },
-                { name: 'طبلية ماركت', logo: 'https://i.ibb.co/B2Fm90cV/Whats-Ap-Image-2026-04-02-at-13-09-41-1.jpg' }
-              ].map((store) => (
-                <div key={store.name} className="min-w-[140px] flex flex-col items-center gap-3">
-                  <div className="w-24 h-24 bg-white rounded-3xl p-4 shadow-lg border border-stone-50 flex items-center justify-center overflow-hidden">
-                    <img src={store.logo} alt={store.name} className="w-full h-auto object-contain" />
-                  </div>
-                  <div className="text-center">
-                    <p className="font-black text-sm text-stone-900">{store.name}</p>
-                    <p className="text-[10px] text-stone-400 font-bold">10-25 دقيقة</p>
-                  </div>
-                </div>
               ))}
             </div>
           </div>

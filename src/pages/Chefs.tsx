@@ -43,9 +43,9 @@ export default function Chefs() {
     <div className="bg-brand-cream min-h-screen py-[100px]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-20 text-center">
-          <span className="text-brand-primary font-black tracking-[0.3em] uppercase text-sm mb-6 block">أفضل الطهاة</span>
+          <span className="text-brand-primary font-black tracking-[0.3em] uppercase text-sm mb-6 block">أفضل المطابخ</span>
           <h1 className="text-6xl md:text-[100px] font-black text-brand-secondary leading-[0.9] tracking-tighter mb-8">ملوك <br /> <span className="text-brand-primary italic font-serif">النفس</span> الفلاحي</h1>
-          <p className="text-stone-500 text-2xl max-w-2xl mx-auto font-medium">قابلوا ملوك النفس الفلاحي والأكل البيتي اللي ملوش زي في طنطا.</p>
+          <p className="text-stone-500 text-2xl max-w-2xl mx-auto font-medium">تعرف على أفضل المطابخ في طنطا.</p>
         </div>
 
         {/* Search */}
@@ -53,7 +53,7 @@ export default function Chefs() {
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-stone-400 group-focus-within:text-brand-primary transition-colors" size={20} />
           <input 
             type="text" 
-            placeholder="ابحث عن شيف بالاسم..." 
+            placeholder="ابحث عن مطبخ بالاسم..." 
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="w-full pl-12 pr-4 py-4 rounded-2xl border border-stone-200 focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary outline-none transition-all bg-white shadow-sm"

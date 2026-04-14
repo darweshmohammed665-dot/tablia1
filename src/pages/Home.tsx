@@ -114,7 +114,7 @@ export default function Home() {
           <motion.h1 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-5xl md:text-[80px] font-serif font-black text-white mb-6 leading-[1.1] drop-shadow-2xl"
+            className="text-4xl md:text-[80px] font-serif font-black text-white mb-6 leading-[1.1] drop-shadow-2xl px-2"
           >
             تعبت من أكل الشارع؟ <br />
             <span className="italic italic-arabic text-transparent bg-clip-text bg-gradient-to-r from-brand-primary to-orange-400">طبلية بيوصلك أكل بيت حقيقي</span>
@@ -270,27 +270,32 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex justify-between items-end mb-12">
             <div className="text-right">
-              <h2 className="text-4xl md:text-5xl font-serif font-bold text-brand-secondary mb-4">تعرف على أفضل طهاة طنطا</h2>
+              <h2 className="text-4xl md:text-5xl font-serif font-bold text-brand-secondary mb-4">تعرف على أفضل مطابخ طنطا</h2>
               <p className="text-stone-500 text-xl">أشطر ستات بيوت بيطبخوا بحب</p>
             </div>
             <Link to="/chefs" className="text-brand-primary font-bold flex items-center gap-2 hover:gap-4 transition-all">
-              عرض كل الطهاة <ArrowRight size={20} />
+              عرض كل المطابخ <ArrowRight size={20} />
             </Link>
           </div>
 
           <div className="flex gap-8 overflow-x-auto pb-8 no-scrollbar">
-            {[1, 2, 3, 4, 5].map((i) => (
+            {[
+              { name: 'مطبخ أم أحمد', role: 'متخصص في المحاشي والطواجن', image: 'https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&q=80&w=400' },
+              { name: 'مطبخ الست غالية', role: 'أصالة الأكل الفلاحي', image: 'https://images.unsplash.com/photo-1590544313991-29c335ad1e2d?auto=format&fit=crop&q=80&w=400' },
+              { name: 'مطبخ الشيف حسن', role: 'حلويات شرقية وغربية', image: 'https://images.unsplash.com/photo-1556910111-a13f82668386?auto=format&fit=crop&q=80&w=400' },
+              { name: 'مطبخ هناء', role: 'أكلات بيتي طازجة', image: 'https://images.unsplash.com/photo-1581299894007-aaa50297cf16?auto=format&fit=crop&q=80&w=400' }
+            ].map((chef, idx) => (
               <motion.div 
-                key={i}
+                key={idx}
                 whileHover={{ y: -10 }}
                 className="min-w-[300px] bg-stone-50 rounded-[32px] overflow-hidden shadow-lg border border-stone-100"
               >
                 <div className="h-48 relative">
-                  <img src={CHEF_IMAGE_URL} className="w-full h-full object-cover" alt="Chef" referrerPolicy="no-referrer" />
+                  <img src={chef.image} className="w-full h-full object-cover" alt={chef.name} referrerPolicy="no-referrer" />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
                   <div className="absolute bottom-4 right-4 text-white">
-                    <h3 className="font-bold text-xl">شيف فاطمة</h3>
-                    <p className="text-sm opacity-80">متخصصة في المحاشي</p>
+                    <h3 className="font-bold text-xl">{chef.name}</h3>
+                    <p className="text-sm opacity-80">{chef.role}</p>
                   </div>
                 </div>
                 <div className="p-6 flex justify-between items-center">
@@ -298,7 +303,7 @@ export default function Home() {
                     <Star size={16} fill="currentColor" />
                     <span className="font-bold text-stone-800">4.9</span>
                   </div>
-                  <Link to="/chef/1" className="text-brand-primary font-bold text-sm">تصفح الاكلات</Link>
+                  <Link to="/chefs" className="text-brand-primary font-bold text-sm">عرض المطبخ</Link>
                 </div>
               </motion.div>
             ))}
@@ -314,7 +319,7 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-16">
             {[
               { step: "1", title: "اختار وجبتك", desc: "تصفح مئات الوجبات البيتي من طهاة قريبين منك.", icon: Utensils },
-              { step: "2", title: "اطلب أسبوعك", desc: "حدد الوجبات اللي محتاجها للأسبوع كله في طلب واحد.", icon: Clock },
+              { step: "2", title: "اطلب", desc: "حدد الوجبات اللي محتاجها للأسبوع كله في طلب واحد.", icon: Clock },
               { step: "3", title: "استمتع بالأكل", desc: "وجباتك هتوصلك طازجة، سخن واستمتع بطعم البيت.", icon: Heart }
             ].map((item, idx) => (
               <div key={idx} className="relative">
@@ -482,7 +487,7 @@ export default function Home() {
             اطلب أكلتك دلوقتي — واتساب / تليفون
           </p>
           <div className="flex flex-col md:flex-row items-center justify-center gap-4">
-            <a href="https://wa.me/201234567890" target="_blank" rel="noopener noreferrer" className="bg-white text-brand-primary px-10 py-4 rounded-full font-black text-xl hover:scale-105 transition-transform shadow-xl flex items-center gap-3">
+            <a href="https://wa.me/201107507344" target="_blank" rel="noopener noreferrer" className="bg-white text-brand-primary px-10 py-4 rounded-full font-black text-xl hover:scale-105 transition-transform shadow-xl flex items-center gap-3">
               <MessageCircle size={24} />
               اطلب على واتساب
             </a>
@@ -523,7 +528,7 @@ export default function Home() {
       {/* Map Section */}
       <section className="py-[100px] bg-brand-cream">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-[56px] font-black text-brand-primary mb-12 text-right">أقرب الطهاة إليك</h2>
+          <h2 className="text-[56px] font-black text-brand-primary mb-12 text-right">أقرب المطابخ إليك</h2>
           <div className="rounded-[2rem] overflow-hidden shadow-2xl h-[500px]">
             <ChefMap />
           </div>

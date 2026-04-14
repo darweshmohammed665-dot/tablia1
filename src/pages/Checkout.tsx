@@ -277,7 +277,7 @@ export default function Checkout() {
               <ArrowRight size={24} />
             </button>
           )}
-          <h1 className="text-[40px] md:text-[56px] font-black text-brand-accent">
+          <h1 className="text-3xl md:text-[56px] font-black text-brand-accent leading-tight">
             {step === 1 ? 'تنفيذ الطلب' : step === 2 ? 'التوصيل والدفع' : 'نظرة أخيرة...'}
           </h1>
         </div>
@@ -498,7 +498,7 @@ export default function Checkout() {
                 animate={{ opacity: 1, scale: 1 }}
                 className="space-y-8"
               >
-                <div className="food-card p-[40px] text-center relative overflow-hidden">
+                <div className="food-card p-6 md:p-10 text-center relative overflow-hidden">
                   <div className="absolute top-0 left-0 w-full h-2 bg-brand-primary/10">
                     <motion.div 
                       initial={{ width: '100%' }}
@@ -508,45 +508,47 @@ export default function Checkout() {
                     />
                   </div>
                   
-                  <div className="mb-8">
-                    <h3 className="text-xl font-black text-brand-accent mb-2">{formData.area}</h3>
-                    <p className="text-stone-500 font-medium">{formData.address || 'لم يتم إدخال العنوان'}</p>
+                  <div className="mb-6 md:mb-8">
+                    <h3 className="text-lg md:text-xl font-black text-brand-accent mb-2">{formData.area}</h3>
+                    <p className="text-stone-500 font-medium break-words whitespace-normal text-sm md:text-base leading-relaxed max-w-full overflow-hidden text-ellipsis">
+                      {formData.address ? (formData.address.length > 60 ? formData.address.substring(0, 60) + '...' : formData.address) : 'لم يتم إدخال العنوان'}
+                    </p>
                     {deliveryType === 'scheduled' && (
-                      <div className="mt-4 inline-block bg-brand-primary/10 text-brand-primary px-4 py-2 rounded-xl font-bold text-sm">
+                      <div className="mt-4 inline-block bg-brand-primary/10 text-brand-primary px-4 py-2 rounded-xl font-bold text-xs md:text-sm">
                         توصيل مجدول: {scheduledDay}
                       </div>
                     )}
                   </div>
 
-                  <hr className="border-stone-100 my-8" />
+                  <hr className="border-stone-100 my-6 md:my-8" />
 
-                  <div className="flex items-center justify-between mb-8">
-                    <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 bg-brand-cream rounded-2xl flex items-center justify-center text-brand-primary font-black">1</div>
-                      <p className="font-black text-lg">{cartItems[0]?.title || 'كنافة كريمة'}</p>
+                  <div className="flex items-center justify-between mb-6 md:mb-8">
+                    <div className="flex items-center gap-3 md:gap-4">
+                      <div className="w-10 h-10 md:w-12 md:h-12 bg-brand-cream rounded-2xl flex items-center justify-center text-brand-primary font-black text-sm md:text-base">1</div>
+                      <p className="font-black text-base md:text-lg truncate max-w-[150px] md:max-w-[200px] text-right">{cartItems[0]?.title || 'كنافة كريمة'}</p>
                     </div>
                   </div>
 
-                  <hr className="border-stone-100 my-8" />
+                  <hr className="border-stone-100 my-6 md:my-8" />
 
-                  <div className="flex items-center justify-between mb-12">
-                    <div className="flex items-center gap-4">
-                      <Coins className="text-stone-400" size={24} />
-                      <p className="font-black text-lg">نقداً</p>
+                  <div className="flex items-center justify-between mb-8 md:mb-12">
+                    <div className="flex items-center gap-3 md:gap-4">
+                      <Coins className="text-stone-400 w-5 h-5 md:w-6 md:h-6" />
+                      <p className="font-black text-base md:text-lg">نقداً</p>
                     </div>
                   </div>
 
-                  <div className="flex flex-col gap-4">
+                  <div className="flex flex-col gap-3 md:gap-4">
                     <button 
                       onClick={() => setStep(2)}
-                      className="w-full py-4 rounded-2xl border-2 border-stone-100 font-black text-stone-600 hover:bg-stone-50 transition-all flex items-center justify-center gap-2"
+                      className="w-full py-3 md:py-4 rounded-2xl border-2 border-stone-100 font-black text-stone-600 hover:bg-stone-50 transition-all flex items-center justify-center gap-2 text-sm md:text-base"
                     >
                       تعديل الطلب (00:0{countdown})
                     </button>
                     <button 
                       onClick={handlePlaceOrder}
                       disabled={loading}
-                      className="btn-primary w-full py-5 text-2xl shadow-2xl shadow-brand-primary/30"
+                      className="btn-primary w-full py-4 md:py-5 text-xl md:text-2xl shadow-2xl shadow-brand-primary/30"
                     >
                       {loading ? 'جاري التنفيذ...' : 'كل شيء تمام'}
                     </button>

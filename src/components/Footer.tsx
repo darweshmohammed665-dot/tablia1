@@ -22,7 +22,7 @@ export default function Footer() {
     { Icon: Facebook, href: "https://www.facebook.com/share/18XobVq5sr/" },
     { Icon: Instagram, href: "https://www.instagram.com/tablia_official?utm_source=qr&igsh=d3V1bjlzZzA5bXZ5" },
     { Icon: TikTokIcon, href: "https://www.tiktok.com/@tablia_official?_r=1&_t=ZS-959vIXdCNuu" },
-    { Icon: WhatsApp, href: "https://wa.me/201000000000" }, // Placeholder WhatsApp
+    { Icon: WhatsApp, href: "https://wa.me/201107507344" }, // Updated WhatsApp
     { Icon: Youtube, href: "https://youtube.com/@tablia-official?si=7L6cxyaxz5gYyP3I" },
   ];
 
@@ -43,7 +43,7 @@ export default function Footer() {
             <h4 className="font-bold text-stone-900 mb-6">المنصة</h4>
             <ul className="space-y-4">
               <li><Link to="/meals" className="text-stone-500 hover:text-brand-primary transition-colors">تصفح الأكلات</Link></li>
-              <li><Link to="/chefs" className="text-stone-500 hover:text-brand-primary transition-colors">قابل الطهاة</Link></li>
+              <li><Link to="/chefs" className="text-stone-500 hover:text-brand-primary transition-colors">قابل المطابخ</Link></li>
               <li><Link to="/about" className="text-stone-500 hover:text-brand-primary transition-colors">كيف يعمل؟</Link></li>
               <li><Link to="/join-us" className="text-stone-500 hover:text-brand-primary transition-colors">انضم كشيف</Link></li>
             </ul>
