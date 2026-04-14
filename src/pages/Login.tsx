@@ -37,7 +37,7 @@ export default function Login() {
     try {
       await signInWithEmailAndPassword(auth, email, password);
       toast.success('تم تسجيل الدخول بنجاح!');
-      navigate('/');
+      navigate('/profile');
     } catch (err: any) {
       console.error('Login error:', err);
       if (err.code === 'auth/user-not-found' || err.code === 'auth/wrong-password' || err.code === 'auth/invalid-credential') {
@@ -74,7 +74,7 @@ export default function Login() {
       }
       
       toast.success('تم تسجيل الدخول بنجاح!');
-      navigate('/');
+      navigate('/profile');
     } catch (err: any) {
       console.error('Google login error:', err);
       setError('فشل تسجيل الدخول باستخدام جوجل: ' + (err.message || 'خطأ غير معروف'));
@@ -100,7 +100,7 @@ export default function Login() {
       }
       
       toast.success('تم تسجيل الدخول بنجاح!');
-      navigate('/');
+      navigate('/profile');
     } catch (err: any) {
       console.error('Apple login error:', err);
       setError('فشل تسجيل الدخول باستخدام أبل: ' + (err.message || 'خطأ غير معروف'));

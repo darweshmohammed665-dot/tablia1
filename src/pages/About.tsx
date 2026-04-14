@@ -1,9 +1,12 @@
-import { motion } from 'motion/react';
+import { motion, useScroll, useTransform } from 'motion/react';
 import { Heart, ShieldCheck, Utensils, Users, MapPin, Star, Flame } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { CHEF_IMAGE_URL } from '../constants';
 
 export default function About() {
+  const { scrollY } = useScroll();
+  const y = useTransform(scrollY, [0, 500], [0, 150]);
+
   return (
     <div className="bg-brand-cream min-h-screen relative">
       {/* Background Grain Overlay */}
@@ -11,15 +14,18 @@ export default function About() {
       
       {/* Hero Section - Editorial Style */}
       <section className="relative min-h-[60vh] flex items-center overflow-hidden bg-brand-secondary">
-        <div className="absolute inset-0 z-0">
+        <motion.div 
+          style={{ y }}
+          className="absolute inset-0 z-0"
+        >
           <img 
             src="https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&q=80&w=1920" 
             alt="Professional Home Cooking Background" 
-            className="w-full h-full object-cover opacity-70"
+            className="w-full h-full object-cover opacity-70 scale-110"
             referrerPolicy="no-referrer"
           />
           <div className="absolute inset-0 bg-gradient-to-b from-brand-secondary/80 via-brand-secondary/40 to-brand-secondary"></div>
-        </div>
+        </motion.div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full text-right mt-10">
           <motion.div

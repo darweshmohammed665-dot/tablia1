@@ -56,7 +56,7 @@ export default function Register() {
       }
 
       toast.success('تم إنشاء الحساب بنجاح!');
-      navigate(role === 'chef' ? '/dashboard' : '/');
+      navigate('/profile');
     } catch (err: any) {
       console.error('Registration error:', err);
       if (err.code === 'auth/email-already-in-use') {
@@ -97,9 +97,9 @@ export default function Register() {
             displayName: result.user.displayName || 'مستخدم جديد',
           }, { merge: true });
         }
-        navigate(userSnap.exists() && userSnap.data().role === 'chef' ? '/dashboard' : (role === 'chef' ? '/dashboard' : '/'));
+        navigate('/profile');
       } else {
-        navigate(role === 'chef' ? '/dashboard' : '/');
+        navigate('/profile');
       }
     } catch (err: any) {
       console.error('Google login error:', err);
@@ -129,9 +129,9 @@ export default function Register() {
           }, { merge: true });
         }
 
-        navigate(userSnap.exists() && userSnap.data().role === 'chef' ? '/dashboard' : (role === 'chef' ? '/dashboard' : '/'));
+        navigate('/profile');
       } else {
-        navigate(role === 'chef' ? '/dashboard' : '/');
+        navigate('/profile');
       }
     } catch (err: any) {
       console.error('Apple login error:', err);
