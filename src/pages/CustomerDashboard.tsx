@@ -15,9 +15,13 @@ import OrderTrackingMap from '../components/OrderTrackingMap';
 import Chat from '../components/Chat';
 import { toast } from 'sonner';
 
-export default function CustomerDashboard() {
+interface CustomerDashboardProps {
+  profile: UserProfile;
+}
+
+export default function CustomerDashboard({ profile: initialProfile }: CustomerDashboardProps) {
   const [orders, setOrders] = useState<Order[]>([]);
-  const [profile, setProfile] = useState<UserProfile | null>(null);
+  const [profile, setProfile] = useState<UserProfile>(initialProfile);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<'overview' | 'orders' | 'settings'>('overview');
   const [trackingOrderId, setTrackingOrderId] = useState<string | null>(null);
@@ -38,7 +42,7 @@ export default function CustomerDashboard() {
       return;
     }
 
-    // Fetch Profile
+    // Fetch Profile (keep it for real-time updates if needed, but we have initialProfile)
     const unsubProfile = onSnapshot(doc(db, 'users', auth.currentUser.uid), (doc) => {
       if (doc.exists()) {
         const data = doc.data() as UserProfile;
@@ -50,6 +54,14 @@ export default function CustomerDashboard() {
           location: data.location || ''
         });
       }
+    });
+
+    // Set initial form values from prop
+    setEditForm({
+      displayName: initialProfile.displayName || '',
+      phoneNumber: initialProfile.phoneNumber || '',
+      address: initialProfile.address || '',
+      location: initialProfile.location || ''
     });
 
     // Fetch Orders

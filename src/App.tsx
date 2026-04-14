@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { onAuthStateChanged, User } from 'firebase/auth';
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc, onSnapshot } from 'firebase/firestore';
 import { auth, db, subscribeToConnectionStatus, ConnectionStatus } from './firebase';
 import { UserProfile } from './types';
 import { AlertCircle, ExternalLink, X } from 'lucide-react';
@@ -153,29 +153,26 @@ export default function App() {
     window.addEventListener('online', handleOnline);
     window.addEventListener('offline', handleOffline);
 
-    const unsubscribe = auth ? onAuthStateChanged(auth, async (firebaseUser) => {
+    const unsubscribe = auth ? onAuthStateChanged(auth, (firebaseUser) => {
       setUser(firebaseUser);
       if (firebaseUser && db) {
-        try {
-          const docRef = doc(db, 'users', firebaseUser.uid);
-          let docSnap;
-          try {
-            docSnap = await getDoc(docRef);
-          } catch (error) {
-            handleFirestoreError(error, OperationType.GET, `users/${firebaseUser.uid}`);
-            return;
-          }
+        const docRef = doc(db, 'users', firebaseUser.uid);
+        // Use onSnapshot for faster initial load (from cache) and real-time updates
+        const unsubProfile = onSnapshot(docRef, (docSnap) => {
           if (docSnap.exists()) {
             setProfile(docSnap.data() as UserProfile);
           }
-        } catch (error) {
+          setLoading(false);
+        }, (error) => {
           console.error("Error fetching profile:", error);
-        }
+          setLoading(false); // Still stop loading even on error
+        });
+        
+        return () => unsubProfile();
       } else {
         setProfile(null);
+        setLoading(false);
       }
-      
-      setLoading(false);
     }) : (() => {
       setLoading(false);
       return () => {};

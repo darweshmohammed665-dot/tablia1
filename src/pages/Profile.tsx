@@ -17,5 +17,5 @@ export default function Profile({ profile }: ProfileProps) {
     return <ChefDashboard profile={profile} />;
   }
 
-  return <CustomerDashboard />;
+  return <CustomerDashboard profile={profile} />;
 }

@@ -54,23 +54,22 @@ export default function ChefDashboard({ profile }: ChefDashboardProps) {
       setLoading(false);
     }, (error) => {
       handleFirestoreError(error, OperationType.LIST, ordersPath);
+      setLoading(false);
     });
 
-    // Fetch Chef's Meals (one-time is fine, or could be snapshot too)
-    const fetchMeals = async () => {
-      const mealsPath = 'meals';
-      try {
-        const mealsQ = query(collection(db, mealsPath), where('chefId', '==', auth.currentUser!.uid));
-        const mealsSnap = await getDocs(mealsQ);
-        setMeals(mealsSnap.docs.map(doc => ({ id: doc.id, ...doc.data() } as Meal)));
-      } catch (error) {
-        handleFirestoreError(error, OperationType.GET, mealsPath);
-      }
+    // Real-time Meals Listener
+    const mealsPath = 'meals';
+    const mealsQ = query(collection(db, mealsPath), where('chefId', '==', auth.currentUser.uid));
+    const unsubscribeMeals = onSnapshot(mealsQ, (snapshot) => {
+      setMeals(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Meal)));
+    }, (error) => {
+      handleFirestoreError(error, OperationType.LIST, mealsPath);
+    });
+
+    return () => {
+      unsubscribeOrders();
+      unsubscribeMeals();
     };
-
-    fetchMeals();
-
-    return () => unsubscribeOrders();
   }, []);
 
   const handleUpdateStatus = async (orderId: string, newStatus: Order['status']) => {
