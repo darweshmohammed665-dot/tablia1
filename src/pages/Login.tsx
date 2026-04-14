@@ -140,6 +140,7 @@ export default function Login() {
             uid: result.user.uid,
             email: result.user.email || 'no-email@example.com',
             displayName: result.user.displayName || 'مستخدم جديد',
+            photoURL: result.user.photoURL || '',
             role: 'customer',
             createdAt: Date.now(),
           });
@@ -166,6 +167,7 @@ export default function Login() {
             uid: result.user.uid,
             email: result.user.email || 'no-email@example.com',
             displayName: result.user.displayName || 'مستخدم جديد',
+            photoURL: result.user.photoURL || '',
             role: 'customer',
             createdAt: Date.now(),
           });

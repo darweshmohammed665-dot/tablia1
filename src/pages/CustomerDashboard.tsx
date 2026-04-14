@@ -193,19 +193,21 @@ export default function CustomerDashboard() {
                 <div className="bg-white p-8 rounded-[40px] shadow-sm border border-stone-100 relative overflow-hidden group">
                   <div className="absolute -right-4 -top-4 w-24 h-24 bg-green-500/5 rounded-full group-hover:scale-150 transition-transform duration-700"></div>
                   <div className="text-green-500 mb-6 bg-green-500/10 w-14 h-14 rounded-2xl flex items-center justify-center">
-                    <Heart size={32} />
+                    <CreditCard size={32} />
                   </div>
-                  <p className="text-4xl font-black text-brand-secondary mb-2">12</p>
-                  <p className="text-stone-500 font-bold">أكلات مفضلة</p>
+                  <p className="text-4xl font-black text-brand-secondary mb-2">
+                    {orders.filter(o => o.status === 'delivered').reduce((acc, o) => acc + o.total, 0)} <span className="text-sm">ج.م</span>
+                  </p>
+                  <p className="text-stone-500 font-bold">إجمالي المدفوعات</p>
                 </div>
 
                 <div className="bg-brand-primary p-8 rounded-[40px] shadow-xl text-white relative overflow-hidden group">
                   <div className="absolute -right-4 -top-4 w-24 h-24 bg-white/10 rounded-full group-hover:scale-150 transition-transform duration-700"></div>
                   <div className="mb-6 bg-white/20 w-14 h-14 rounded-2xl flex items-center justify-center">
-                    <CreditCard size={32} />
+                    <Heart size={32} />
                   </div>
-                  <p className="text-4xl font-black mb-2">450</p>
-                  <p className="text-white/80 font-bold">نقاط طبلية (ج.م)</p>
+                  <p className="text-4xl font-black mb-2">12</p>
+                  <p className="text-white/80 font-bold">أكلات مفضلة</p>
                 </div>
               </div>
 

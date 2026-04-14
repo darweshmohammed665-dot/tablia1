@@ -89,6 +89,7 @@ export default function Register() {
             uid: result.user.uid,
             email: result.user.email || 'no-email@example.com',
             displayName: result.user.displayName || 'مستخدم جديد',
+            photoURL: result.user.photoURL || '',
             role: role,
             createdAt: Date.now(),
           });
@@ -97,6 +98,7 @@ export default function Register() {
           await setDoc(userRef, {
             email: result.user.email || 'no-email@example.com',
             displayName: result.user.displayName || 'مستخدم جديد',
+            photoURL: result.user.photoURL || '',
           }, { merge: true });
         }
         navigate('/profile');
@@ -121,6 +123,7 @@ export default function Register() {
             uid: result.user.uid,
             email: result.user.email || 'no-email@example.com',
             displayName: result.user.displayName || 'مستخدم جديد',
+            photoURL: result.user.photoURL || '',
             role: role,
             createdAt: Date.now(),
           });
@@ -128,6 +131,7 @@ export default function Register() {
           await setDoc(userRef, {
             email: result.user.email || 'no-email@example.com',
             displayName: result.user.displayName || 'مستخدم جديد',
+            photoURL: result.user.photoURL || '',
           }, { merge: true });
         }
 

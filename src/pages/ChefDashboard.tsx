@@ -4,7 +4,7 @@ import { db, auth } from '../firebase';
 import { Meal, UserProfile, Order } from '../types';
 import { handleFirestoreError, OperationType } from '../lib/firestore-errors';
 import { motion, AnimatePresence } from 'motion/react';
-import { Plus, Trash2, Package, DollarSign, Star, Utensils, Settings, Clock, ChevronDown, UserCheck, MapPin, Phone, Map, MessageCircle } from 'lucide-react';
+import { Plus, Trash2, Package, DollarSign, Star, Utensils, Settings, Clock, ChevronDown, UserCheck, MapPin, Phone, Map, MessageCircle, Share2, ChefHat } from 'lucide-react';
 import OrderStatusTracker from '../components/OrderStatusTracker';
 import ChefProfileForm from '../components/ChefProfileForm';
 import OrderTrackingMap from '../components/OrderTrackingMap';
@@ -198,33 +198,57 @@ export default function ChefDashboard({ profile }: ChefDashboardProps) {
   }
 
   return (
-    <div className="bg-brand-cream min-h-screen py-[100px]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-12">
-          <div>
-            <h1 className="text-[56px] font-bold text-brand-accent mb-2">لوحة التحكم</h1>
-            <p className="text-stone-500 text-xl">أهلاً بك يا شيف، إليك ملخص نشاطك اليوم</p>
-          </div>
-          <div className="flex flex-col md:flex-row items-start md:items-center gap-4">
-            <button 
-              onClick={handleShareProfile}
-              className="bg-white text-brand-secondary border border-stone-200 px-6 py-3 rounded-full font-bold text-sm hover:bg-stone-50 transition-all flex items-center gap-2"
-            >
-              <MapPin size={18} /> رابط مطبخك الخاص
-            </button>
-            <button 
-              onClick={() => {
-                setMealToEdit(null);
-                setNewMeal({ title: '', description: '', price: 0, category: 'محاشي', image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&q=80&w=800', featured: false });
-                setShowAddModal(true);
-              }}
-              className="btn-primary flex items-center gap-2"
-            >
-              <Plus size={20} /> إضافة وجبة جديدة
-            </button>
+    <div className="bg-brand-cream min-h-screen">
+      {/* Dashboard Header / Hero */}
+      <div className="bg-brand-secondary pt-32 pb-24 relative overflow-hidden">
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-brand-primary rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob"></div>
+          <div className="absolute top-0 left-0 w-64 h-64 bg-brand-accent rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob animation-delay-2000"></div>
+        </div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-8">
+            <div className="flex flex-col md:flex-row items-center gap-6 text-center md:text-right">
+              <div className="relative">
+                <img 
+                  src={profile.photoURL || `https://api.dicebear.com/7.x/initials/svg?seed=${profile.displayName}`} 
+                  alt={profile.displayName} 
+                  className="w-24 h-24 md:w-32 md:h-32 rounded-full object-cover border-4 border-white shadow-lg"
+                  referrerPolicy="no-referrer"
+                />
+                <div className="absolute -bottom-2 -right-2 bg-brand-primary text-white p-2 rounded-full border-4 border-brand-secondary shadow-lg">
+                  <ChefHat size={20} />
+                </div>
+              </div>
+              <div>
+                <h1 className="text-3xl md:text-5xl font-black text-white mb-2">أهلاً بك يا شيف {profile.displayName}</h1>
+                <p className="text-brand-cream/80 text-lg">إليك ملخص نشاط مطبخك اليوم</p>
+              </div>
+            </div>
+            <div className="flex flex-col sm:flex-row gap-3">
+              <button 
+                onClick={handleShareProfile}
+                className="bg-white/10 hover:bg-white/20 text-white px-6 py-3 rounded-2xl font-bold transition-all flex items-center justify-center gap-2 backdrop-blur-sm"
+              >
+                <MapPin size={20} />
+                رابط مطبخك
+              </button>
+              <button 
+                onClick={() => {
+                  setMealToEdit(null);
+                  setNewMeal({ title: '', description: '', price: 0, category: 'محاشي', image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&q=80&w=800', featured: false });
+                  setShowAddModal(true);
+                }}
+                className="bg-brand-primary hover:bg-brand-primary/90 text-white px-6 py-3 rounded-2xl font-bold transition-all flex items-center justify-center gap-2 shadow-lg"
+              >
+                <Plus size={20} />
+                إضافة وجبة
+              </button>
+            </div>
           </div>
         </div>
+      </div>
 
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 -mt-16 relative z-20">
         {/* Stats Grid */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12">
           {stats.map((stat, i) => (

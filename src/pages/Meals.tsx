@@ -124,12 +124,6 @@ export default function Meals() {
               الوجبات الأسبوعية — للطلاب والموظفين: اشترك في الباقة الأسبوعية ووفر أكتر!
             </p>
           </div>
-          
-          <div className="inline-block px-8 py-4 bg-red-50 border-2 border-red-500 border-dashed rounded-2xl">
-            <p className="text-lg font-bold text-red-600">
-              صفحة تصفح الاكلات (لسه هنضيف الوجبات بعد م ناخد التفاصيل من الطباخات)
-            </p>
-          </div>
         </div>
 
         {/* Filters & Search */}
