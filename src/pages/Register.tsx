@@ -147,63 +147,11 @@ export default function Register() {
 
   return (
     <div className="min-h-screen flex flex-col md:flex-row bg-brand-cream">
-      {/* Left Side: Branding & Info (Hidden on mobile) */}
-      <div className="hidden md:flex md:w-1/2 relative bg-stone-900 overflow-hidden">
-        <img 
-          src={CHEF_IMAGE_URL} 
-          alt="Traditional Egyptian Kitchen" 
-          className="absolute inset-0 w-full h-full object-cover opacity-85 scale-110 hover:scale-100 transition-transform duration-10000"
-          referrerPolicy="no-referrer"
-        />
-        <div className="absolute inset-0 bg-gradient-to-br from-brand-primary/60 to-transparent"></div>
-        
-        <div className="relative z-10 flex flex-col justify-between p-16 w-full text-white">
-          <Link to="/" className="text-4xl font-black tracking-tighter flex items-center gap-2">
-            <span className="bg-brand-accent text-stone-900 px-3 py-1 rounded-xl">ط</span>
-            طبلية
-          </Link>
-          
-          <div className="space-y-8">
-            <motion.h2 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="text-[56px] font-bold leading-tight"
-            >
-              ابدأ رحلتك مع <br /> مذاق لا يُنسى.
-            </motion.h2>
-            
-            <div className="space-y-4">
-              {[
-                'وصول سريع لأفضل الطهاة المنزليين',
-                'دعم فني على مدار الساعة',
-                'توصيل آمن وسريع لكل مناطق طنطا',
-                'فرصة لزيادة دخلك كطباخ محترف'
-              ].map((text, i) => (
-                <motion.div 
-                  key={i}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.2 + i * 0.1 }}
-                  className="flex items-center gap-3 text-stone-200"
-                >
-                  <CheckCircle2 className="text-brand-accent" size={20} />
-                  <span className="text-lg">{text}</span>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-          
-          <div className="text-sm text-stone-400">
-            بالتسجيل، أنت توافق على شروط الخدمة وسياسة الخصوصية الخاصة بنا.
-          </div>
-        </div>
-      </div>
-
-      {/* Right Side: Register Form */}
+      {/* Register Form */}
       <div className="flex-1 flex items-center justify-center p-8 md:p-16 bg-brand-cream overflow-y-auto">
         <motion.div 
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
           className="max-w-md w-full py-12"
         >
           <div className="mb-10">

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { MapPin, Phone, CreditCard, Truck, CheckCircle2, ArrowRight, ShieldCheck, Ticket, Info, Coins, Bell, BellOff, UserCircle, MessageSquare, Clock, Plus } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { collection, addDoc } from 'firebase/firestore';
+import { collection, addDoc, getDoc, doc } from 'firebase/firestore';
 import { db, auth } from '../firebase';
 import { loadStripe } from '@stripe/stripe-js';
 import { useCart } from '../context/CartContext';
@@ -100,6 +100,8 @@ export default function Checkout() {
   const [deliveryInstruction, setDeliveryInstruction] = useState('call');
   const [couponCode, setCouponCode] = useState('');
   const [discount, setDiscount] = useState(0);
+  const [deliveryType, setDeliveryType] = useState<'quick' | 'scheduled'>('quick');
+  const [scheduledDay, setScheduledDay] = useState('غداً');
   const [formData, setFormData] = useState({
     address: '',
     area: 'طنطا - سيجر',
@@ -107,6 +109,28 @@ export default function Checkout() {
     notes: ''
   });
   const [countdown, setCountdown] = useState(6);
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      if (auth.currentUser && db) {
+        try {
+          const userDoc = await getDoc(doc(db, 'users', auth.currentUser.uid));
+          if (userDoc.exists()) {
+            const data = userDoc.data();
+            if (data.location) {
+              setFormData(prev => ({ ...prev, address: data.location }));
+            }
+            if (data.phoneNumber) {
+              setFormData(prev => ({ ...prev, phone: data.phoneNumber }));
+            }
+          }
+        } catch (error) {
+          console.error("Error fetching user data:", error);
+        }
+      }
+    };
+    fetchUserData();
+  }, []);
 
   useEffect(() => {
     if (step === 3 && countdown > 0) {
@@ -184,23 +208,32 @@ export default function Checkout() {
         return;
       }
       const orderData = {
-        customerId: auth.currentUser?.uid,
+        customerId: auth.currentUser?.uid || 'anonymous',
         customerName: auth.currentUser?.displayName || 'عميل طبلية',
-        customerPhone: formData.phone,
-        customerAddress: `${formData.area} - ${formData.address}`,
-        chefId: cartItems[0].chefId,
+        customerPhone: formData.phone || '',
+        customerAddress: `${formData.area || ''} - ${formData.address || ''}`,
+        deliveryType: deliveryType || 'quick',
+        scheduledDay: deliveryType === 'scheduled' ? (scheduledDay || 'غداً') : null,
+        chefId: cartItems[0]?.chefId || 'unknown',
         items: cartItems.map(item => ({
-          mealId: item.mealId,
-          title: item.title,
-          quantity: item.quantity,
-          price: item.price
+          mealId: item.mealId || 'unknown',
+          title: item.title || 'بدون اسم',
+          quantity: item.quantity || 1,
+          price: item.price || 0
         })),
-        total: total,
+        total: total || 0,
         status: 'pending',
-        paymentMethod: paymentMethod,
+        paymentMethod: paymentMethod || 'cod',
         paymentId: paymentId || null,
         createdAt: Date.now()
       };
+
+      // Remove any undefined values just in case
+      Object.keys(orderData).forEach(key => {
+        if ((orderData as any)[key] === undefined) {
+          delete (orderData as any)[key];
+        }
+      });
 
       await addDoc(collection(db, 'orders'), orderData);
       clearCart();
@@ -280,12 +313,12 @@ export default function Checkout() {
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="col-span-full">
-                      <label className="block text-sm font-black text-brand-accent mb-2">شقة (سبرباي)</label>
+                      <label className="block text-sm font-black text-brand-accent mb-2">العنوان بالتفصيل</label>
                       <div className="relative">
                         <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 text-stone-400" size={20} />
                         <input 
                           type="text" 
-                          placeholder="امشي على اللوكيشن، مبني وزارة التضامن، هستلم تحت"
+                          placeholder="مثال: شارع النادي، عمارة 5، شقة 12"
                           value={formData.address}
                           onChange={(e) => setFormData({ ...formData, address: e.target.value })}
                           className="w-full pl-12 pr-4 py-4 rounded-2xl border border-stone-100 focus:ring-2 focus:ring-brand-primary outline-none font-medium"
@@ -321,22 +354,54 @@ export default function Checkout() {
                   </div>
 
                   <div className="mt-8 space-y-4">
-                    <div className="p-4 rounded-2xl border-2 border-brand-accent bg-white flex items-center justify-between">
+                    <h3 className="text-lg font-black text-brand-accent mb-4">نوع الطلب</h3>
+                    <div 
+                      onClick={() => setDeliveryType('quick')}
+                      className={`p-4 rounded-2xl border-2 cursor-pointer transition-all flex items-center justify-between ${deliveryType === 'quick' ? 'border-brand-accent bg-brand-accent/5' : 'border-stone-100 bg-white hover:border-stone-200'}`}
+                    >
                       <div className="flex items-center gap-4">
-                        <div className="w-4 h-4 rounded-full bg-brand-accent"></div>
+                        <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${deliveryType === 'quick' ? 'border-brand-accent' : 'border-stone-300'}`}>
+                          {deliveryType === 'quick' && <div className="w-2.5 h-2.5 rounded-full bg-brand-accent"></div>}
+                        </div>
                         <div>
-                          <p className="font-black">يصل خلال 15-25 دقيقة</p>
+                          <p className="font-black">وجبة سريعة (الآن)</p>
+                          <p className="text-xs text-stone-500 font-bold mt-1">يصل خلال 30-45 دقيقة</p>
                         </div>
                       </div>
                     </div>
-                    <div className="p-4 rounded-2xl border-2 border-stone-100 bg-white flex items-center justify-between opacity-50">
-                      <div className="flex items-center gap-4">
-                        <div className="w-4 h-4 rounded-full border-2 border-stone-300"></div>
-                        <div>
-                          <p className="font-black">يصل خلال 10-20 دقيقة • إكسبرس</p>
+
+                    <div 
+                      onClick={() => setDeliveryType('scheduled')}
+                      className={`p-4 rounded-2xl border-2 cursor-pointer transition-all flex flex-col gap-4 ${deliveryType === 'scheduled' ? 'border-brand-primary bg-brand-primary/5' : 'border-stone-100 bg-white hover:border-stone-200'}`}
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-4">
+                          <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${deliveryType === 'scheduled' ? 'border-brand-primary' : 'border-stone-300'}`}>
+                            {deliveryType === 'scheduled' && <div className="w-2.5 h-2.5 rounded-full bg-brand-primary"></div>}
+                          </div>
+                          <div>
+                            <p className="font-black">وجبة يومية (مجدولة)</p>
+                            <p className="text-xs text-stone-500 font-bold mt-1">اطلب اليوم، يوصلك في اليوم المحدد</p>
+                          </div>
                         </div>
                       </div>
-                      <span className="font-black text-brand-primary">+ 6 ج.م</span>
+                      
+                      {deliveryType === 'scheduled' && (
+                        <div className="pl-9 pr-4">
+                          <label className="block text-xs font-bold text-stone-600 mb-2">اختر يوم التوصيل:</label>
+                          <select 
+                            value={scheduledDay}
+                            onChange={(e) => setScheduledDay(e.target.value)}
+                            className="w-full p-3 rounded-xl border border-stone-200 bg-white focus:ring-2 focus:ring-brand-primary outline-none font-bold text-sm"
+                          >
+                            <option value="غداً">غداً</option>
+                            <option value="بعد غد">بعد غد</option>
+                            <option value="الأحد القادم">الأحد القادم</option>
+                            <option value="الاثنين القادم">الاثنين القادم</option>
+                            <option value="الثلاثاء القادم">الثلاثاء القادم</option>
+                          </select>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -444,8 +509,13 @@ export default function Checkout() {
                   </div>
                   
                   <div className="mb-8">
-                    <h3 className="text-xl font-black text-brand-accent mb-2">شقة (سبرباي)</h3>
-                    <p className="text-stone-500 font-medium">امشي على اللوكيشن، مبني وزارة التضامن، هستلم تحت</p>
+                    <h3 className="text-xl font-black text-brand-accent mb-2">{formData.area}</h3>
+                    <p className="text-stone-500 font-medium">{formData.address || 'لم يتم إدخال العنوان'}</p>
+                    {deliveryType === 'scheduled' && (
+                      <div className="mt-4 inline-block bg-brand-primary/10 text-brand-primary px-4 py-2 rounded-xl font-bold text-sm">
+                        توصيل مجدول: {scheduledDay}
+                      </div>
+                    )}
                   </div>
 
                   <hr className="border-stone-100 my-8" />

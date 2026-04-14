@@ -184,46 +184,11 @@ export default function Login() {
 
   return (
     <div className="min-h-screen flex flex-col md:flex-row bg-brand-cream">
-      {/* Left Side: Image & Branding (Hidden on mobile) */}
-      <div className="hidden md:flex md:w-1/2 relative bg-stone-900 overflow-hidden">
-        <img 
-          src={CHEF_IMAGE_URL} 
-          alt="Authentic Egyptian Food" 
-          className="absolute inset-0 w-full h-full object-cover opacity-85 scale-105 hover:scale-100 transition-transform duration-10000"
-          referrerPolicy="no-referrer"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-brand-secondary/60 to-transparent"></div>
-        
-        <div className="relative z-10 flex flex-col justify-between p-16 w-full text-white">
-          <Link to="/" className="text-4xl font-black tracking-tighter flex items-center gap-2">
-            <span className="bg-brand-accent text-stone-900 px-3 py-1 rounded-xl">ط</span>
-            طبلية
-          </Link>
-          
-          <div>
-            <motion.h2 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="text-[56px] font-bold mb-6 leading-tight"
-            >
-              طعم البيت الأصيل، <br /> يوصلك لحد باب البيت.
-            </motion.h2>
-            <p className="text-xl text-stone-200 max-w-md">
-              انضم لآلاف العائلات في طنطا التي تستمتع يومياً بأشهى الوجبات المنزلية المحضرة بكل حب.
-            </p>
-          </div>
-          
-          <div className="flex items-center gap-4 text-sm text-stone-300">
-            <span>© 2026 طبلية. جميع الحقوق محفوظة.</span>
-          </div>
-        </div>
-      </div>
-
-      {/* Right Side: Login Form */}
+      {/* Login Form */}
       <div className="flex-1 flex items-center justify-center p-8 md:p-16 bg-brand-cream">
         <motion.div 
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
           className="max-w-md w-full"
         >
           <div className="mb-12">
