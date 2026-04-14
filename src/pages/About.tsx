@@ -16,14 +16,8 @@ export default function About() {
       <section className="relative min-h-[60vh] flex items-center overflow-hidden bg-brand-secondary">
         <motion.div 
           style={{ y }}
-          className="absolute inset-0 z-0"
+          className="absolute inset-0 z-0 bg-gradient-to-br from-brand-secondary via-brand-primary/30 to-brand-secondary"
         >
-          <img 
-            src="https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&q=80&w=1920" 
-            alt="Professional Home Cooking Background" 
-            className="w-full h-full object-cover opacity-70 scale-110"
-            referrerPolicy="no-referrer"
-          />
           <div className="absolute inset-0 bg-gradient-to-b from-brand-secondary/80 via-brand-secondary/40 to-brand-secondary"></div>
         </motion.div>
 
@@ -60,13 +54,8 @@ export default function About() {
                 viewport={{ once: true }}
                 className="relative"
               >
-                <div className="aspect-[4/5] rounded-[60px] overflow-hidden shadow-2xl rotate-[-3deg] hover:rotate-0 transition-transform duration-1000">
-                  <img 
-                    src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&q=80&w=1000" 
-                    alt="Food Presentation" 
-                    className="w-full h-full object-cover"
-                    referrerPolicy="no-referrer"
-                  />
+                <div className="aspect-[4/5] rounded-[60px] overflow-hidden shadow-2xl rotate-[-3deg] hover:rotate-0 transition-transform duration-1000 bg-gradient-to-br from-brand-primary to-brand-secondary flex items-center justify-center p-12">
+                  <Utensils size={100} className="text-white opacity-20" />
                 </div>
                 <div className="absolute -bottom-10 -right-10 w-48 h-48 bg-brand-primary rounded-full flex items-center justify-center text-white p-8 text-center rotate-12 shadow-2xl">
                   <p className="font-black text-xl leading-tight">طعم ملوش زي في طنطا</p>

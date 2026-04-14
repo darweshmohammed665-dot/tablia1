@@ -19,30 +19,6 @@ export default function Home() {
 
   const y = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
 
-  // Live Orders Ticker
-  const [liveOrder, setLiveOrder] = useState<{name: string, meal: string, time: string} | null>(null);
-  
-  useEffect(() => {
-    const orders = [
-      { name: "أحمد م.", meal: "طاجن بامية باللحمة", time: "الآن" },
-      { name: "سارة ع.", meal: "محشي كرنب", time: "منذ دقيقتين" },
-      { name: "محمود س.", meal: "نص فرخة مشوية", time: "منذ 5 دقائق" },
-      { name: "منى ك.", meal: "مكرونة بشاميل", time: "منذ 10 دقائق" },
-      { name: "كريم ن.", meal: "فطير مشلتت", time: "الآن" }
-    ];
-    
-    let currentIndex = 0;
-    const interval = setInterval(() => {
-      setLiveOrder(orders[currentIndex]);
-      currentIndex = (currentIndex + 1) % orders.length;
-      
-      // Hide after 4 seconds
-      setTimeout(() => setLiveOrder(null), 4000);
-    }, 8000);
-    
-    return () => clearInterval(interval);
-  }, []);
-
   const handleSurpriseMe = () => {
     toast.success('جاري اختيار أكلة عشوائية لك...', { icon: '🎲' });
     setTimeout(() => {
@@ -54,26 +30,6 @@ export default function Home() {
     <div ref={containerRef} className="relative bg-brand-cream overflow-hidden selection:bg-brand-primary selection:text-white">
       {/* Background Grain Overlay */}
       <div className="fixed inset-0 pointer-events-none z-[99] opacity-[0.03] bg-grain"></div>
-
-      {/* Live Orders Ticker */}
-      <div className="fixed bottom-24 left-4 z-50 pointer-events-none">
-        <motion.div
-          initial={{ opacity: 0, y: 50, scale: 0.9 }}
-          animate={liveOrder ? { opacity: 1, y: 0, scale: 1 } : { opacity: 0, y: 50, scale: 0.9 }}
-          transition={{ type: "spring", bounce: 0.4 }}
-          className="bg-white/90 backdrop-blur-md p-4 rounded-2xl shadow-2xl border border-stone-100 flex items-center gap-4"
-        >
-          <div className="w-12 h-12 bg-brand-peach rounded-full flex items-center justify-center text-2xl">
-            🍲
-          </div>
-          <div>
-            <p className="text-sm text-stone-500 font-bold mb-1">{liveOrder?.time}</p>
-            <p className="text-stone-800 font-medium">
-              <span className="font-black text-brand-primary">{liveOrder?.name}</span> طلب {liveOrder?.meal}
-            </p>
-          </div>
-        </motion.div>
-      </div>
 
       {/* Hero Section - Shef Style */}
       <section className="relative min-h-[85vh] flex items-center justify-center overflow-hidden pt-20">
@@ -172,15 +128,15 @@ export default function Home() {
             <h2 className="text-2xl font-black text-stone-900 mb-6 text-right">ماذا تشتهي اليوم؟</h2>
             <div className="flex gap-6 overflow-x-auto pb-4 no-scrollbar justify-start md:justify-end flex-row-reverse">
               {[
-                { name: "حلويات", img: "https://images.unsplash.com/photo-1551024601-bec78aea704b?auto=format&fit=crop&q=80&w=200" },
-                { name: "مخبوزات", img: "https://images.unsplash.com/photo-1626074353765-517a681e40be?auto=format&fit=crop&q=80&w=200" },
-                { name: "طواجن", img: "https://images.unsplash.com/photo-1541518763669-27fef04b14ea?auto=format&fit=crop&q=80&w=200" },
-                { name: "مشويات", img: "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&q=80&w=200" },
-                { name: "محاشي", img: "https://images.unsplash.com/photo-1547592166-23ac45744acd?auto=format&fit=crop&q=80&w=200" }
+                { name: "حلويات", icon: "🍰" },
+                { name: "مخبوزات", icon: "🥐" },
+                { name: "طواجن", icon: "🥘" },
+                { name: "مشويات", icon: "🍗" },
+                { name: "محاشي", icon: "🍲" }
               ].map((cat, i) => (
                 <Link to={`/meals?category=${cat.name}`} key={i} className="flex flex-col items-center gap-3 min-w-[90px] group">
-                  <div className="w-24 h-24 rounded-full overflow-hidden shadow-sm border-4 border-transparent group-hover:border-brand-primary transition-all duration-300">
-                    <img src={cat.img} alt={cat.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                  <div className="w-24 h-24 rounded-full bg-white shadow-sm border-4 border-transparent group-hover:border-brand-primary transition-all duration-300 flex items-center justify-center text-4xl">
+                    {cat.icon}
                   </div>
                   <span className="font-bold text-stone-800 text-sm group-hover:text-brand-primary transition-colors">{cat.name}</span>
                 </Link>
@@ -202,25 +158,11 @@ export default function Home() {
 
           {/* Big Stores Near You */}
           <div className="mt-12">
-            <h2 className="text-2xl font-black text-stone-900 mb-6 text-right">أشهر الطباخين بالقرب منك</h2>
+            <h2 className="text-2xl font-black text-stone-900 mb-6 text-right">أشهر المطابخ بالقرب منك</h2>
             <div className="flex gap-4 overflow-x-auto pb-4 no-scrollbar justify-end flex-row-reverse">
-              {[
-                { name: "شيف فاطمة", img: "https://images.unsplash.com/photo-1577219491135-ce391730fb2c?auto=format&fit=crop&q=80&w=200", time: "30 دقيقة" },
-                { name: "مطبخ الست غالية", img: "https://images.unsplash.com/photo-1583394838336-acd977736f90?auto=format&fit=crop&q=80&w=200", time: "45 دقيقة" },
-                { name: "أكلات زمان", img: "https://images.unsplash.com/photo-1600565193348-f74bd3c7ccdf?auto=format&fit=crop&q=80&w=200", time: "25 دقيقة" },
-                { name: "شيف حسن", img: "https://images.unsplash.com/photo-1581299894007-aaa50297cf16?auto=format&fit=crop&q=80&w=200", time: "40 دقيقة" },
-                { name: "مطبخ أم علي", img: "https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&q=80&w=200", time: "35 دقيقة" }
-              ].map((store, i) => (
-                <Link to="/chefs" key={i} className="min-w-[120px] bg-white rounded-2xl p-3 border border-stone-100 shadow-sm hover:shadow-md transition-all group text-center">
-                  <div className="w-16 h-16 mx-auto rounded-xl overflow-hidden mb-3 border border-stone-100">
-                    <img src={store.img} alt={store.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform" />
-                  </div>
-                  <h4 className="font-bold text-stone-800 text-sm mb-1 truncate">{store.name}</h4>
-                  <p className="text-xs text-stone-500 flex items-center justify-center gap-1">
-                    <Clock size={12} /> {store.time}
-                  </p>
-                </Link>
-              ))}
+              <div className="text-stone-400 font-bold py-8 text-center w-full">
+                قريباً... أفضل المطابخ في منطقتك
+              </div>
             </div>
           </div>
         </div>
@@ -252,14 +194,13 @@ export default function Home() {
               initial={{ opacity: 0, scale: 0.9 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
-              className="relative rounded-[40px] overflow-hidden shadow-2xl aspect-square"
+              className="relative rounded-[40px] overflow-hidden shadow-2xl aspect-square bg-gradient-to-br from-brand-primary to-brand-secondary flex items-center justify-center p-12"
             >
-              <img 
-                src="https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&q=80&w=1000" 
-                className="w-full h-full object-cover"
-                alt="Egyptian Kitchen"
-                referrerPolicy="no-referrer"
-              />
+              <div className="text-white text-center">
+                <Utensils size={120} className="mx-auto mb-6 opacity-20" />
+                <h3 className="text-4xl font-black">طبلية</h3>
+                <p className="text-xl opacity-80">أصل الأكل البيتي في طنطا</p>
+              </div>
             </motion.div>
           </div>
         </div>
@@ -279,34 +220,9 @@ export default function Home() {
           </div>
 
           <div className="flex gap-8 overflow-x-auto pb-8 no-scrollbar">
-            {[
-              { name: 'مطبخ أم أحمد', role: 'متخصص في المحاشي والطواجن', image: 'https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&q=80&w=400' },
-              { name: 'مطبخ الست غالية', role: 'أصالة الأكل الفلاحي', image: 'https://images.unsplash.com/photo-1590544313991-29c335ad1e2d?auto=format&fit=crop&q=80&w=400' },
-              { name: 'مطبخ الشيف حسن', role: 'حلويات شرقية وغربية', image: 'https://images.unsplash.com/photo-1556910111-a13f82668386?auto=format&fit=crop&q=80&w=400' },
-              { name: 'مطبخ هناء', role: 'أكلات بيتي طازجة', image: 'https://images.unsplash.com/photo-1581299894007-aaa50297cf16?auto=format&fit=crop&q=80&w=400' }
-            ].map((chef, idx) => (
-              <motion.div 
-                key={idx}
-                whileHover={{ y: -10 }}
-                className="min-w-[300px] bg-stone-50 rounded-[32px] overflow-hidden shadow-lg border border-stone-100"
-              >
-                <div className="h-48 relative">
-                  <img src={chef.image} className="w-full h-full object-cover" alt={chef.name} referrerPolicy="no-referrer" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                  <div className="absolute bottom-4 right-4 text-white">
-                    <h3 className="font-bold text-xl">{chef.name}</h3>
-                    <p className="text-sm opacity-80">{chef.role}</p>
-                  </div>
-                </div>
-                <div className="p-6 flex justify-between items-center">
-                  <div className="flex items-center gap-1 text-yellow-500">
-                    <Star size={16} fill="currentColor" />
-                    <span className="font-bold text-stone-800">4.9</span>
-                  </div>
-                  <Link to="/chefs" className="text-brand-primary font-bold text-sm">عرض المطبخ</Link>
-                </div>
-              </motion.div>
-            ))}
+            <div className="w-full py-12 text-center bg-stone-50 rounded-[32px] border border-dashed border-stone-200">
+              <p className="text-stone-400 font-bold">جاري تجهيز قائمة بأفضل المطابخ...</p>
+            </div>
           </div>
         </div>
       </section>
@@ -318,7 +234,7 @@ export default function Home() {
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-16">
             {[
-              { step: "1", title: "اختار وجبتك", desc: "تصفح مئات الوجبات البيتي من طهاة قريبين منك.", icon: Utensils },
+              { step: "1", title: "اختار وجبتك", desc: "تصفح مئات الوجبات البيتي من مطابخ قريبة منك.", icon: Utensils },
               { step: "2", title: "اطلب", desc: "حدد الوجبات اللي محتاجها للأسبوع كله في طلب واحد.", icon: Clock },
               { step: "3", title: "استمتع بالأكل", desc: "وجباتك هتوصلك طازجة، سخن واستمتع بطعم البيت.", icon: Heart }
             ].map((item, idx) => (
@@ -359,7 +275,7 @@ export default function Home() {
               <img src="https://images.unsplash.com/photo-1541518763669-27fef04b14ea?auto=format&fit=crop&q=80&w=1200" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" alt="Mahshi" />
               <div className="absolute inset-0 bg-gradient-to-t from-brand-secondary via-brand-secondary/20 to-transparent p-12 flex flex-col justify-end text-white">
                 <h3 className="text-5xl md:text-7xl font-black mb-4">المحاشي الفلاحي</h3>
-                <p className="text-white/70 text-xl font-medium">من قلب الغيط لسفرتك، طعم ملوش زي</p>
+                <p className="text-white/70 text-xl font-medium">طعم بيتي أصيل ملوش زي</p>
               </div>
             </motion.div>
             
@@ -421,7 +337,7 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-5 gap-8">
             {[
               { title: "طازة مش مجمد", desc: "كل أكلة بتتطبخ من الأول عشانك يوم بيوم.", icon: Utensils },
-              { title: "أيادي ستات شاطرة", desc: "أختارنا الطباخات بعناية لضمان النفس الحلو.", icon: Award },
+              { title: "أيادي ستات شاطرة", desc: "أختارنا المطابخ بعناية لضمان النفس الحلو.", icon: Award },
               { title: "نضافة مضمونة", desc: "بنفتش على كل مطبخ وبنتأكد من أعلى معايير النضافة.", icon: ShieldCheck },
               { title: "سعر على قد الإيد", desc: "أكلات بجودة عالية مقابل سعر يناسب ميزانيتك.", icon: Sparkles },
               { title: "توصيل سريع في طنطا", desc: "فريق توصيل مدرب بيوصلك الأكل سخن ومحفوظ صح.", icon: Clock }
@@ -452,27 +368,9 @@ export default function Home() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8">
-            {[
-              { id: 1, name: "صينية محشي مشكل", price: 180, img: "https://images.unsplash.com/photo-1541518763669-27fef04b14ea?auto=format&fit=crop&q=80&w=800" },
-              { id: 2, name: "فطير مشلتت بالسمن", price: 120, img: "https://images.unsplash.com/photo-1626074353765-517a681e40be?auto=format&fit=crop&q=80&w=800" },
-              { id: 3, name: "بط محمر بالمرتة", price: 450, img: "https://images.unsplash.com/photo-1518492104633-130d0cc84637?auto=format&fit=crop&q=80&w=800" },
-              { id: 4, name: "مكرونة بالبشاميل", price: 150, img: "https://images.unsplash.com/photo-1614961909053-2e69107699e1?auto=format&fit=crop&q=80&w=800" }
-            ].map((meal, i) => (
-              <MealCard 
-                key={meal.id}
-                meal={{
-                  id: meal.id,
-                  title: meal.name,
-                  price: meal.price,
-                  image: meal.img,
-                  chefId: "chef1",
-                  chefName: "شيف طبلية",
-                  rating: 4.9,
-                  deliveryTime: 45
-                }}
-                index={i}
-              />
-            ))}
+            <div className="col-span-full py-12 text-center bg-stone-50 rounded-[32px] border border-dashed border-stone-200">
+              <p className="text-stone-400 font-bold">جاري تحديث قائمة الأكلات الأكثر طلباً...</p>
+            </div>
           </div>
         </div>
       </section>

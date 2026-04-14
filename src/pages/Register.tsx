@@ -38,17 +38,18 @@ export default function Register() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Submitting registration form...', { email, role, location });
+    const virtualEmail = `${phoneNumber}@tablia.com`;
+    console.log('Submitting registration form...', { phoneNumber, role, location });
     setLoading(true);
     setError('');
     try {
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const userCredential = await createUserWithEmailAndPassword(auth, virtualEmail, password);
       await updateProfile(userCredential.user, { displayName: name });
       
       if (db) {
         await setDoc(doc(db, 'users', userCredential.user.uid), {
           uid: userCredential.user.uid,
-          email,
+          email: virtualEmail,
           displayName: name,
           phoneNumber,
           location,
@@ -212,16 +213,16 @@ export default function Register() {
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-bold text-stone-700 mr-1">البريد الإلكتروني</label>
+              <label className="text-sm font-bold text-stone-700 mr-1">رقم الهاتف</label>
               <div className="relative group">
-                <Mail className="absolute right-4 top-1/2 -translate-y-1/2 text-stone-400 group-focus-within:text-brand-primary transition-colors" size={20} />
+                <Phone className="absolute right-4 top-1/2 -translate-y-1/2 text-stone-400 group-focus-within:text-brand-primary transition-colors" size={20} />
                 <input 
-                  type="email" 
+                  type="tel" 
                   required 
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  value={phoneNumber}
+                  onChange={(e) => setPhoneNumber(e.target.value)}
                   className="w-full pr-12 pl-4 py-4 rounded-2xl border border-stone-200 bg-white focus:ring-4 focus:ring-brand-primary/10 focus:border-brand-primary outline-none transition-all text-lg"
-                  placeholder="name@example.com"
+                  placeholder="01xxxxxxxxx"
                 />
               </div>
             </div>
@@ -237,21 +238,6 @@ export default function Register() {
                   onChange={(e) => setPassword(e.target.value)}
                   className="w-full pr-12 pl-4 py-4 rounded-2xl border border-stone-200 bg-white focus:ring-4 focus:ring-brand-primary/10 focus:border-brand-primary outline-none transition-all text-lg"
                   placeholder="••••••••"
-                />
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <label className="text-sm font-bold text-stone-700 mr-1">رقم الهاتف</label>
-              <div className="relative group">
-                <Phone className="absolute right-4 top-1/2 -translate-y-1/2 text-stone-400 group-focus-within:text-brand-primary transition-colors" size={20} />
-                <input 
-                  type="tel" 
-                  required 
-                  value={phoneNumber}
-                  onChange={(e) => setPhoneNumber(e.target.value)}
-                  className="w-full pr-12 pl-4 py-4 rounded-2xl border border-stone-200 bg-white focus:ring-4 focus:ring-brand-primary/10 focus:border-brand-primary outline-none transition-all text-lg"
-                  placeholder="01xxxxxxxxx"
                 />
               </div>
             </div>

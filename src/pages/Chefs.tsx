@@ -102,7 +102,7 @@ export default function Chefs() {
                 </div>
                 
                 <p className="text-stone-500 mb-8 line-clamp-2 text-sm flex-grow">
-                  {chef.bio || "طاهٍ منزلي شغوف يقدم أشهى الوجبات التقليدية في مدينة طنطا."}
+                  {chef.bio || "مطبخ منزلي شغوف يقدم أشهى الوجبات التقليدية في مدينة طنطا."}
                 </p>
                 
                 <div className="flex items-center justify-center gap-4 text-stone-400 text-sm mb-6">
@@ -117,7 +117,7 @@ export default function Chefs() {
           </div>
         ) : (
           <div className="text-center py-20">
-            <h3 className="text-xl font-bold text-stone-900 mb-2">لا يوجد طهاة بهذا الاسم</h3>
+            <h3 className="text-xl font-bold text-stone-900 mb-2">لا توجد مطابخ بهذا الاسم</h3>
             <p className="text-stone-500">جرب البحث باسم آخر</p>
           </div>
         )}

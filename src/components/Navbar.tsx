@@ -34,7 +34,7 @@ export default function Navbar({ user, profile }: NavbarProps) {
           {/* Desktop Nav */}
           <div className="hidden md:flex items-center gap-8">
             <Link to="/meals" className="text-stone-600 hover:text-brand-primary transition-colors font-medium text-sm">الأكلات</Link>
-            <Link to="/chefs" className="text-stone-600 hover:text-brand-primary transition-colors font-medium text-sm">الطهاة</Link>
+            <Link to="/chefs" className="text-stone-600 hover:text-brand-primary transition-colors font-medium text-sm">المطابخ</Link>
             <Link to="/about" className="text-stone-600 hover:text-brand-primary transition-colors font-medium text-sm">كيف يعمل؟</Link>
             
             <div className="h-6 w-px bg-stone-200 mx-2"></div>
@@ -88,7 +88,7 @@ export default function Navbar({ user, profile }: NavbarProps) {
             <div className="px-4 py-6 space-y-4">
               <Link to="/" className="block text-lg text-stone-600 font-bold" onClick={() => setIsOpen(false)}>الرئيسية</Link>
               <Link to="/meals" className="block text-lg text-stone-600 font-bold" onClick={() => setIsOpen(false)}>الأكلات</Link>
-              <Link to="/chefs" className="block text-lg text-stone-600 font-bold" onClick={() => setIsOpen(false)}>الطهاة</Link>
+              <Link to="/chefs" className="block text-lg text-stone-600 font-bold" onClick={() => setIsOpen(false)}>المطابخ</Link>
               <Link to="/about" className="block text-lg text-stone-600 font-bold" onClick={() => setIsOpen(false)}>من نحن</Link>
               <Link to="/join-us" className="block text-lg text-stone-600 font-bold" onClick={() => setIsOpen(false)}>انضم إلينا</Link>
               <Link to="/cart" className="block text-lg text-stone-600 font-bold flex items-center justify-between" onClick={() => setIsOpen(false)}>

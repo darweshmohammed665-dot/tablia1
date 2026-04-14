@@ -108,7 +108,8 @@ export default function Login() {
     setLoading(true);
     setError('');
     try {
-      await signInWithEmailAndPassword(auth, email, password);
+      const virtualEmail = `${phoneNumber}@tablia.com`;
+      await signInWithEmailAndPassword(auth, virtualEmail, password);
       toast.success('تم تسجيل الدخول بنجاح!');
       navigate('/profile');
     } catch (err: any) {
@@ -205,13 +206,13 @@ export default function Login() {
               }}
               className={`flex-1 py-3 rounded-xl font-bold text-sm transition-all ${loginMethod === 'email' ? 'bg-white text-brand-primary shadow-sm' : 'text-stone-400'}`}
             >
-              البريد الإلكتروني
+              كلمة المرور
             </button>
             <button 
               onClick={() => setLoginMethod('phone')}
               className={`flex-1 py-3 rounded-xl font-bold text-sm transition-all ${loginMethod === 'phone' ? 'bg-white text-brand-primary shadow-sm' : 'text-stone-400'}`}
             >
-              رقم الهاتف
+              رمز التحقق (OTP)
             </button>
           </div>
 
@@ -239,16 +240,16 @@ export default function Login() {
                 className="space-y-6"
               >
                 <div className="space-y-2">
-                  <label className="text-sm font-bold text-stone-700 mr-1">البريد الإلكتروني</label>
+                  <label className="text-sm font-bold text-stone-700 mr-1">رقم الهاتف</label>
                   <div className="relative group">
-                    <Mail className="absolute right-4 top-1/2 -translate-y-1/2 text-stone-400 group-focus-within:text-brand-primary transition-colors" size={20} />
+                    <Phone className="absolute right-4 top-1/2 -translate-y-1/2 text-stone-400 group-focus-within:text-brand-primary transition-colors" size={20} />
                     <input 
-                      type="email" 
+                      type="tel" 
                       required 
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
+                      value={phoneNumber}
+                      onChange={(e) => setPhoneNumber(e.target.value)}
                       className="w-full pr-12 pl-4 py-4 rounded-2xl border border-stone-200 bg-white focus:ring-4 focus:ring-brand-primary/10 focus:border-brand-primary outline-none transition-all text-lg"
-                      placeholder="name@example.com"
+                      placeholder="01xxxxxxxxx"
                     />
                   </div>
                 </div>

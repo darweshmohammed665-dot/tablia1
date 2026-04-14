@@ -64,17 +64,12 @@ export default function ChefProfile() {
   };
 
   if (loading) return <div className="min-h-screen flex items-center justify-center"><div className="animate-spin rounded-full h-12 w-12 border-t-2 border-brand-primary"></div></div>;
-  if (!chef) return <div className="min-h-screen flex flex-col items-center justify-center"><h2 className="text-2xl font-bold mb-4 text-brand-secondary">الشيف غير موجود</h2><Link to="/chefs" className="btn-primary">العودة لسوق الطهاة</Link></div>;
+  if (!chef) return <div className="min-h-screen flex flex-col items-center justify-center"><h2 className="text-2xl font-bold mb-4 text-brand-secondary">المطبخ غير موجود</h2><Link to="/chefs" className="btn-primary">العودة لسوق المطابخ</Link></div>;
 
   return (
     <div className="bg-brand-peach min-h-screen pb-[80px]">
       {/* Professional Cover Header */}
-      <div className="h-[280px] relative overflow-hidden">
-        <img 
-          src="https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&q=80&w=2000" 
-          alt="Kitchen Cover" 
-          className="w-full h-full object-cover"
-        />
+      <div className="h-[280px] relative overflow-hidden bg-gradient-to-br from-brand-secondary via-brand-primary/20 to-brand-secondary">
         <div className="absolute inset-0 bg-gradient-to-t from-brand-secondary/90 via-brand-secondary/40 to-transparent"></div>
       </div>
 
@@ -190,7 +185,7 @@ export default function ChefProfile() {
               </div>
               <div>
                 <h2 className="text-3xl font-black text-brand-secondary">أكثر الأكلات طلباً</h2>
-                <p className="text-stone-500 font-medium mt-1">الأكثر تميزاً وشعبية لدى زبائن الشيف</p>
+                <p className="text-stone-500 font-medium mt-1">الأكثر تميزاً وشعبية لدى زبائن المطبخ</p>
               </div>
             </div>
 
@@ -294,7 +289,7 @@ export default function ChefProfile() {
               <div className="col-span-full text-center py-20 bg-white rounded-[32px] border border-stone-100 shadow-sm">
                 <UtensilsCrossed size={48} className="mx-auto text-stone-300 mb-4" />
                 <h3 className="text-xl font-bold text-brand-secondary mb-2">لا توجد وجبات متاحة حالياً</h3>
-                <p className="text-stone-500">يقوم الشيف بتجهيز قائمة طعام جديدة، يرجى العودة لاحقاً.</p>
+                <p className="text-stone-500">يقوم المطبخ بتجهيز قائمة طعام جديدة، يرجى العودة لاحقاً.</p>
               </div>
             )}
           </div>
