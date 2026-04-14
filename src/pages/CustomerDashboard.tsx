@@ -42,6 +42,11 @@ export default function CustomerDashboard({ profile: initialProfile }: CustomerD
       return;
     }
 
+    // Safety timeout to prevent stuck loading
+    const timeoutId = setTimeout(() => {
+      setLoading(false);
+    }, 5000);
+
     // Fetch Profile (keep it for real-time updates if needed, but we have initialProfile)
     const unsubProfile = onSnapshot(doc(db, 'users', auth.currentUser.uid), (doc) => {
       if (doc.exists()) {
@@ -74,13 +79,17 @@ export default function CustomerDashboard({ profile: initialProfile }: CustomerD
     const unsubscribeOrders = onSnapshot(q, (snapshot) => {
       setOrders(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Order)));
       setLoading(false);
+      clearTimeout(timeoutId);
     }, (error) => {
+      setLoading(false);
+      clearTimeout(timeoutId);
       handleFirestoreError(error, OperationType.LIST, 'orders');
     });
 
     return () => {
       unsubProfile();
       unsubscribeOrders();
+      clearTimeout(timeoutId);
     };
   }, []);
 

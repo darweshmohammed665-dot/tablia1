@@ -46,15 +46,22 @@ export default function ChefDashboard({ profile }: ChefDashboardProps) {
       return;
     }
 
+    // Safety timeout to prevent stuck loading
+    const timeoutId = setTimeout(() => {
+      setLoading(false);
+    }, 5000);
+
     // Real-time Orders Listener
     const ordersPath = 'orders';
     const ordersQ = query(collection(db, ordersPath), where('chefId', '==', auth.currentUser.uid));
     const unsubscribeOrders = onSnapshot(ordersQ, (snapshot) => {
       setOrders(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Order)));
       setLoading(false);
+      clearTimeout(timeoutId);
     }, (error) => {
-      handleFirestoreError(error, OperationType.LIST, ordersPath);
       setLoading(false);
+      clearTimeout(timeoutId);
+      handleFirestoreError(error, OperationType.LIST, ordersPath);
     });
 
     // Real-time Meals Listener
@@ -69,6 +76,7 @@ export default function ChefDashboard({ profile }: ChefDashboardProps) {
     return () => {
       unsubscribeOrders();
       unsubscribeMeals();
+      clearTimeout(timeoutId);
     };
   }, []);
 
