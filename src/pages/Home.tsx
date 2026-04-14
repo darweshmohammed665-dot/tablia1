@@ -338,7 +338,7 @@ export default function Home() {
           <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-8">
             <div className="text-right">
               <span className="text-brand-primary font-black tracking-[0.3em] uppercase text-sm mb-4 block">لمحة من الاكلات</span>
-              <h2 className="text-5xl md:text-[70px] font-black text-brand-secondary leading-[1] tracking-tighter">عندنا ايه <br /> النهاردة؟</h2>
+              <h2 className="text-4xl md:text-[70px] font-black text-brand-secondary leading-[1] tracking-tighter">عندنا ايه <br /> النهاردة؟</h2>
             </div>
             <Link to="/meals" className="btn-secondary group">
               تصفح الاكلات 

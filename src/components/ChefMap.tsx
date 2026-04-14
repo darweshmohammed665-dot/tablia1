@@ -236,7 +236,7 @@ export default function ChefMap() {
           </div>
         </div>
 
-        <div className="relative h-[650px] w-full rounded-[3.5rem] overflow-hidden shadow-2xl border-[12px] border-stone-50 group">
+        <div className="relative h-[400px] md:h-[650px] w-full rounded-[2rem] md:rounded-[3.5rem] overflow-hidden shadow-2xl border-[6px] md:border-[12px] border-stone-50 group">
           <MapContainer 
             center={center} 
             zoom={13} 
@@ -330,22 +330,22 @@ export default function ChefMap() {
           </div>
 
           {/* Map Legend */}
-          <div className="absolute bottom-10 right-10 z-[1000] bg-brand-cream/95 backdrop-blur-md p-6 rounded-[2rem] shadow-2xl border border-stone-100 flex flex-col gap-4 min-w-[220px]">
-            <h4 className="text-sm font-bold text-stone-900 border-b border-stone-100 pb-2 mb-1">دليل الخريطة</h4>
-            <div className="flex items-center gap-4 text-sm font-bold text-stone-700">
-              <div className="w-5 h-5 bg-brand-primary rounded-full border-2 border-white shadow-md flex items-center justify-center">
-                <ChefHat size={10} className="text-white" />
+          <div className="absolute bottom-4 right-4 md:bottom-10 md:right-10 z-[1000] bg-brand-cream/95 backdrop-blur-md p-4 md:p-6 rounded-[1.5rem] md:rounded-[2rem] shadow-2xl border border-stone-100 flex flex-col gap-3 md:gap-4 min-w-[160px] md:min-w-[220px]">
+            <h4 className="text-xs md:text-sm font-bold text-stone-900 border-b border-stone-100 pb-2 mb-1">دليل الخريطة</h4>
+            <div className="flex items-center gap-3 md:gap-4 text-xs md:text-sm font-bold text-stone-700">
+              <div className="w-4 h-4 md:w-5 md:h-5 bg-brand-primary rounded-full border-2 border-white shadow-md flex items-center justify-center">
+                <ChefHat size={8} className="text-white md:w-2.5 md:h-2.5" />
               </div>
               <span>موقع الشيف</span>
             </div>
-            <div className="flex items-center gap-4 text-sm font-bold text-stone-700">
-              <div className="w-5 h-5 bg-brand-secondary rounded-full border-2 border-white shadow-md flex items-center justify-center">
-                <ShoppingBag size={10} className="text-white" />
+            <div className="flex items-center gap-3 md:gap-4 text-xs md:text-sm font-bold text-stone-700">
+              <div className="w-4 h-4 md:w-5 md:h-5 bg-brand-secondary rounded-full border-2 border-white shadow-md flex items-center justify-center">
+                <ShoppingBag size={8} className="text-white md:w-2.5 md:h-2.5" />
               </div>
               <span>طلب نشط حالياً</span>
             </div>
-            <div className="flex items-center gap-4 text-sm font-bold text-stone-700">
-              <div className="w-5 h-5 bg-brand-primary/10 rounded-full border border-brand-primary border-dashed"></div>
+            <div className="flex items-center gap-3 md:gap-4 text-xs md:text-sm font-bold text-stone-700">
+              <div className="w-4 h-4 md:w-5 md:h-5 bg-brand-primary/10 rounded-full border border-brand-primary border-dashed"></div>
               <span>نطاق التوصيل المتاح</span>
             </div>
           </div>

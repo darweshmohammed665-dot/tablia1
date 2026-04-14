@@ -61,13 +61,13 @@ export default function Chefs() {
         </div>
 
         {loading ? (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {[1, 2, 3].map(i => (
               <div key={i} className="bg-white rounded-[18px] h-80 animate-pulse shadow-[0_8px_20px_rgba(0,0,0,0.08)]"></div>
             ))}
           </div>
         ) : filteredChefs.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {filteredChefs.map((chef, i) => (
               <motion.div 
                 key={chef.uid}

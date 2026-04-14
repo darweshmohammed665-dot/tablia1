@@ -291,17 +291,17 @@ export default function ChefDashboard({ profile }: ChefDashboardProps) {
               
               <div className="space-y-6">
                 {meals.filter(m => categoryFilter === 'الكل' || m.category === categoryFilter).length > 0 ? meals.filter(m => categoryFilter === 'الكل' || m.category === categoryFilter).map((meal) => (
-                  <div key={meal.id} className="flex items-center gap-6 p-4 rounded-2xl hover:bg-brand-cream transition-colors border border-transparent hover:border-stone-100">
-                    <img src={meal.image} alt={meal.title} className="w-24 h-24 rounded-xl object-cover shadow-sm" />
-                    <div className="flex-grow">
-                      <div className="flex items-center gap-2">
+                  <div key={meal.id} className="flex flex-col sm:flex-row items-center gap-6 p-4 rounded-2xl hover:bg-brand-cream transition-colors border border-transparent hover:border-stone-100">
+                    <img src={meal.image} alt={meal.title} className="w-full sm:w-24 h-48 sm:h-24 rounded-xl object-cover shadow-sm" />
+                    <div className="flex-grow w-full">
+                      <div className="flex items-center justify-between sm:justify-start gap-2 mb-2 sm:mb-0">
                         <h3 className="font-bold text-lg text-stone-900">{meal.title}</h3>
                         {meal.featured && <span className="bg-brand-accent/20 text-brand-accent text-[10px] px-2 py-0.5 rounded-full font-bold">مميز</span>}
                       </div>
-                      <p className="text-stone-500 text-sm mb-2">{meal.category}</p>
+                      <p className="text-stone-500 text-sm mb-1">{meal.category}</p>
                       <p className="text-brand-primary font-bold">{meal.price} ج.م</p>
                     </div>
-                    <div className="flex gap-2">
+                    <div className="flex gap-2 w-full sm:w-auto justify-end">
                       <button 
                         onClick={() => handleToggleFeatured(meal)}
                         className={`p-2 transition-colors ${meal.featured ? 'text-brand-accent' : 'text-stone-400 hover:text-brand-accent'}`}

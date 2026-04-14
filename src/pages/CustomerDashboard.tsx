@@ -170,7 +170,7 @@ export default function CustomerDashboard({ profile: initialProfile }: CustomerD
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-12 relative z-20">
         {/* Navigation Tabs */}
-        <div className="bg-white p-2 rounded-[32px] shadow-xl border border-stone-100 flex gap-2 mb-12 w-fit mx-auto md:mx-0">
+        <div className="bg-white p-2 rounded-[32px] shadow-xl border border-stone-100 flex flex-wrap md:flex-nowrap gap-2 mb-12 w-fit mx-auto md:mx-0">
           {[
             { id: 'overview', label: 'نظرة عامة', icon: ShoppingBag },
             { id: 'orders', label: 'طلباتي', icon: Package },
@@ -179,13 +179,13 @@ export default function CustomerDashboard({ profile: initialProfile }: CustomerD
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id as any)}
-              className={`flex items-center gap-3 px-8 py-4 rounded-[24px] font-black text-sm transition-all ${
+              className={`flex items-center gap-3 px-6 md:px-8 py-3 md:py-4 rounded-[24px] font-black text-xs md:text-sm transition-all ${
                 activeTab === tab.id 
                   ? 'bg-brand-primary text-white shadow-lg shadow-brand-primary/20 scale-105' 
                   : 'text-stone-400 hover:text-brand-secondary hover:bg-stone-50'
               }`}
             >
-              <tab.icon size={20} />
+              <tab.icon size={18} className="md:w-5 md:h-5" />
               {tab.label}
             </button>
           ))}

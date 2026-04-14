@@ -81,9 +81,9 @@ export default function MealDetails() {
               <span className="bg-brand-primary/10 text-brand-primary px-4 py-1 rounded-full text-sm font-bold mb-4 inline-block">
                 {meal.category}
               </span>
-              <h1 className="text-[56px] font-bold text-brand-accent mb-4 leading-tight">{meal.title}</h1>
+              <h1 className="text-4xl md:text-[56px] font-bold text-brand-accent mb-4 leading-tight">{meal.title}</h1>
               
-              <div className="flex items-center gap-6 text-stone-500">
+              <div className="flex flex-wrap items-center gap-4 md:gap-6 text-stone-500">
                 <div className="flex items-center gap-1 text-brand-accent">
                   <Star size={20} className="fill-brand-accent" />
                   <span className="text-lg font-bold">{meal.rating}</span>
