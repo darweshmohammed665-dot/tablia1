@@ -209,7 +209,8 @@ export default function ChefProfile() {
                       chefName: chef.displayName,
                       rating: meal.rating,
                       deliveryTime: 45,
-                      description: meal.description
+                      description: meal.description,
+                      orderType: meal.orderType
                     }}
                     index={i}
                   />
@@ -275,7 +276,8 @@ export default function ChefProfile() {
                     chefName: chef.displayName,
                     rating: meal.rating,
                     deliveryTime: 45,
-                    description: meal.description
+                    description: meal.description,
+                    orderType: meal.orderType
                   }}
                   index={i}
                 />

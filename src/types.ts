@@ -27,6 +27,8 @@ export interface Meal {
   description: string;
   price: number;
   image: string;
+  images?: string[]; // Up to 6 images
+  orderType?: 'instant' | 'preorder'; // فوري ولا طلب يوم بيومه
   category: string;
   rating: number;
   reviewsCount: number;

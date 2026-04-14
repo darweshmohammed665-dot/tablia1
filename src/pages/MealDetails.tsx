@@ -14,6 +14,7 @@ export default function MealDetails() {
   const [meal, setMeal] = useState<Meal | null>(null);
   const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
+  const [activeImage, setActiveImage] = useState<string>('');
   const { addToCart } = useCart();
 
   const handleAddToCart = () => {
@@ -23,7 +24,7 @@ export default function MealDetails() {
       title: meal.title,
       price: meal.price,
       quantity: quantity,
-      image: meal.image,
+      image: meal.image || (meal.images && meal.images[0]) || '',
       chefId: meal.chefId,
       chefName: meal.chefName
     });
@@ -36,7 +37,9 @@ export default function MealDetails() {
       try {
         const docSnap = await getDoc(doc(db, 'meals', id));
         if (docSnap.exists()) {
-          setMeal({ id: docSnap.id, ...docSnap.data() } as Meal);
+          const mealData = { id: docSnap.id, ...docSnap.data() } as Meal;
+          setMeal(mealData);
+          setActiveImage(mealData.image || (mealData.images && mealData.images[0]) || '');
         }
       } catch (error) {
         console.error("Error fetching meal details:", error);
@@ -51,6 +54,8 @@ export default function MealDetails() {
   if (loading) return <div className="min-h-screen flex items-center justify-center"><div className="animate-spin rounded-full h-12 w-12 border-t-2 border-brand-primary"></div></div>;
   if (!meal) return <div className="min-h-screen flex flex-col items-center justify-center"><h2 className="text-2xl font-bold mb-4">الوجبة غير موجودة</h2><Link to="/meals" className="btn-primary">العودة للأكلات</Link></div>;
 
+  const allImages = meal.images && meal.images.length > 0 ? meal.images : [meal.image];
+
   return (
     <div className="bg-brand-cream min-h-screen py-[100px]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -63,12 +68,27 @@ export default function MealDetails() {
           <motion.div 
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
-            className="relative rounded-[2rem] md:rounded-[3rem] overflow-hidden shadow-2xl h-[300px] md:h-[500px]"
+            className="flex flex-col gap-4"
           >
-            <img src={meal.image} alt={meal.title} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
-            <div className="absolute top-4 left-4 md:top-6 md:left-6 bg-white/90 backdrop-blur-md px-4 md:px-6 py-1 md:py-2 rounded-full text-lg md:text-xl font-bold text-brand-primary shadow-lg">
-              {meal.price} ج.م
+            <div className="relative rounded-[2rem] md:rounded-[3rem] overflow-hidden shadow-2xl h-[300px] md:h-[500px]">
+              <img src={activeImage} alt={meal.title} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+              <div className="absolute top-4 left-4 md:top-6 md:left-6 bg-white/90 backdrop-blur-md px-4 md:px-6 py-1 md:py-2 rounded-full text-lg md:text-xl font-bold text-brand-primary shadow-lg">
+                {meal.price} ج.م
+              </div>
             </div>
+            {allImages.length > 1 && (
+              <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide">
+                {allImages.map((img, idx) => (
+                  <button 
+                    key={idx}
+                    onClick={() => setActiveImage(img)}
+                    className={`relative w-20 h-20 md:w-24 md:h-24 rounded-2xl overflow-hidden flex-shrink-0 border-4 transition-all ${activeImage === img ? 'border-brand-primary scale-105' : 'border-transparent opacity-70 hover:opacity-100'}`}
+                  >
+                    <img src={img} alt={`${meal.title} ${idx + 1}`} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+                  </button>
+                ))}
+              </div>
+            )}
           </motion.div>
 
           {/* Info Section */}
@@ -78,9 +98,16 @@ export default function MealDetails() {
             className="flex flex-col"
           >
             <div className="mb-8">
-              <span className="bg-brand-primary/10 text-brand-primary px-4 py-1 rounded-full text-sm font-bold mb-4 inline-block">
-                {meal.category}
-              </span>
+              <div className="flex flex-wrap gap-2 mb-4">
+                <span className="bg-brand-primary/10 text-brand-primary px-4 py-1 rounded-full text-sm font-bold inline-block">
+                  {meal.category}
+                </span>
+                {meal.orderType && (
+                  <span className={`px-4 py-1 rounded-full text-sm font-bold inline-block ${meal.orderType === 'instant' ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700'}`}>
+                    {meal.orderType === 'instant' ? 'فوري' : 'طلب يوم بيومه'}
+                  </span>
+                )}
+              </div>
               <h1 className="text-4xl md:text-[56px] font-bold text-brand-accent mb-4 leading-tight">{meal.title}</h1>
               
               <div className="flex flex-wrap items-center gap-4 md:gap-6 text-stone-500">

@@ -36,7 +36,9 @@ export default function ChefDashboard({ profile }: ChefDashboardProps) {
     description: '',
     price: 0,
     category: 'محاشي',
-    image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&q=80&w=800',
+    image: '',
+    images: [] as string[],
+    orderType: 'instant' as 'instant' | 'preorder',
     featured: false
   });
 
@@ -121,7 +123,7 @@ export default function ChefDashboard({ profile }: ChefDashboardProps) {
       }
       setShowAddModal(false);
       setMealToEdit(null);
-      setNewMeal({ title: '', description: '', price: 0, category: 'محاشي', image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&q=80&w=800', featured: false });
+      setNewMeal({ title: '', description: '', price: 0, category: 'محاشي', image: '', images: [], orderType: 'instant', featured: false });
     } catch (error) {
       handleFirestoreError(error, OperationType.CREATE, 'meals');
     }
@@ -131,10 +133,12 @@ export default function ChefDashboard({ profile }: ChefDashboardProps) {
     setMealToEdit(meal);
     setNewMeal({
       title: meal.title,
-      description: meal.description,
+      description: meal.description || '',
       price: meal.price,
       category: meal.category,
-      image: meal.image,
+      image: meal.image || (meal.images && meal.images[0]) || '',
+      images: meal.images || (meal.image ? [meal.image] : []),
+      orderType: meal.orderType || 'instant',
       featured: !!meal.featured
     });
     setShowAddModal(true);
@@ -144,6 +148,77 @@ export default function ChefDashboard({ profile }: ChefDashboardProps) {
     const url = `${window.location.origin}/chef/${auth.currentUser?.uid}`;
     navigator.clipboard.writeText(url);
     toast.success('تم نسخ رابط مطبخك بنجاح!');
+  };
+
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+    if (files.length + newMeal.images.length > 6) {
+      toast.error('يمكنك رفع 6 صور كحد أقصى');
+      return;
+    }
+
+    files.forEach(file => {
+      if (!file.type.startsWith('image/')) {
+        toast.error('يرجى اختيار ملف صورة صالح');
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          const MAX_WIDTH = 800;
+          const MAX_HEIGHT = 800;
+          let width = img.width;
+          let height = img.height;
+
+          if (width > height) {
+            if (width > MAX_WIDTH) {
+              height *= MAX_WIDTH / width;
+              width = MAX_WIDTH;
+            }
+          } else {
+            if (height > MAX_HEIGHT) {
+              width *= MAX_HEIGHT / height;
+              height = MAX_HEIGHT;
+            }
+          }
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx?.drawImage(img, 0, 0, width, height);
+          const dataUrl = canvas.toDataURL('image/jpeg', 0.8);
+          
+          setNewMeal(prev => {
+            const newImages = [...prev.images, dataUrl].slice(0, 6);
+            return {
+              ...prev,
+              images: newImages,
+              image: newImages[0] || prev.image
+            };
+          });
+        };
+        img.src = event.target?.result as string;
+      };
+      reader.readAsDataURL(file);
+    });
+    
+    // Reset input
+    if (e.target) {
+      e.target.value = '';
+    }
+  };
+
+  const removeImage = (index: number) => {
+    setNewMeal(prev => {
+      const newImages = prev.images.filter((_, i) => i !== index);
+      return {
+        ...prev,
+        images: newImages,
+        image: newImages[0] || ''
+      };
+    });
   };
 
   const handleDeleteMeal = (id: string) => {
@@ -242,7 +317,7 @@ export default function ChefDashboard({ profile }: ChefDashboardProps) {
               <button 
                 onClick={() => {
                   setMealToEdit(null);
-                  setNewMeal({ title: '', description: '', price: 0, category: 'محاشي', image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&q=80&w=800', featured: false });
+                  setNewMeal({ title: '', description: '', price: 0, category: 'محاشي', image: '', images: [], orderType: 'instant', featured: false });
                   setShowAddModal(true);
                 }}
                 className="bg-brand-primary hover:bg-brand-primary/90 text-white px-6 py-3 rounded-2xl font-bold transition-all flex items-center justify-center gap-2 shadow-lg"
@@ -574,27 +649,61 @@ export default function ChefDashboard({ profile }: ChefDashboardProps) {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-stone-700 mb-1">القسم</label>
+                  <label className="block text-sm font-medium text-stone-700 mb-1">نوع الطلب</label>
                   <select 
-                    value={newMeal.category}
-                    onChange={(e) => setNewMeal({...newMeal, category: e.target.value})}
+                    value={newMeal.orderType}
+                    onChange={(e) => setNewMeal({...newMeal, orderType: e.target.value as 'instant' | 'preorder'})}
                     className="w-full px-4 py-3 rounded-xl border border-stone-200 focus:ring-2 focus:ring-brand-primary outline-none"
                   >
-                    {['محاشي', 'مشويات', 'مكرونات', 'حلويات', 'مخبوزات', 'أكل صحي'].map(c => (
-                      <option key={c} value={c}>{c}</option>
-                    ))}
+                    <option value="instant">فوري</option>
+                    <option value="preorder">طلب يوم بيومه</option>
                   </select>
                 </div>
               </div>
               <div>
-                <label className="block text-sm font-medium text-stone-700 mb-1">رابط الصورة</label>
-                <input 
-                  type="url" 
-                  required 
-                  value={newMeal.image}
-                  onChange={(e) => setNewMeal({...newMeal, image: e.target.value})}
+                <label className="block text-sm font-medium text-stone-700 mb-1">القسم</label>
+                <select 
+                  value={newMeal.category}
+                  onChange={(e) => setNewMeal({...newMeal, category: e.target.value})}
                   className="w-full px-4 py-3 rounded-xl border border-stone-200 focus:ring-2 focus:ring-brand-primary outline-none"
-                />
+                >
+                  {['محاشي', 'مشويات', 'مكرونات', 'حلويات', 'مخبوزات', 'أكل صحي'].map(c => (
+                    <option key={c} value={c}>{c}</option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-stone-700 mb-1">صور الوجبة (حتى 6 صور)</label>
+                <div className="flex flex-wrap gap-2 mb-2">
+                  {newMeal.images.map((img, idx) => (
+                    <div key={idx} className="relative w-20 h-20 rounded-xl overflow-hidden border border-stone-200">
+                      <img src={img} alt={`Preview ${idx}`} className="w-full h-full object-cover" />
+                      <button 
+                        type="button"
+                        onClick={() => removeImage(idx)}
+                        className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 hover:bg-red-600"
+                      >
+                        <X size={12} />
+                      </button>
+                    </div>
+                  ))}
+                  {newMeal.images.length < 6 && (
+                    <label className="w-20 h-20 rounded-xl border-2 border-dashed border-stone-300 flex flex-col items-center justify-center text-stone-400 cursor-pointer hover:bg-stone-50 hover:border-brand-primary transition-colors">
+                      <Camera size={24} />
+                      <span className="text-[10px] mt-1">إضافة صورة</span>
+                      <input 
+                        type="file" 
+                        accept="image/*" 
+                        multiple 
+                        onChange={handleImageUpload}
+                        className="hidden" 
+                      />
+                    </label>
+                  )}
+                </div>
+                {newMeal.images.length === 0 && (
+                  <p className="text-xs text-red-500">يرجى إضافة صورة واحدة على الأقل</p>
+                )}
               </div>
               <div className="flex items-center gap-2">
                 <input 

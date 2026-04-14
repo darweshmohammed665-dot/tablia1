@@ -63,13 +63,13 @@ export default function Register() {
     } catch (err: any) {
       console.error('Registration error:', err);
       if (err.code === 'auth/email-already-in-use') {
-        setError('هذا البريد الإلكتروني مستخدم بالفعل. حاول تسجيل الدخول بدلاً من ذلك.');
+        setError('رقم الهاتف مستخدم بالفعل. حاول تسجيل الدخول بدلاً من ذلك.');
       } else if (err.code === 'auth/operation-not-allowed') {
-        setError('تسجيل الدخول بالبريد الإلكتروني غير مفعل حالياً. يرجى تفعيله من لوحة تحكم Firebase أو استخدام جوجل.');
+        setError('تسجيل الدخول غير مفعل حالياً. يرجى تفعيله من لوحة تحكم Firebase أو استخدام جوجل.');
       } else if (err.code === 'auth/weak-password') {
         setError('كلمة المرور ضعيفة جداً. يجب أن تكون 6 أحرف على الأقل.');
       } else if (err.code === 'auth/invalid-email') {
-        setError('البريد الإلكتروني غير صالح.');
+        setError('رقم الهاتف غير صالح.');
       } else {
         setError('حدث خطأ أثناء إنشاء الحساب: ' + (err.message || 'خطأ غير معروف'));
       }

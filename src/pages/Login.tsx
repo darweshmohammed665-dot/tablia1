@@ -115,9 +115,9 @@ export default function Login() {
     } catch (err: any) {
       console.error('Login error:', err);
       if (err.code === 'auth/user-not-found' || err.code === 'auth/wrong-password' || err.code === 'auth/invalid-credential') {
-        setError('خطأ في البريد الإلكتروني أو كلمة المرور. يرجى المحاولة مرة أخرى.');
+        setError('خطأ في رقم الهاتف أو كلمة المرور. يرجى المحاولة مرة أخرى.');
       } else if (err.code === 'auth/operation-not-allowed') {
-        setError('تسجيل الدخول بالبريد الإلكتروني غير مفعل حالياً. يرجى تفعيله من لوحة تحكم Firebase أو استخدام جوجل.');
+        setError('تسجيل الدخول غير مفعل حالياً. يرجى تفعيله من لوحة تحكم Firebase أو استخدام جوجل.');
       } else if (err.code === 'auth/too-many-requests') {
         setError('تم حظر الدخول مؤقتاً بسبب محاولات فاشلة كثيرة. حاول لاحقاً.');
       } else {

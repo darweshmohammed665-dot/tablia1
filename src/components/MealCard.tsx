@@ -16,6 +16,7 @@ interface MealCardProps {
     rating?: number;
     deliveryTime?: number;
     description?: string;
+    orderType?: 'instant' | 'preorder';
   };
   index?: number;
 }
@@ -52,6 +53,12 @@ export const MealCard: React.FC<MealCardProps> = ({ meal, index = 0 }) => {
         </Link>
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover/img:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
         
+        {meal.orderType && (
+          <div className={`absolute top-4 right-4 px-3 py-1 rounded-full text-xs font-black shadow-lg pointer-events-none z-10 ${meal.orderType === 'instant' ? 'bg-green-500 text-white' : 'bg-blue-500 text-white'}`}>
+            {meal.orderType === 'instant' ? 'فوري' : 'طلب يوم بيومه'}
+          </div>
+        )}
+
         {/* Quick Add to Cart Button directly on the image */}
         <button 
           onClick={handleQuickAdd}
