@@ -4,7 +4,7 @@ import { createUserWithEmailAndPassword, updateProfile, signInWithPopup } from '
 import { doc, setDoc, getDoc } from 'firebase/firestore';
 import { auth, db, googleProvider, appleProvider } from '../firebase';
 import { motion } from 'motion/react';
-import { Mail, Lock, User, ChefHat, ArrowRight, Chrome, CheckCircle2, Apple, MapPin } from 'lucide-react';
+import { Mail, Lock, User, ChefHat, ArrowRight, Chrome, CheckCircle2, Apple, MapPin, Phone } from 'lucide-react';
 import { UserRole } from '../types';
 import { toast } from 'sonner';
 import { CHEF_IMAGE_URL } from '../constants';
@@ -30,6 +30,7 @@ export default function Register() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
   const [location, setLocation] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -49,6 +50,7 @@ export default function Register() {
           uid: userCredential.user.uid,
           email,
           displayName: name,
+          phoneNumber,
           location,
           role,
           createdAt: Date.now(),
@@ -283,6 +285,21 @@ export default function Register() {
                   onChange={(e) => setPassword(e.target.value)}
                   className="w-full pr-12 pl-4 py-4 rounded-2xl border border-stone-200 bg-white focus:ring-4 focus:ring-brand-primary/10 focus:border-brand-primary outline-none transition-all text-lg"
                   placeholder="••••••••"
+                />
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-bold text-stone-700 mr-1">رقم الهاتف</label>
+              <div className="relative group">
+                <Phone className="absolute right-4 top-1/2 -translate-y-1/2 text-stone-400 group-focus-within:text-brand-primary transition-colors" size={20} />
+                <input 
+                  type="tel" 
+                  required 
+                  value={phoneNumber}
+                  onChange={(e) => setPhoneNumber(e.target.value)}
+                  className="w-full pr-12 pl-4 py-4 rounded-2xl border border-stone-200 bg-white focus:ring-4 focus:ring-brand-primary/10 focus:border-brand-primary outline-none transition-all text-lg"
+                  placeholder="01xxxxxxxxx"
                 />
               </div>
             </div>

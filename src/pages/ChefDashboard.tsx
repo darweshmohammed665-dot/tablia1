@@ -9,6 +9,7 @@ import OrderStatusTracker from '../components/OrderStatusTracker';
 import ChefProfileForm from '../components/ChefProfileForm';
 import OrderTrackingMap from '../components/OrderTrackingMap';
 import Chat from '../components/Chat';
+import { toast } from 'sonner';
 
 interface ChefDashboardProps {
   profile: UserProfile;
@@ -20,6 +21,7 @@ export default function ChefDashboard({ profile }: ChefDashboardProps) {
   const [loading, setLoading] = useState(true);
   const [showAddModal, setShowAddModal] = useState(false);
   const [mealToDelete, setMealToDelete] = useState<string | null>(null);
+  const [mealToEdit, setMealToEdit] = useState<Meal | null>(null);
   const [updatingOrderId, setUpdatingOrderId] = useState<string | null>(null);
   const [trackingOrderId, setTrackingOrderId] = useState<string | null>(null);
   const [chatOrderId, setChatOrderId] = useState<string | null>(null);
@@ -88,25 +90,53 @@ export default function ChefDashboard({ profile }: ChefDashboardProps) {
     if (!auth.currentUser) return;
 
     try {
-      const mealData = {
-        ...newMeal,
-        chefId: auth.currentUser.uid,
-        chefName: auth.currentUser.displayName || 'شيف طبلية',
-        rating: 5.0,
-        reviewsCount: 0,
-        orderCount: 0,
-        available: true,
-        createdAt: Date.now()
-      };
+      if (mealToEdit) {
+        const path = `meals/${mealToEdit.id}`;
+        await updateDoc(doc(db, 'meals', mealToEdit.id), newMeal);
+        setMeals(meals.map(m => m.id === mealToEdit.id ? { ...m, ...newMeal } : m));
+        toast.success('تم تحديث الوجبة بنجاح');
+      } else {
+        const mealData = {
+          ...newMeal,
+          chefId: auth.currentUser.uid,
+          chefName: auth.currentUser.displayName || 'شيف طبلية',
+          rating: 5.0,
+          reviewsCount: 0,
+          orderCount: 0,
+          available: true,
+          createdAt: Date.now()
+        };
 
-      const path = 'meals';
-      const docRef = await addDoc(collection(db, path), mealData);
-      setMeals([...meals, { id: docRef.id, ...mealData } as Meal]);
+        const path = 'meals';
+        const docRef = await addDoc(collection(db, path), mealData);
+        setMeals([...meals, { id: docRef.id, ...mealData } as Meal]);
+        toast.success('تم إضافة الوجبة بنجاح');
+      }
       setShowAddModal(false);
-      setNewMeal({ title: '', description: '', price: 0, category: 'محاشي', image: '', featured: false });
+      setMealToEdit(null);
+      setNewMeal({ title: '', description: '', price: 0, category: 'محاشي', image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&q=80&w=800', featured: false });
     } catch (error) {
       handleFirestoreError(error, OperationType.CREATE, 'meals');
     }
+  };
+
+  const handleEditMeal = (meal: Meal) => {
+    setMealToEdit(meal);
+    setNewMeal({
+      title: meal.title,
+      description: meal.description,
+      price: meal.price,
+      category: meal.category,
+      image: meal.image,
+      featured: !!meal.featured
+    });
+    setShowAddModal(true);
+  };
+
+  const handleShareProfile = () => {
+    const url = `${window.location.origin}/chef/${auth.currentUser?.uid}`;
+    navigator.clipboard.writeText(url);
+    toast.success('تم نسخ رابط مطبخك بنجاح!');
   };
 
   const handleDeleteMeal = (id: string) => {
@@ -175,12 +205,24 @@ export default function ChefDashboard({ profile }: ChefDashboardProps) {
             <h1 className="text-[56px] font-bold text-brand-accent mb-2">لوحة التحكم</h1>
             <p className="text-stone-500 text-xl">أهلاً بك يا شيف، إليك ملخص نشاطك اليوم</p>
           </div>
-          <button 
-            onClick={() => setShowAddModal(true)}
-            className="btn-primary flex items-center gap-2"
-          >
-            <Plus size={20} /> إضافة وجبة جديدة
-          </button>
+          <div className="flex flex-col md:flex-row items-start md:items-center gap-4">
+            <button 
+              onClick={handleShareProfile}
+              className="bg-white text-brand-secondary border border-stone-200 px-6 py-3 rounded-full font-bold text-sm hover:bg-stone-50 transition-all flex items-center gap-2"
+            >
+              <MapPin size={18} /> رابط مطبخك الخاص
+            </button>
+            <button 
+              onClick={() => {
+                setMealToEdit(null);
+                setNewMeal({ title: '', description: '', price: 0, category: 'محاشي', image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&q=80&w=800', featured: false });
+                setShowAddModal(true);
+              }}
+              className="btn-primary flex items-center gap-2"
+            >
+              <Plus size={20} /> إضافة وجبة جديدة
+            </button>
+          </div>
         </div>
 
         {/* Stats Grid */}
@@ -236,7 +278,10 @@ export default function ChefDashboard({ profile }: ChefDashboardProps) {
                       >
                         <Star size={20} className={meal.featured ? 'fill-brand-accent' : ''} />
                       </button>
-                      <button className="p-2 text-stone-400 hover:text-brand-secondary transition-colors">
+                      <button 
+                        onClick={() => handleEditMeal(meal)}
+                        className="p-2 text-stone-400 hover:text-brand-secondary transition-colors"
+                      >
                         <Settings size={20} />
                       </button>
                       <button 
@@ -465,7 +510,7 @@ export default function ChefDashboard({ profile }: ChefDashboardProps) {
             animate={{ opacity: 1, scale: 1 }}
             className="bg-white rounded-[2.5rem] p-8 max-w-lg w-full shadow-2xl"
           >
-            <h2 className="text-2xl font-bold mb-6">إضافة وجبة جديدة</h2>
+            <h2 className="text-2xl font-bold mb-6">{mealToEdit ? 'تعديل الوجبة' : 'إضافة وجبة جديدة'}</h2>
             <form onSubmit={handleAddMeal} className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-stone-700 mb-1">اسم الوجبة</label>
@@ -531,10 +576,15 @@ export default function ChefDashboard({ profile }: ChefDashboardProps) {
                 <label htmlFor="featured-meal" className="text-sm font-medium text-stone-700">تمييز هذه الوجبة (ستظهر في أعلى ملفك الشخصي)</label>
               </div>
               <div className="flex gap-4 pt-4">
-                <button type="submit" className="btn-primary flex-grow">إضافة الوجبة</button>
+                <button type="submit" className="btn-primary flex-grow">
+                  {mealToEdit ? 'حفظ التغييرات' : 'إضافة الوجبة'}
+                </button>
                 <button 
                   type="button" 
-                  onClick={() => setShowAddModal(false)}
+                  onClick={() => {
+                    setShowAddModal(false);
+                    setMealToEdit(null);
+                  }}
                   className="px-6 py-3 rounded-full font-medium text-stone-500 hover:bg-stone-100 transition-colors"
                 >
                   إلغاء
