@@ -8,6 +8,8 @@ export interface UserProfile {
   photoURL?: string;
   bio?: string;
   location?: string;
+  phoneNumber?: string;
+  address?: string;
   rating?: number;
   reviewsCount?: number;
   coordinates?: {

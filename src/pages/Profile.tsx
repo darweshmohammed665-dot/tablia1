@@ -2,7 +2,7 @@ import React from 'react';
 import { Navigate } from 'react-router-dom';
 import { UserProfile } from '../types';
 import ChefDashboard from './ChefDashboard';
-import MyOrders from './MyOrders';
+import CustomerDashboard from './CustomerDashboard';
 
 interface ProfileProps {
   profile: UserProfile | null;
@@ -17,5 +17,5 @@ export default function Profile({ profile }: ProfileProps) {
     return <ChefDashboard profile={profile} />;
   }
 
-  return <MyOrders />;
+  return <CustomerDashboard />;
 }

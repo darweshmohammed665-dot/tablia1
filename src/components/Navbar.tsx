@@ -98,14 +98,10 @@ export default function Navbar({ user, profile }: NavbarProps) {
               <hr className="border-stone-100" />
               {user ? (
                 <>
-                  {profile?.role === 'chef' && (
-                    <Link to="/dashboard" className="block text-lg text-brand-secondary" onClick={() => setIsOpen(false)}>لوحة التحكم</Link>
-                  )}
-                  {profile?.role === 'customer' && (
-                    <Link to="/orders" className="block text-lg text-stone-600" onClick={() => setIsOpen(false)}>طلباتي</Link>
-                  )}
-                  <Link to="/profile" className="block text-lg text-stone-600" onClick={() => setIsOpen(false)}>الملف الشخصي</Link>
-                  <button onClick={handleLogout} className="block text-lg text-red-500">تسجيل الخروج</button>
+                  <Link to="/profile" className="block text-lg text-brand-secondary font-bold" onClick={() => setIsOpen(false)}>
+                    {profile?.role === 'chef' ? 'لوحة التحكم' : 'حسابي وطلباتي'}
+                  </Link>
+                  <button onClick={handleLogout} className="block text-lg text-red-500 font-bold">تسجيل الخروج</button>
                 </>
               ) : (
                 <div className="flex flex-col gap-3">
