@@ -251,57 +251,56 @@ export default function ChefMap() {
             {/* Chef Markers & Coverage */}
             {chefs.map((chef, index) => {
               const isClosest = index < 3;
+              if (!chef.coordinates || typeof chef.coordinates.lat !== 'number' || typeof chef.coordinates.lng !== 'number') {
+                return null;
+              }
               return (
                 <React.Fragment key={chef.uid}>
-                  {chef.coordinates && (
-                    <>
-                      <Marker 
-                        position={[chef.coordinates.lat, chef.coordinates.lng]} 
-                        icon={createChefIcon(isClosest)}
-                      >
-                        <Popup className="custom-popup">
-                          <div className="p-3 text-right min-w-[200px]" dir="rtl">
-                            <div className="flex items-center gap-3 mb-3">
-                              <img 
-                                src={chef.photoURL || CHEF_IMAGE_URL} 
-                                alt={chef.displayName} 
-                                className="w-12 h-12 rounded-full object-cover border-2 border-brand-primary/20"
-                              />
-                              <div>
-                                <h3 className="font-bold text-stone-900 m-0 leading-tight">{chef.displayName}</h3>
-                                <p className="text-xs text-stone-500 m-0 flex items-center gap-1">
-                                  <MapPin size={10} /> {chef.location || 'طنطا'}
-                                </p>
-                              </div>
-                            </div>
-                            <div className="flex items-center justify-between mb-4 bg-brand-cream p-2 rounded-xl">
-                              <div className="flex items-center gap-1 text-brand-accent">
-                                <span className="text-sm font-bold">★ {chef.rating || '5.0'}</span>
-                              </div>
-                              <span className="text-[10px] font-bold text-stone-400">توصيل خلال 45 د</span>
-                            </div>
-                            <a 
-                              href={`/chef/${chef.uid}`} 
-                              className="block text-center bg-brand-primary text-white py-2 px-4 rounded-xl text-sm font-bold no-underline hover:bg-brand-primary/90 transition-colors shadow-md"
-                            >
-                              طلب أكل بيتي
-                            </a>
+                  <Marker 
+                    position={[chef.coordinates.lat, chef.coordinates.lng]} 
+                    icon={createChefIcon(isClosest)}
+                  >
+                    <Popup className="custom-popup">
+                      <div className="p-3 text-right min-w-[200px]" dir="rtl">
+                        <div className="flex items-center gap-3 mb-3">
+                          <img 
+                            src={chef.photoURL || CHEF_IMAGE_URL} 
+                            alt={chef.displayName} 
+                            className="w-12 h-12 rounded-full object-cover border-2 border-brand-primary/20"
+                          />
+                          <div>
+                            <h3 className="font-bold text-stone-900 m-0 leading-tight">{chef.displayName}</h3>
+                            <p className="text-xs text-stone-500 m-0 flex items-center gap-1">
+                              <MapPin size={10} /> {chef.location || 'طنطا'}
+                            </p>
                           </div>
-                        </Popup>
-                      </Marker>
-                      <Circle 
-                        center={[chef.coordinates.lat, chef.coordinates.lng]}
-                        radius={3500}
-                        pathOptions={{ 
-                          fillColor: isClosest ? '#f27d26' : '#c65d3a', 
-                          color: isClosest ? '#f27d26' : '#c65d3a', 
-                          fillOpacity: isClosest ? 0.15 : 0.05,
-                          weight: isClosest ? 2 : 1,
-                          dashArray: '8, 12'
-                        }}
-                      />
-                    </>
-                  )}
+                        </div>
+                        <div className="flex items-center justify-between mb-4 bg-brand-cream p-2 rounded-xl">
+                          <div className="flex items-center gap-1 text-brand-accent">
+                            <span className="text-sm font-bold">★ {chef.rating || '5.0'}</span>
+                          </div>
+                          <span className="text-[10px] font-bold text-stone-400">توصيل خلال 45 د</span>
+                        </div>
+                        <a 
+                          href={`/chef/${chef.uid}`} 
+                          className="block text-center bg-brand-primary text-white py-2 px-4 rounded-xl text-sm font-bold no-underline hover:bg-brand-primary/90 transition-colors shadow-md"
+                        >
+                          طلب أكل بيتي
+                        </a>
+                      </div>
+                    </Popup>
+                  </Marker>
+                  <Circle 
+                    center={[chef.coordinates.lat, chef.coordinates.lng]}
+                    radius={3500}
+                    pathOptions={{ 
+                      fillColor: isClosest ? '#f27d26' : '#c65d3a', 
+                      color: isClosest ? '#f27d26' : '#c65d3a', 
+                      fillOpacity: isClosest ? 0.15 : 0.05,
+                      weight: isClosest ? 2 : 1,
+                      dashArray: '8, 12'
+                    }}
+                  />
                 </React.Fragment>
               );
             })}

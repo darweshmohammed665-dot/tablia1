@@ -153,22 +153,30 @@ export default function App() {
     window.addEventListener('online', handleOnline);
     window.addEventListener('offline', handleOffline);
 
-    const unsubscribe = auth ? onAuthStateChanged(auth, (firebaseUser) => {
+    const unsubProfileRef = { current: null as (() => void) | null };
+
+    const unsubscribeAuth = auth ? onAuthStateChanged(auth, (firebaseUser) => {
       setUser(firebaseUser);
+      
+      // Clean up previous profile listener if it exists
+      if (unsubProfileRef.current) {
+        unsubProfileRef.current();
+        unsubProfileRef.current = null;
+      }
+
       if (firebaseUser && db) {
         const docRef = doc(db, 'users', firebaseUser.uid);
-        // Use onSnapshot for faster initial load (from cache) and real-time updates
-        const unsubProfile = onSnapshot(docRef, (docSnap) => {
+        unsubProfileRef.current = onSnapshot(docRef, (docSnap) => {
           if (docSnap.exists()) {
             setProfile(docSnap.data() as UserProfile);
+          } else {
+            setProfile(null);
           }
           setLoading(false);
         }, (error) => {
           console.error("Error fetching profile:", error);
-          setLoading(false); // Still stop loading even on error
+          setLoading(false);
         });
-        
-        return () => unsubProfile();
       } else {
         setProfile(null);
         setLoading(false);
@@ -181,7 +189,8 @@ export default function App() {
     return () => {
       window.removeEventListener('online', handleOnline);
       window.removeEventListener('offline', handleOffline);
-      if (typeof unsubscribe === 'function') unsubscribe();
+      if (typeof unsubscribeAuth === 'function') unsubscribeAuth();
+      if (unsubProfileRef.current) unsubProfileRef.current();
       unsubConn();
     };
   }, []);

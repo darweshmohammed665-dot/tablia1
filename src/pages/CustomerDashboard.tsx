@@ -284,6 +284,40 @@ export default function CustomerDashboard({ profile: initialProfile }: CustomerD
                   </div>
                 </div>
               )}
+
+              {/* Recent History Section */}
+              <div>
+                <h2 className="text-3xl font-black text-brand-secondary mb-8 flex items-center gap-4">
+                  <div className="w-2 h-8 bg-stone-200 rounded-full"></div>
+                  آخر الطلبات المكتملة
+                </h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {orders.filter(o => o.status === 'delivered' || o.status === 'cancelled').slice(0, 4).map((order) => (
+                    <div key={order.id} className="bg-white p-6 rounded-[32px] border border-stone-100 shadow-sm flex items-center justify-between group hover:shadow-md transition-all">
+                      <div className="flex items-center gap-4">
+                        <div className={`w-12 h-12 rounded-2xl flex items-center justify-center ${order.status === 'delivered' ? 'bg-green-50 text-green-600' : 'bg-red-50 text-red-600'}`}>
+                          {order.status === 'delivered' ? <Package size={24} /> : <LogOut size={24} className="rotate-180" />}
+                        </div>
+                        <div>
+                          <h4 className="font-black text-brand-secondary line-clamp-1">{order.items.map(i => i.title).join('، ')}</h4>
+                          <p className="text-xs text-stone-400 font-bold">{new Date(order.createdAt).toLocaleDateString('ar-EG')}</p>
+                        </div>
+                      </div>
+                      <div className="text-left">
+                        <p className="font-black text-brand-primary">{order.total} ج.م</p>
+                        <span className={`text-[10px] font-black ${order.status === 'delivered' ? 'text-green-600' : 'text-red-600'}`}>
+                          {order.status === 'delivered' ? 'تم التوصيل' : 'ملغي'}
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                  {orders.filter(o => o.status === 'delivered' || o.status === 'cancelled').length === 0 && (
+                    <div className="col-span-full py-12 text-center bg-stone-50 rounded-[32px] border border-dashed border-stone-200">
+                      <p className="text-stone-400 font-bold">لا يوجد تاريخ طلبات بعد</p>
+                    </div>
+                  )}
+                </div>
+              </div>
             </motion.div>
           )}
 

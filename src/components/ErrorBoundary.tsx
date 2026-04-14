@@ -70,7 +70,7 @@ export default class ErrorBoundary extends React.Component<Props, State> {
                 العودة للرئيسية
               </a>
             </div>
-            {(process.env.NODE_ENV === 'development' || structuredError) && (
+            {(structuredError || (typeof process !== 'undefined' && process.env?.NODE_ENV === 'development')) && (
               <div className="mt-8 p-4 bg-stone-50 rounded-xl text-left overflow-auto max-h-40">
                 <pre className="text-xs text-red-400">
                   {structuredError 
