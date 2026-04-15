@@ -4,7 +4,7 @@ import { db, auth } from '../firebase';
 import { Meal, UserProfile, Order } from '../types';
 import { handleFirestoreError, OperationType } from '../lib/firestore-errors';
 import { motion, AnimatePresence } from 'motion/react';
-import { Plus, Trash2, Package, DollarSign, Star, Utensils, Settings, Clock, ChevronDown, UserCheck, MapPin, Phone, Map, MessageCircle, Share2, ChefHat } from 'lucide-react';
+import { Plus, Trash2, Package, DollarSign, Star, Utensils, Settings, Clock, ChevronDown, UserCheck, MapPin, Phone, Map, MessageCircle, Share2, ChefHat, X, Camera } from 'lucide-react';
 import OrderStatusTracker from '../components/OrderStatusTracker';
 import ChefProfileForm from '../components/ChefProfileForm';
 import OrderTrackingMap from '../components/OrderTrackingMap';
@@ -54,10 +54,43 @@ export default function ChefDashboard({ profile }: ChefDashboardProps) {
     }, 5000);
 
     // Real-time Orders Listener
+    let isInitialLoad = true;
     const ordersPath = 'orders';
     const ordersQ = query(collection(db, ordersPath), where('chefId', '==', auth.currentUser.uid));
     const unsubscribeOrders = onSnapshot(ordersQ, (snapshot) => {
-      setOrders(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Order)));
+      const updatedOrders = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Order));
+      setOrders(updatedOrders);
+
+      if (!isInitialLoad) {
+        snapshot.docChanges().forEach((change) => {
+          if (change.type === 'added') {
+            const orderData = change.doc.data() as Order;
+            toast.success(`طلب جديد!`, {
+              description: `وصلك طلب جديد من ${orderData.customerName || 'عميل'} لوجبة ${orderData.items[0]?.title || ''}`,
+              duration: 8000,
+              icon: <Package className="text-brand-primary" />,
+              action: {
+                label: 'مشاهدة',
+                onClick: () => {
+                  const element = document.getElementById('orders-section');
+                  element?.scrollIntoView({ behavior: 'smooth' });
+                }
+              }
+            });
+            
+            // Optional: Play a subtle notification sound
+            try {
+              const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2358/2358-preview.mp3');
+              audio.volume = 0.5;
+              audio.play().catch(() => {}); // Ignore errors if browser blocks autoplay
+            } catch (e) {
+              console.error('Audio notification failed', e);
+            }
+          }
+        });
+      }
+
+      isInitialLoad = false;
       setLoading(false);
       clearTimeout(timeoutId);
     }, (error) => {
@@ -157,7 +190,7 @@ export default function ChefDashboard({ profile }: ChefDashboardProps) {
       return;
     }
 
-    files.forEach(file => {
+    files.forEach((file: File) => {
       if (!file.type.startsWith('image/')) {
         toast.error('يرجى اختيار ملف صورة صالح');
         return;
@@ -407,7 +440,7 @@ export default function ChefDashboard({ profile }: ChefDashboardProps) {
             </div>
 
             {/* Active Orders with Tracking */}
-            <div className="food-card p-[20px]">
+            <div id="orders-section" className="food-card p-[20px]">
               <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
                 <h2 className="text-2xl font-bold text-brand-accent flex items-center gap-2">
                   <Package size={24} className="text-brand-secondary" /> إدارة الطلبات النشطة

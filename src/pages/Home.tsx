@@ -424,14 +424,7 @@ export default function Home() {
       </section>
 
       {/* Map Section */}
-      <section className="py-[100px] bg-brand-cream">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-[56px] font-black text-brand-primary mb-12 text-right">أقرب المطابخ إليك</h2>
-          <div className="rounded-[2rem] overflow-hidden shadow-2xl h-[500px]">
-            <ChefMap />
-          </div>
-        </div>
-      </section>
+      <ChefMap />
     </div>
   );
 }

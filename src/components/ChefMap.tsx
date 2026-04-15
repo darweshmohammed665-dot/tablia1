@@ -202,41 +202,41 @@ export default function ChefMap() {
   }
 
   return (
-    <section className="py-24 bg-white overflow-hidden">
+    <section className="py-12 md:py-24 bg-white overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
-          <div className="text-right">
+        <div className="flex flex-col md:flex-row justify-between items-end mb-8 md:mb-16 gap-6">
+          <div className="text-right w-full md:w-auto">
             <motion.span 
               initial={{ opacity: 0, x: 20 }}
               whileInView={{ opacity: 1, x: 0 }}
-              className="text-brand-primary font-bold tracking-widest uppercase text-sm mb-4 block"
+              className="text-brand-primary font-bold tracking-widest uppercase text-xs md:text-sm mb-2 md:mb-4 block"
             >
               تغطية حية
             </motion.span>
             <motion.h2 
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              className="text-4xl md:text-5xl font-bold text-stone-900 mb-4"
+              className="text-3xl md:text-5xl font-bold text-stone-900 mb-4"
             >
-              خريطة طبلية التفاعلية
+              أقرب المطابخ إليك
             </motion.h2>
-            <p className="text-stone-500 text-lg max-w-2xl">
-              شاهد مواقع الشيفات النشطين ونطاق التوصيل المتاح حالياً في مدينة طنطا والقرى المجاورة.
+            <p className="text-stone-500 text-base md:text-lg max-w-2xl">
+              شاهد مواقع المطابخ النشطة ونطاق التوصيل المتاح حالياً في مدينة طنطا.
             </p>
           </div>
-          <div className="flex gap-4">
-            <div className="bg-brand-cream px-6 py-3 rounded-2xl border border-stone-100 text-center">
-              <p className="text-2xl font-bold text-brand-primary">{chefs.length}</p>
-              <p className="text-xs text-stone-500 font-bold">شيف نشط</p>
+          <div className="flex gap-3 md:gap-4 w-full md:w-auto justify-start md:justify-end">
+            <div className="flex-1 md:flex-none bg-brand-cream px-4 md:px-6 py-2 md:py-3 rounded-2xl border border-stone-100 text-center">
+              <p className="text-xl md:text-2xl font-bold text-brand-primary">{chefs.length}</p>
+              <p className="text-[10px] md:text-xs text-stone-500 font-bold">مطبخ نشط</p>
             </div>
-            <div className="bg-brand-cream px-6 py-3 rounded-2xl border border-stone-100 text-center">
-              <p className="text-2xl font-bold text-brand-secondary">{recentOrders.length}+</p>
-              <p className="text-xs text-stone-500 font-bold">طلب مؤخراً</p>
+            <div className="flex-1 md:flex-none bg-brand-cream px-4 md:px-6 py-2 md:py-3 rounded-2xl border border-stone-100 text-center">
+              <p className="text-xl md:text-2xl font-bold text-brand-secondary">{recentOrders.length}+</p>
+              <p className="text-[10px] md:text-xs text-stone-500 font-bold">طلب مؤخراً</p>
             </div>
           </div>
         </div>
 
-        <div className="relative h-[400px] md:h-[650px] w-full rounded-[2rem] md:rounded-[3.5rem] overflow-hidden shadow-2xl border-[6px] md:border-[12px] border-stone-50 group">
+        <div className="-mx-4 md:mx-0 relative h-[500px] md:h-[650px] w-[calc(100%+2rem)] md:w-full md:rounded-[3.5rem] overflow-hidden shadow-2xl border-y-2 md:border-[12px] border-stone-50 group">
           <MapContainer 
             center={center} 
             zoom={13} 
@@ -330,7 +330,7 @@ export default function ChefMap() {
           </div>
 
           {/* Map Legend */}
-          <div className="absolute bottom-4 right-4 md:bottom-10 md:right-10 z-[1000] bg-brand-cream/95 backdrop-blur-md p-4 md:p-6 rounded-[1.5rem] md:rounded-[2rem] shadow-2xl border border-stone-100 flex flex-col gap-3 md:gap-4 min-w-[160px] md:min-w-[220px]">
+          <div className="absolute bottom-2 right-2 md:bottom-10 md:right-10 z-[1000] bg-brand-cream/95 backdrop-blur-md p-3 md:p-6 rounded-[1rem] md:rounded-[2rem] shadow-2xl border border-stone-100 flex flex-col gap-2 md:gap-4 min-w-[140px] md:min-w-[220px]">
             <h4 className="text-xs md:text-sm font-bold text-stone-900 border-b border-stone-100 pb-2 mb-1">دليل الخريطة</h4>
             <div className="flex items-center gap-3 md:gap-4 text-xs md:text-sm font-bold text-stone-700">
               <div className="w-4 h-4 md:w-5 md:h-5 bg-brand-primary rounded-full border-2 border-white shadow-md flex items-center justify-center">
