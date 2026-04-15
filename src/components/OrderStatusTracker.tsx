@@ -65,10 +65,18 @@ export default function OrderStatusTracker({ status }: OrderStatusTrackerProps) 
                   color: isCompleted || isActive ? '#ffffff' : '#d6d3d1'
                 }}
                 transition={{ duration: 0.4 }}
-                className={`w-16 h-16 rounded-2xl flex items-center justify-center shadow-sm border-4 ${
+                className={`w-16 h-16 rounded-2xl flex items-center justify-center shadow-sm border-4 relative ${
                   isActive ? 'ring-8 ring-brand-primary/20' : ''
                 }`}
               >
+                {isActive && (
+                  <motion.div 
+                    layoutId="pulse"
+                    className="absolute inset-0 rounded-2xl bg-brand-primary/20"
+                    animate={{ scale: [1, 1.2, 1] }}
+                    transition={{ repeat: Infinity, duration: 2 }}
+                  />
+                )}
                 {isCompleted ? (
                   <motion.div
                     initial={{ scale: 0 }}

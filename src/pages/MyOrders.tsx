@@ -4,7 +4,7 @@ import { db, auth } from '../firebase';
 import { Order, UserProfile } from '../types';
 import { handleFirestoreError, OperationType } from '../lib/firestore-errors';
 import { motion } from 'motion/react';
-import { Package, Clock, ShoppingBag, ChevronLeft, Map, User, Settings, Edit3, MessageCircle } from 'lucide-react';
+import { Package, Clock, ShoppingBag, ChevronLeft, Map, User, Settings, Edit3, MessageCircle, Truck, Utensils, CheckCircle2, XCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import OrderStatusTracker from '../components/OrderStatusTracker';
 import OrderTrackingMap from '../components/OrderTrackingMap';
@@ -125,6 +125,20 @@ export default function MyOrders() {
           <h2 className="text-3xl font-black text-brand-secondary">سجل الطلبات</h2>
         </div>
 
+        {upcomingOrders.length > 0 && activeTab === 'upcoming' && (
+          <div className="mb-8 p-6 bg-brand-primary/5 rounded-[2rem] border border-brand-primary/10 flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 bg-brand-primary rounded-2xl flex items-center justify-center text-white animate-pulse">
+                <Clock size={24} />
+              </div>
+              <div>
+                <h3 className="font-black text-brand-secondary">عندك {upcomingOrders.length} طلبات جارية</h3>
+                <p className="text-sm text-stone-500 font-medium">تابع حالة أكلك لحظة بلحظة</p>
+              </div>
+            </div>
+          </div>
+        )}
+
         <div className="flex gap-4 mb-8 bg-white p-2 rounded-2xl shadow-sm border border-stone-100 w-fit">
           <button 
             onClick={() => setActiveTab('upcoming')}
@@ -154,11 +168,16 @@ export default function MyOrders() {
                   <div>
                     <div className="flex items-center gap-3 mb-2">
                       <span className="text-xs font-bold text-stone-400 bg-stone-100 px-3 py-1 rounded-full">#{order.id.slice(-6).toUpperCase()}</span>
-                      <span className={`px-3 py-1 rounded-full text-xs font-black uppercase tracking-widest ${
+                      <span className={`px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-widest flex items-center gap-2 ${
                         order.status === 'delivered' ? 'bg-green-100 text-green-700' : 
                         order.status === 'cancelled' ? 'bg-red-100 text-red-700' : 
                         'bg-brand-primary/10 text-brand-primary'
                       }`}>
+                        {order.status === 'pending' && <Clock size={14} className="animate-pulse" />}
+                        {order.status === 'preparing' && <Utensils size={14} className="animate-bounce" />}
+                        {order.status === 'out_for_delivery' && <Truck size={14} className="animate-pulse" />}
+                        {order.status === 'delivered' && <CheckCircle2 size={14} />}
+                        {order.status === 'cancelled' && <XCircle size={14} />}
                         {order.status === 'pending' ? 'قيد الانتظار' : 
                          order.status === 'preparing' ? 'جاري التحضير' : 
                          order.status === 'out_for_delivery' ? 'في الطريق' :
@@ -168,15 +187,32 @@ export default function MyOrders() {
                     <h3 className="text-xl font-bold text-brand-secondary">
                       {order.items.map(item => item.title).join('، ')}
                     </h3>
-                    {order.status === 'out_for_delivery' && (
-                      <button 
-                        onClick={() => setTrackingOrderId(trackingOrderId === order.id ? null : order.id)}
-                        className="text-sm text-brand-primary hover:underline flex items-center gap-2 w-fit mt-3 font-bold bg-brand-primary/5 px-4 py-2 rounded-full"
-                      >
-                        <Map size={16} /> {trackingOrderId === order.id ? 'إخفاء الخريطة' : 'تتبع السائق على الخريطة'}
-                      </button>
-                    )}
+                    
+                    {/* Mini Progress Bar for Mobile/Quick View */}
                     {['pending', 'preparing', 'out_for_delivery'].includes(order.status) && (
+                      <div className="mt-4 w-full max-w-[200px] h-1.5 bg-stone-100 rounded-full overflow-hidden">
+                        <motion.div 
+                          initial={{ width: 0 }}
+                          animate={{ 
+                            width: order.status === 'pending' ? '25%' : 
+                                   order.status === 'preparing' ? '50%' : 
+                                   order.status === 'out_for_delivery' ? '75%' : '100%' 
+                          }}
+                          className="h-full bg-brand-primary rounded-full"
+                        />
+                      </div>
+                    )}
+
+                    <div className="flex flex-wrap gap-2 mt-3">
+                      {order.status === 'out_for_delivery' && (
+                        <button 
+                          onClick={() => setTrackingOrderId(trackingOrderId === order.id ? null : order.id)}
+                          className="text-sm text-brand-primary hover:underline flex items-center gap-2 w-fit mt-3 font-bold bg-brand-primary/5 px-4 py-2 rounded-full"
+                        >
+                          <Map size={16} /> {trackingOrderId === order.id ? 'إخفاء الخريطة' : 'تتبع السائق على الخريطة'}
+                        </button>
+                      )}
+                      {['pending', 'preparing', 'out_for_delivery'].includes(order.status) && (
                       <button 
                         onClick={() => {
                           setChatOrderId(order.id);
@@ -187,6 +223,7 @@ export default function MyOrders() {
                         <MessageCircle size={16} /> محادثة مع الشيف
                       </button>
                     )}
+                    </div>
                   </div>
                   <div className="text-left md:text-right">
                     <p className="text-2xl font-black text-brand-primary mb-1">{order.total} <span className="text-sm text-stone-500">ج.م</span></p>
