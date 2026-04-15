@@ -16,6 +16,13 @@ export interface UserProfile {
     lat: number;
     lng: number;
   };
+  paymentMethods?: {
+    vodafoneCash?: string;
+    bankName?: string;
+    accountNumber?: string;
+    accountHolderName?: string;
+    instapay?: string;
+  };
   createdAt: number;
 }
 

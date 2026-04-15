@@ -3,7 +3,7 @@ import { doc, updateDoc } from 'firebase/firestore';
 import { db } from '../firebase';
 import { UserProfile } from '../types';
 import { motion, AnimatePresence } from 'motion/react';
-import { Camera, MapPin, AlignLeft, Save, X, ChevronRight, ChevronLeft, Check, AlertCircle, Image as ImageIcon } from 'lucide-react';
+import { Camera, MapPin, AlignLeft, Save, X, ChevronRight, ChevronLeft, Check, AlertCircle, Image as ImageIcon, CreditCard, Phone as PhoneIcon, Landmark } from 'lucide-react';
 
 interface ChefProfileFormProps {
   profile: UserProfile;
@@ -13,13 +13,20 @@ interface ChefProfileFormProps {
 
 const DEFAULT_AVATAR = "https://images.unsplash.com/photo-1577219491135-ce391730fb2c?auto=format&fit=crop&q=80&w=400&h=400";
 
-type Step = 'photo' | 'info' | 'review';
+type Step = 'photo' | 'info' | 'payment' | 'review';
 
 export default function ChefProfileForm({ profile, onComplete, onCancel }: ChefProfileFormProps) {
   const [step, setStep] = useState<Step>('photo');
   const [bio, setBio] = useState(profile.bio || '');
   const [location, setLocation] = useState(profile.location || 'طنطا');
   const [photoURL, setPhotoURL] = useState(profile.photoURL || '');
+  const [paymentMethods, setPaymentMethods] = useState({
+    vodafoneCash: profile.paymentMethods?.vodafoneCash || '',
+    bankName: profile.paymentMethods?.bankName || '',
+    accountNumber: profile.paymentMethods?.accountNumber || '',
+    accountHolderName: profile.paymentMethods?.accountHolderName || '',
+    instapay: profile.paymentMethods?.instapay || ''
+  });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [imageError, setImageError] = useState('');
@@ -104,6 +111,13 @@ export default function ChefProfileForm({ profile, onComplete, onCancel }: ChefP
         bio: bio.trim(),
         location: location.trim(),
         photoURL: finalPhotoURL,
+        paymentMethods: {
+          vodafoneCash: paymentMethods.vodafoneCash.trim(),
+          bankName: paymentMethods.bankName.trim(),
+          accountNumber: paymentMethods.accountNumber.trim(),
+          accountHolderName: paymentMethods.accountHolderName.trim(),
+          instapay: paymentMethods.instapay.trim()
+        },
         updatedAt: Date.now()
       });
       onComplete();
@@ -118,6 +132,7 @@ export default function ChefProfileForm({ profile, onComplete, onCancel }: ChefP
   const steps = [
     { id: 'photo', label: 'الصورة الشخصية', icon: Camera },
     { id: 'info', label: 'المعلومات', icon: AlignLeft },
+    { id: 'payment', label: 'طرق الدفع', icon: CreditCard },
     { id: 'review', label: 'المراجعة', icon: Check },
   ];
 
@@ -136,14 +151,14 @@ export default function ChefProfileForm({ profile, onComplete, onCancel }: ChefP
             className="absolute top-1/2 left-0 h-0.5 bg-brand-primary -translate-y-1/2 z-0"
             initial={false}
             animate={{ 
-              width: step === 'photo' ? '0%' : step === 'info' ? '50%' : '100%' 
+              width: step === 'photo' ? '0%' : step === 'info' ? '33%' : step === 'payment' ? '66%' : '100%' 
             }}
           />
 
           {steps.map((s, idx) => {
             const Icon = s.icon;
             const isActive = step === s.id;
-            const isCompleted = (step === 'info' && idx === 0) || (step === 'review' && idx <= 1);
+            const isCompleted = (step === 'info' && idx === 0) || (step === 'payment' && idx <= 1) || (step === 'review' && idx <= 2);
             
             return (
               <div key={s.id} className="relative z-10 flex flex-col items-center gap-2">
@@ -317,6 +332,93 @@ export default function ChefProfileForm({ profile, onComplete, onCancel }: ChefP
                   <ChevronRight size={20} /> السابق
                 </button>
                 <button 
+                  onClick={() => setStep('payment')}
+                  className="btn-primary px-10 py-4 flex items-center gap-3"
+                >
+                  طرق الدفع <ChevronLeft size={20} />
+                </button>
+              </div>
+            </motion.div>
+          )}
+
+          {step === 'payment' && (
+            <motion.div 
+              key="payment-step"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              className="space-y-8"
+            >
+              <div className="text-center">
+                <h3 className="text-2xl font-black text-stone-900 mb-2">طرق استلام الأرباح</h3>
+                <p className="text-stone-500">أضف بياناتك المالية لتتمكن من استلام مستحقاتك بسهولة</p>
+              </div>
+
+              <div className="space-y-6">
+                <div className="bg-stone-50 p-6 rounded-2xl border border-stone-100">
+                  <label className="block text-sm font-black text-stone-700 mb-4 flex items-center gap-2">
+                    <PhoneIcon size={18} className="text-brand-primary" /> فودافون كاش
+                  </label>
+                  <input 
+                    type="tel" 
+                    placeholder="رقم فودافون كاش (مثال: 010XXXXXXXX)"
+                    value={paymentMethods.vodafoneCash}
+                    onChange={(e) => setPaymentMethods({...paymentMethods, vodafoneCash: e.target.value})}
+                    className="w-full px-6 py-4 rounded-2xl border border-stone-200 focus:ring-4 focus:ring-brand-primary/10 focus:border-brand-primary outline-none transition-all font-medium"
+                  />
+                </div>
+
+                <div className="bg-stone-50 p-6 rounded-2xl border border-stone-100 space-y-4">
+                  <label className="block text-sm font-black text-stone-700 mb-2 flex items-center gap-2">
+                    <Landmark size={18} className="text-brand-primary" /> الحساب البنكي
+                  </label>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <input 
+                      type="text" 
+                      placeholder="اسم البنك"
+                      value={paymentMethods.bankName}
+                      onChange={(e) => setPaymentMethods({...paymentMethods, bankName: e.target.value})}
+                      className="w-full px-6 py-4 rounded-2xl border border-stone-200 focus:ring-4 focus:ring-brand-primary/10 focus:border-brand-primary outline-none transition-all font-medium"
+                    />
+                    <input 
+                      type="text" 
+                      placeholder="اسم صاحب الحساب"
+                      value={paymentMethods.accountHolderName}
+                      onChange={(e) => setPaymentMethods({...paymentMethods, accountHolderName: e.target.value})}
+                      className="w-full px-6 py-4 rounded-2xl border border-stone-200 focus:ring-4 focus:ring-brand-primary/10 focus:border-brand-primary outline-none transition-all font-medium"
+                    />
+                  </div>
+                  <input 
+                    type="text" 
+                    placeholder="رقم الحساب أو الـ IBAN"
+                    value={paymentMethods.accountNumber}
+                    onChange={(e) => setPaymentMethods({...paymentMethods, accountNumber: e.target.value})}
+                    className="w-full px-6 py-4 rounded-2xl border border-stone-200 focus:ring-4 focus:ring-brand-primary/10 focus:border-brand-primary outline-none transition-all font-medium"
+                  />
+                </div>
+
+                <div className="bg-stone-50 p-6 rounded-2xl border border-stone-100">
+                  <label className="block text-sm font-black text-stone-700 mb-4 flex items-center gap-2">
+                    <CreditCard size={18} className="text-brand-primary" /> InstaPay (اختياري)
+                  </label>
+                  <input 
+                    type="text" 
+                    placeholder="عنوان InstaPay (مثال: name@instapay)"
+                    value={paymentMethods.instapay}
+                    onChange={(e) => setPaymentMethods({...paymentMethods, instapay: e.target.value})}
+                    className="w-full px-6 py-4 rounded-2xl border border-stone-200 focus:ring-4 focus:ring-brand-primary/10 focus:border-brand-primary outline-none transition-all font-medium"
+                  />
+                </div>
+              </div>
+
+              <div className="flex justify-between pt-4">
+                <button 
+                  onClick={() => setStep('info')}
+                  className="px-8 py-4 rounded-2xl font-bold text-stone-500 hover:bg-stone-100 transition-colors flex items-center gap-2"
+                >
+                  <ChevronRight size={20} /> السابق
+                </button>
+                <button 
                   onClick={() => setStep('review')}
                   className="btn-primary px-10 py-4 flex items-center gap-3"
                 >
@@ -353,8 +455,32 @@ export default function ChefProfileForm({ profile, onComplete, onCancel }: ChefP
                     </p>
                   </div>
                 </div>
-                <div className="bg-white p-6 rounded-2xl border border-stone-100 text-stone-600 leading-relaxed font-medium">
+                <div className="bg-white p-6 rounded-2xl border border-stone-100 text-stone-600 leading-relaxed font-medium mb-6">
                   {bio || 'لا توجد نبذة شخصية مضافة'}
+                </div>
+
+                <div className="space-y-3">
+                  <h5 className="text-sm font-black text-stone-400 uppercase tracking-widest">طرق الدفع المضافة:</h5>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {paymentMethods.vodafoneCash && (
+                      <div className="flex items-center gap-2 text-sm font-bold text-stone-700 bg-white p-3 rounded-xl border border-stone-100">
+                        <PhoneIcon size={14} className="text-brand-primary" /> {paymentMethods.vodafoneCash} (فودافون كاش)
+                      </div>
+                    )}
+                    {paymentMethods.bankName && (
+                      <div className="flex items-center gap-2 text-sm font-bold text-stone-700 bg-white p-3 rounded-xl border border-stone-100">
+                        <Landmark size={14} className="text-brand-primary" /> {paymentMethods.bankName}
+                      </div>
+                    )}
+                    {paymentMethods.instapay && (
+                      <div className="flex items-center gap-2 text-sm font-bold text-stone-700 bg-white p-3 rounded-xl border border-stone-100">
+                        <CreditCard size={14} className="text-brand-primary" /> {paymentMethods.instapay} (InstaPay)
+                      </div>
+                    )}
+                    {!paymentMethods.vodafoneCash && !paymentMethods.bankName && !paymentMethods.instapay && (
+                      <p className="text-xs text-stone-400 italic">لم يتم إضافة طرق دفع بعد</p>
+                    )}
+                  </div>
                 </div>
               </div>
 

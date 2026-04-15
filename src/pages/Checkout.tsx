@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { MapPin, Phone, CreditCard, Truck, CheckCircle2, ArrowRight, ShieldCheck, Ticket, Info, Coins, Bell, BellOff, UserCircle, MessageSquare, Clock, Plus } from 'lucide-react';
+import { MapPin, Phone, CreditCard, Truck, CheckCircle2, ArrowRight, ShieldCheck, Info, Coins, Bell, BellOff, UserCircle, MessageSquare, Clock, Plus } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { collection, addDoc, getDoc, doc } from 'firebase/firestore';
 import { db, auth } from '../firebase';
@@ -98,7 +98,6 @@ export default function Checkout() {
   const [loading, setLoading] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState<'cod' | 'stripe'>('cod');
   const [deliveryInstruction, setDeliveryInstruction] = useState('call');
-  const [couponCode, setCouponCode] = useState('');
   const [discount, setDiscount] = useState(0);
   const [deliveryType, setDeliveryType] = useState<'quick' | 'scheduled'>('quick');
   const [scheduledDay, setScheduledDay] = useState('غداً');
@@ -146,15 +145,6 @@ export default function Checkout() {
   const serviceFee = 5.00;
   const isFirstOrder = true; // Mock for demo
   const total = subtotal - discount + (isFirstOrder ? 0 : deliveryFee) + serviceFee;
-
-  const handleApplyCoupon = () => {
-    if (couponCode.toUpperCase() === 'TABLYA30') {
-      setDiscount(30);
-      toast.success('تم تطبيق الخصم بنجاح!');
-    } else {
-      toast.error('كود الخصم غير صحيح');
-    }
-  };
 
   const handlePlaceOrder = async () => {
     if (!auth.currentUser) {
@@ -307,7 +297,7 @@ export default function Checkout() {
                       </div>
                     </div>
                     <div className="absolute bottom-4 right-4 bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl text-xs font-bold shadow-lg">
-                      مركز الخدمات الاجتماعية المتكاملة بسبرباي
+                      موقع الطباخ
                     </div>
                   </div>
 
@@ -561,33 +551,6 @@ export default function Checkout() {
           {/* Order Summary */}
           <div className="lg:col-span-1">
             <div className="food-card p-[20px] sticky top-24 space-y-8">
-              {/* Coupon Section */}
-              <div>
-                <h3 className="text-lg font-bold text-brand-accent mb-4 flex items-center gap-2">
-                  <Ticket size={20} className="text-brand-primary" />
-                  وفر على طلبك
-                </h3>
-                <div className="flex gap-2">
-                  <div className="relative flex-grow">
-                    <input 
-                      type="text" 
-                      placeholder="قم بإدخال رمز القسيمة هنا"
-                      value={couponCode}
-                      onChange={(e) => setCouponCode(e.target.value)}
-                      className="w-full px-4 py-3 rounded-xl border border-stone-200 focus:ring-2 focus:ring-brand-primary outline-none text-sm"
-                    />
-                  </div>
-                  <button 
-                    onClick={handleApplyCoupon}
-                    className="bg-brand-primary text-white px-6 py-3 rounded-xl font-bold text-sm hover:bg-brand-accent transition-colors"
-                  >
-                    إرسال
-                  </button>
-                </div>
-              </div>
-
-              <hr className="border-stone-100" />
-
               <div>
                 <h2 className="text-2xl font-bold text-brand-accent mb-6">ملخص الدفع</h2>
                 

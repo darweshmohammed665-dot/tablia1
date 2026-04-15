@@ -29,6 +29,7 @@ export default function ChefDashboard({ profile }: ChefDashboardProps) {
   const [orderFilter, setOrderFilter] = useState<'all' | 'pending' | 'preparing' | 'out_for_delivery'>('all');
   const [categoryFilter, setCategoryFilter] = useState('الكل');
   const [isProfileComplete, setIsProfileComplete] = useState(!!(profile.bio && profile.location && profile.photoURL));
+  const [showProfileEdit, setShowProfileEdit] = useState(false);
   
   // New Meal Form
   const [newMeal, setNewMeal] = useState({
@@ -341,6 +342,13 @@ export default function ChefDashboard({ profile }: ChefDashboardProps) {
             </div>
             <div className="flex flex-col sm:flex-row gap-3">
               <button 
+                onClick={() => setShowProfileEdit(true)}
+                className="bg-white/10 hover:bg-white/20 text-white px-6 py-3 rounded-2xl font-bold transition-all flex items-center justify-center gap-2 backdrop-blur-sm"
+              >
+                <Settings size={20} />
+                تعديل الملف
+              </button>
+              <button 
                 onClick={handleShareProfile}
                 className="bg-white/10 hover:bg-white/20 text-white px-6 py-3 rounded-2xl font-bold transition-all flex items-center justify-center gap-2 backdrop-blur-sm"
               >
@@ -559,7 +567,54 @@ export default function ChefDashboard({ profile }: ChefDashboardProps) {
           </div>
 
           {/* Recent History */}
-          <div className="lg:col-span-1">
+          <div className="lg:col-span-1 space-y-8">
+            {/* Financial Info Card */}
+            <div className="food-card p-[20px]">
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-xl font-bold text-brand-accent flex items-center gap-2">
+                  <DollarSign size={20} className="text-green-500" /> بيانات الدفع
+                </h2>
+                <button 
+                  onClick={() => setShowProfileEdit(true)}
+                  className="text-xs font-bold text-brand-primary hover:underline"
+                >
+                  تعديل
+                </button>
+              </div>
+              
+              <div className="space-y-4">
+                {profile.paymentMethods?.vodafoneCash ? (
+                  <div className="p-3 bg-stone-50 rounded-xl border border-stone-100">
+                    <p className="text-[10px] text-stone-400 font-bold uppercase mb-1">فودافون كاش</p>
+                    <p className="text-sm font-bold text-stone-700">{profile.paymentMethods.vodafoneCash}</p>
+                  </div>
+                ) : (
+                  <div className="p-3 bg-red-50/50 rounded-xl border border-red-100 border-dashed">
+                    <p className="text-xs text-red-400 font-medium">لم يتم إضافة فودافون كاش</p>
+                  </div>
+                )}
+
+                {profile.paymentMethods?.bankName ? (
+                  <div className="p-3 bg-stone-50 rounded-xl border border-stone-100">
+                    <p className="text-[10px] text-stone-400 font-bold uppercase mb-1">الحساب البنكي ({profile.paymentMethods.bankName})</p>
+                    <p className="text-sm font-bold text-stone-700">{profile.paymentMethods.accountNumber}</p>
+                    <p className="text-[10px] text-stone-500 mt-1">{profile.paymentMethods.accountHolderName}</p>
+                  </div>
+                ) : (
+                  <div className="p-3 bg-red-50/50 rounded-xl border border-red-100 border-dashed">
+                    <p className="text-xs text-red-400 font-medium">لم يتم إضافة حساب بنكي</p>
+                  </div>
+                )}
+
+                {profile.paymentMethods?.instapay && (
+                  <div className="p-3 bg-stone-50 rounded-xl border border-stone-100">
+                    <p className="text-[10px] text-stone-400 font-bold uppercase mb-1">InstaPay</p>
+                    <p className="text-sm font-bold text-stone-700">{profile.paymentMethods.instapay}</p>
+                  </div>
+                )}
+              </div>
+            </div>
+
             <div className="food-card p-[20px]">
               <h2 className="text-2xl font-bold text-brand-accent mb-8 flex items-center gap-2">
                 <Clock size={24} className="text-stone-400" /> سجل الطلبات المكتملة
@@ -604,6 +659,24 @@ export default function ChefDashboard({ profile }: ChefDashboardProps) {
         isOpen={!!chatOrderId} 
         onClose={() => setChatOrderId(null)} 
       />
+
+      {/* Profile Edit Modal */}
+      <AnimatePresence>
+        {showProfileEdit && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-md overflow-y-auto">
+            <div className="min-h-screen py-10 w-full flex items-center justify-center">
+              <ChefProfileForm 
+                profile={profile} 
+                onComplete={() => {
+                  setShowProfileEdit(false);
+                  window.location.reload(); // Reload to get fresh profile data
+                }} 
+                onCancel={() => setShowProfileEdit(false)}
+              />
+            </div>
+          </div>
+        )}
+      </AnimatePresence>
 
       {/* Delete Confirmation Modal */}
       <AnimatePresence>
