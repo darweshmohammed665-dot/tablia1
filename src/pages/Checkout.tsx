@@ -98,7 +98,6 @@ export default function Checkout() {
   const [loading, setLoading] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState<'cod' | 'stripe'>('cod');
   const [deliveryInstruction, setDeliveryInstruction] = useState('call');
-  const [discount, setDiscount] = useState(0);
   const [deliveryType, setDeliveryType] = useState<'quick' | 'scheduled'>('quick');
   const [scheduledDay, setScheduledDay] = useState('غداً');
   const [formData, setFormData] = useState({
@@ -143,8 +142,10 @@ export default function Checkout() {
   const subtotal = cartTotal;
   const deliveryFee = 18.99;
   const serviceFee = 5.00;
+  const commissionRate = 0.15;
+  const commission = subtotal * commissionRate;
   const isFirstOrder = true; // Mock for demo
-  const total = subtotal - discount + (isFirstOrder ? 0 : deliveryFee) + serviceFee;
+  const total = subtotal + commission + (isFirstOrder ? 0 : deliveryFee) + serviceFee;
 
   const handlePlaceOrder = async () => {
     if (!auth.currentUser) {
@@ -212,6 +213,8 @@ export default function Checkout() {
           price: item.price || 0
         })),
         total: total || 0,
+        subtotal: subtotal || 0,
+        commission: commission || 0,
         status: 'pending',
         paymentMethod: paymentMethod || 'cod',
         paymentId: paymentId || null,
@@ -559,13 +562,11 @@ export default function Checkout() {
                     <span>المجموع الفرعي</span>
                     <span>{subtotal.toFixed(2)} ج.م</span>
                   </div>
-                  
-                  {discount > 0 && (
-                    <div className="flex justify-between text-green-600 font-bold">
-                      <span className="bg-green-100 px-2 py-0.5 rounded">خصم</span>
-                      <span>-{discount.toFixed(2)} ج.م</span>
-                    </div>
-                  )}
+
+                  <div className="flex justify-between text-stone-600">
+                    <span>عمولة المنصة (15%)</span>
+                    <span>{commission.toFixed(2)} ج.م</span>
+                  </div>
 
                   <div className="flex justify-between text-stone-600 items-center">
                     <div className="flex items-center gap-1">
@@ -593,18 +594,6 @@ export default function Checkout() {
                   </div>
                 </div>
               </div>
-
-              {discount > 0 && (
-                <div className="bg-orange-50 border border-orange-100 rounded-2xl p-4 flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center">
-                      <Coins className="text-orange-600" size={20} />
-                    </div>
-                    <p className="text-orange-900 font-bold">لقد وفرت</p>
-                  </div>
-                  <p className="text-orange-600 font-black text-lg">EGP {discount.toFixed(2)}</p>
-                </div>
-              )}
 
               <div className="space-y-4">
                 <button 

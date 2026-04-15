@@ -1,9 +1,24 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { doc, updateDoc } from 'firebase/firestore';
 import { db } from '../firebase';
 import { UserProfile } from '../types';
 import { motion, AnimatePresence } from 'motion/react';
-import { Camera, MapPin, AlignLeft, Save, X, ChevronRight, ChevronLeft, Check, AlertCircle, Image as ImageIcon, CreditCard, Phone as PhoneIcon, Landmark } from 'lucide-react';
+import { Camera, MapPin, AlignLeft, Save, X, ChevronRight, ChevronLeft, Check, AlertCircle, Image as ImageIcon, CreditCard, Phone as PhoneIcon, Landmark, Crosshair } from 'lucide-react';
+import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
+import L from 'leaflet';
+import { toast } from 'sonner';
+
+// Fix for default marker icon
+import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';
+import markerIcon from 'leaflet/dist/images/marker-icon.png';
+import markerShadow from 'leaflet/dist/images/marker-shadow.png';
+
+delete (L.Icon.Default.prototype as any)._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconUrl: markerIcon,
+  iconRetinaUrl: markerIcon2x,
+  shadowUrl: markerShadow,
+});
 
 interface ChefProfileFormProps {
   profile: UserProfile;
@@ -12,13 +27,33 @@ interface ChefProfileFormProps {
 }
 
 const DEFAULT_AVATAR = "https://images.unsplash.com/photo-1577219491135-ce391730fb2c?auto=format&fit=crop&q=80&w=400&h=400";
+const DEFAULT_CENTER: [number, number] = [30.7865, 31.0004]; // Tanta, Egypt
 
 type Step = 'photo' | 'info' | 'payment' | 'review';
+
+function LocationMarker({ position, setPosition }: { position: [number, number] | null, setPosition: (pos: [number, number]) => void }) {
+  const map = useMapEvents({
+    click(e) {
+      setPosition([e.latlng.lat, e.latlng.lng]);
+      map.flyTo(e.latlng, map.getZoom());
+    },
+  });
+
+  return position === null ? null : (
+    <Marker position={position} />
+  );
+}
 
 export default function ChefProfileForm({ profile, onComplete, onCancel }: ChefProfileFormProps) {
   const [step, setStep] = useState<Step>('photo');
   const [bio, setBio] = useState(profile.bio || '');
   const [location, setLocation] = useState(profile.location || 'طنطا');
+  const [coordinates, setCoordinates] = useState<[number, number] | null>(
+    profile.coordinates ? [profile.coordinates.lat, profile.coordinates.lng] : null
+  );
+  const [mapCenter, setMapCenter] = useState<[number, number]>(
+    profile.coordinates ? [profile.coordinates.lat, profile.coordinates.lng] : DEFAULT_CENTER
+  );
   const [photoURL, setPhotoURL] = useState(profile.photoURL || '');
   const [paymentMethods, setPaymentMethods] = useState({
     vodafoneCash: profile.paymentMethods?.vodafoneCash || '',
@@ -95,6 +130,25 @@ export default function ChefProfileForm({ profile, onComplete, onCancel }: ChefP
     reader.readAsDataURL(file);
   };
 
+  const handleLocateMe = () => {
+    if (!navigator.geolocation) {
+      toast.error('المتصفح لا يدعم تحديد الموقع الجغرافي');
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const { latitude, longitude } = position.coords;
+        setCoordinates([latitude, longitude]);
+        setMapCenter([latitude, longitude]);
+      },
+      (error) => {
+        console.error("Error getting location:", error);
+        toast.error('فشل تحديد موقعك الحالي. يرجى المحاولة يدوياً.');
+      }
+    );
+  };
+
   const handleSubmit = async () => {
     if (!bio.trim() || !location.trim()) {
       setError('يرجى إكمال جميع الحقول المطلوبة');
@@ -107,7 +161,7 @@ export default function ChefProfileForm({ profile, onComplete, onCancel }: ChefP
 
     try {
       const finalPhotoURL = photoURL.trim() || DEFAULT_AVATAR;
-      await updateDoc(doc(db, 'users', profile.uid), {
+      const updateData: any = {
         bio: bio.trim(),
         location: location.trim(),
         photoURL: finalPhotoURL,
@@ -119,7 +173,16 @@ export default function ChefProfileForm({ profile, onComplete, onCancel }: ChefP
           instapay: paymentMethods.instapay.trim()
         },
         updatedAt: Date.now()
-      });
+      };
+
+      if (coordinates) {
+        updateData.coordinates = {
+          lat: coordinates[0],
+          lng: coordinates[1]
+        };
+      }
+
+      await updateDoc(doc(db, 'users', profile.uid), updateData);
       onComplete();
     } catch (err) {
       console.error("Error updating chef profile:", err);
@@ -311,7 +374,7 @@ export default function ChefProfileForm({ profile, onComplete, onCancel }: ChefP
 
                 <div>
                   <label className="block text-sm font-black text-stone-700 mb-3 flex items-center gap-2">
-                    <MapPin size={18} className="text-brand-primary" /> المنطقة / الموقع
+                    <MapPin size={18} className="text-brand-primary" /> المنطقة / الموقع (نصي)
                   </label>
                   <input 
                     type="text" 
@@ -319,8 +382,36 @@ export default function ChefProfileForm({ profile, onComplete, onCancel }: ChefP
                     placeholder="مثال: طنطا - حي القحافة"
                     value={location}
                     onChange={(e) => setLocation(e.target.value)}
-                    className="w-full px-6 py-4 rounded-2xl border border-stone-200 focus:ring-4 focus:ring-brand-primary/10 focus:border-brand-primary outline-none transition-all font-medium"
+                    className="w-full px-6 py-4 rounded-2xl border border-stone-200 focus:ring-4 focus:ring-brand-primary/10 focus:border-brand-primary outline-none transition-all font-medium mb-4"
                   />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-black text-stone-700 mb-3 flex items-center gap-2">
+                    <Crosshair size={18} className="text-brand-primary" /> حدد موقعك بدقة على الخريطة
+                  </label>
+                  <div className="h-64 rounded-2xl overflow-hidden border border-stone-200 relative z-0">
+                    <MapContainer 
+                      center={mapCenter} 
+                      zoom={13} 
+                      style={{ height: '100%', width: '100%' }}
+                    >
+                      <TileLayer
+                        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                      />
+                      <LocationMarker position={coordinates} setPosition={setCoordinates} />
+                    </MapContainer>
+                    <button
+                      type="button"
+                      onClick={handleLocateMe}
+                      className="absolute bottom-4 left-4 z-[1000] bg-white p-3 rounded-full shadow-lg hover:bg-stone-50 transition-colors border border-stone-200 text-brand-primary"
+                      title="حدد موقعي الحالي"
+                    >
+                      <Crosshair size={20} />
+                    </button>
+                  </div>
+                  <p className="text-[10px] text-stone-400 mt-2 text-right">اضغط على الخريطة لتحديد موقع مطبخك بدقة، أو استخدم زر التحديد التلقائي</p>
                 </div>
               </div>
 
@@ -453,6 +544,11 @@ export default function ChefProfileForm({ profile, onComplete, onCancel }: ChefP
                     <p className="text-brand-primary font-bold flex items-center justify-center md:justify-start gap-1">
                       <MapPin size={14} /> {location}
                     </p>
+                    {coordinates && (
+                      <p className="text-[10px] text-stone-400 font-bold flex items-center justify-center md:justify-start gap-1 mt-1">
+                        <Crosshair size={10} /> تم تحديد الموقع الجغرافي
+                      </p>
+                    )}
                   </div>
                 </div>
                 <div className="bg-white p-6 rounded-2xl border border-stone-100 text-stone-600 leading-relaxed font-medium mb-6">

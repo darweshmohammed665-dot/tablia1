@@ -28,7 +28,7 @@ export default function ChefDashboard({ profile }: ChefDashboardProps) {
   const [chatRecipient, setChatRecipient] = useState<string>('');
   const [orderFilter, setOrderFilter] = useState<'all' | 'pending' | 'preparing' | 'out_for_delivery'>('all');
   const [categoryFilter, setCategoryFilter] = useState('الكل');
-  const [isProfileComplete, setIsProfileComplete] = useState(!!(profile.bio && profile.location && profile.photoURL));
+  const [isProfileComplete, setIsProfileComplete] = useState(!!(profile.bio && profile.location && profile.photoURL && profile.coordinates));
   const [showProfileEdit, setShowProfileEdit] = useState(false);
   
   // New Meal Form

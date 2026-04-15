@@ -1,29 +1,18 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'motion/react';
-import { ShoppingCart, Trash2, ArrowRight, ShoppingBag, ChevronLeft, Plus, Minus, Ticket, Info, Coins } from 'lucide-react';
+import { ShoppingCart, Trash2, ArrowRight, ShoppingBag, ChevronLeft, Plus, Minus, Info } from 'lucide-react';
 import { useCart } from '../context/CartContext';
-import { useState } from 'react';
-import { toast } from 'sonner';
 
 export default function Cart() {
   const { cartItems, removeFromCart, updateQuantity, cartTotal } = useCart();
-  const [couponCode, setCouponCode] = useState('');
-  const [discount, setDiscount] = useState(0);
 
   const subtotal = cartTotal;
   const deliveryFee = 18.99;
   const serviceFee = 5.00;
+  const commissionRate = 0.15;
+  const commission = subtotal * commissionRate;
   const isFirstOrder = true; // Mock for demo
-  const total = subtotal - discount + (isFirstOrder ? 0 : deliveryFee) + serviceFee;
-
-  const handleApplyCoupon = () => {
-    if (couponCode.toUpperCase() === 'TABLYA30') {
-      setDiscount(30);
-      toast.success('تم تطبيق الخصم بنجاح!');
-    } else {
-      toast.error('كود الخصم غير صحيح');
-    }
-  };
+  const total = subtotal + commission + (isFirstOrder ? 0 : deliveryFee) + serviceFee;
 
   if (cartItems.length === 0) {
     return (
@@ -132,33 +121,6 @@ export default function Cart() {
           {/* Summary */}
           <div className="lg:col-span-1">
             <div className="food-card p-[20px] sticky top-24 space-y-8">
-              {/* Coupon Section */}
-              <div>
-                <h3 className="text-lg font-bold text-brand-accent mb-4 flex items-center gap-2">
-                  <Ticket size={20} className="text-brand-primary" />
-                  وفر على طلبك
-                </h3>
-                <div className="flex gap-2">
-                  <div className="relative flex-grow">
-                    <input 
-                      type="text" 
-                      placeholder="قم بإدخال رمز القسيمة هنا"
-                      value={couponCode}
-                      onChange={(e) => setCouponCode(e.target.value)}
-                      className="w-full px-4 py-3 rounded-xl border border-stone-200 focus:ring-2 focus:ring-brand-primary outline-none text-sm"
-                    />
-                  </div>
-                  <button 
-                    onClick={handleApplyCoupon}
-                    className="bg-brand-primary text-white px-6 py-3 rounded-xl font-bold text-sm hover:bg-brand-accent transition-colors"
-                  >
-                    إرسال
-                  </button>
-                </div>
-              </div>
-
-              <hr className="border-stone-100" />
-
               <div>
                 <h2 className="text-2xl font-bold text-brand-accent mb-6">ملخص الدفع</h2>
                 
@@ -167,14 +129,12 @@ export default function Cart() {
                     <span>المجموع الفرعي</span>
                     <span>{subtotal.toFixed(2)} ج.م</span>
                   </div>
-                  
-                  {discount > 0 && (
-                    <div className="flex justify-between text-green-600 font-bold">
-                      <span className="bg-green-100 px-2 py-0.5 rounded">خصم</span>
-                      <span>-{discount.toFixed(2)} ج.م</span>
-                    </div>
-                  )}
 
+                  <div className="flex justify-between text-stone-600">
+                    <span>عمولة المنصة (15%)</span>
+                    <span>{commission.toFixed(2)} ج.م</span>
+                  </div>
+                  
                   <div className="flex justify-between text-stone-600 items-center">
                     <div className="flex items-center gap-1">
                       <span className={isFirstOrder ? "bg-yellow-100 text-yellow-700 px-2 py-0.5 rounded text-xs font-bold" : ""}>
@@ -201,18 +161,6 @@ export default function Cart() {
                   </div>
                 </div>
               </div>
-
-              {discount > 0 && (
-                <div className="bg-orange-50 border border-orange-100 rounded-2xl p-4 flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center">
-                      <Coins className="text-orange-600" size={20} />
-                    </div>
-                    <p className="text-orange-900 font-bold">لقد وفرت</p>
-                  </div>
-                  <p className="text-orange-600 font-black text-lg">EGP {discount.toFixed(2)}</p>
-                </div>
-              )}
 
               <div className="flex flex-col gap-3">
                 <Link to="/checkout" className="btn-primary w-full py-4 text-lg flex items-center justify-center gap-2">
