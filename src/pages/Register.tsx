@@ -157,7 +157,7 @@ export default function Register() {
         >
           <div className="mb-10">
             <h1 className="text-[56px] font-bold text-brand-accent mb-4">إنشاء حساب جديد</h1>
-            <p className="text-stone-500 text-xl">انضم لأكبر مجتمع للطعام البيتي في طنطا.</p>
+            <p className="text-stone-500 text-xl">انضم لأكبر مجتمع للطعام البيتي.</p>
           </div>
 
           {/* Role Selector */}
@@ -252,7 +252,7 @@ export default function Register() {
                   value={location}
                   onChange={(e) => setLocation(e.target.value)}
                   className="w-full pr-12 pl-4 py-4 rounded-2xl border border-stone-200 bg-white focus:ring-4 focus:ring-brand-primary/10 focus:border-brand-primary outline-none transition-all text-lg"
-                  placeholder="مثال: طنطا - حي القحافة"
+                  placeholder="مثال: مدينة طنطا - حي القحافة"
                 />
               </div>
             </div>

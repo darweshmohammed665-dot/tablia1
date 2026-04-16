@@ -63,7 +63,7 @@ export default function Home() {
             className="inline-block mb-8"
           >
             <span className="bg-brand-primary/20 border border-brand-primary/50 text-white px-8 py-3 rounded-full text-sm font-bold tracking-widest uppercase backdrop-blur-md shadow-[0_0_30px_rgba(220,38,38,0.3)]">
-              ✨ تجربة طعام لا تُنسى في طنطا
+              ✨ تجربة طعام لا تُنسى في مدينتك
             </span>
           </motion.div>
 
@@ -82,7 +82,7 @@ export default function Home() {
             transition={{ delay: 0.1 }}
             className="text-xl md:text-3xl text-white/90 mb-12 font-medium leading-relaxed max-w-3xl mx-auto drop-shadow-lg"
           >
-            من مطبخ ست شاطرة، بأحسن جودة وأقل سعر ولحد باب بيتك في طنطا.
+            من مطبخ ست شاطرة، بأحسن جودة وأقل سعر ولحد باب بيتك.
           </motion.p>
           
           <motion.div 
@@ -109,7 +109,7 @@ export default function Home() {
               "طازج يومياً",
               "مطبوخ بأيادي أشطر ستات بيوت",
               "نضيف ومضمون",
-              "توصيل سريع في طنطا"
+              "توصيل سريع ومخلص"
             ].map((badge, i) => (
               <div key={i} className="bg-white/10 backdrop-blur-md border border-white/20 px-4 py-2 rounded-full text-white text-sm font-bold flex items-center justify-center gap-2">
                 <ShieldCheck size={16} className="text-brand-primary" />
@@ -180,13 +180,13 @@ export default function Home() {
               <h2 className="text-4xl md:text-6xl font-serif font-bold text-brand-secondary mb-8">قصة طبلية</h2>
               <div className="space-y-6 text-stone-600 text-xl leading-relaxed font-medium">
                 <p>
-                  في طنطا، كل شارع فيه بيت ريحة أكله بتجوع الجيران، وفي كل بيت ست شاطرة نفسها أكلها وحلاوة نفسها يوصلوا للناس.
+                  كل شارع فيه بيت ريحة أكله بتجوع الجيران، وفي كل بيت ست شاطرة نفسها أكلها وحلاوة نفسها يوصلوا للناس.
                 </p>
                 <p>
                   وفي نفس الشارع.. موظف راجع مهدود، أو أم وراها ألف حاجة، ونفسهم في لقمة بيتي ترم العضم من غير فرهدة المطبخ أو أسعار الدليفري اللي بتخلص المرتب.
                 </p>
                 <p>
-                  من هنا بدأت طبلية.. قررنا نكون حلقة الوصل اللي بتريح الطرفين. قفلنا دايرة التعب، وفتحنا مطابخ أشطر ستات في طنطا عشان تجبلك أكل بيتي بجودة عالية ونضافة وسعر على قد الإيد، وعلشان تساعد كل ست بيت نفسها تفتح مشروعها الخاص من مطبخها.
+                  من هنا بدأت طبلية.. قررنا نكون حلقة الوصل اللي بتريح الطرفين. قفلنا دايرة التعب، وفتحنا مطابخ أشطر ستات في بلدنا عشان تجبلك أكل بيتي بجودة عالية ونضافة وسعر على قد الإيد، وعلشان تساعد كل ست بيت نفسها تفتح مشروعها الخاص من مطبخها.
                 </p>
               </div>
             </motion.div>
@@ -199,7 +199,7 @@ export default function Home() {
               <div className="text-white text-center">
                 <Utensils size={120} className="mx-auto mb-6 opacity-20" />
                 <h3 className="text-4xl font-black">طبلية</h3>
-                <p className="text-xl opacity-80">أصل الأكل البيتي في طنطا</p>
+                <p className="text-xl opacity-80">أصل الأكل البيتي الحقيقي</p>
               </div>
             </motion.div>
           </div>
@@ -211,7 +211,7 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex justify-between items-end mb-12">
             <div className="text-right">
-              <h2 className="text-4xl md:text-5xl font-serif font-bold text-brand-secondary mb-4">تعرف على أفضل مطابخ طنطا</h2>
+              <h2 className="text-4xl md:text-5xl font-serif font-bold text-brand-secondary mb-4">تعرف على أفضل المطابخ</h2>
               <p className="text-stone-500 text-xl">أشطر ستات بيوت بيطبخوا بحب</p>
             </div>
             <Link to="/chefs" className="text-brand-primary font-bold flex items-center gap-2 hover:gap-4 transition-all">
@@ -340,7 +340,7 @@ export default function Home() {
               { title: "أيادي ستات شاطرة", desc: "أختارنا المطابخ بعناية لضمان النفس الحلو.", icon: Award },
               { title: "نضافة مضمونة", desc: "بنفتش على كل مطبخ وبنتأكد من أعلى معايير النضافة.", icon: ShieldCheck },
               { title: "سعر على قد الإيد", desc: "أكلات بجودة عالية مقابل سعر يناسب ميزانيتك.", icon: Sparkles },
-              { title: "توصيل سريع في طنطا", desc: "فريق توصيل مدرب بيوصلك الأكل سخن ومحفوظ صح.", icon: Clock }
+              { title: "توصيل سريع ومضمون", desc: "فريق توصيل مدرب بيوصلك الأكل سخن ومحفوظ صح.", icon: Clock }
             ].map((item, i) => (
               <div key={i} className="text-center group">
                 <div className="w-20 h-20 bg-brand-cream rounded-3xl flex items-center justify-center mx-auto mb-6 text-brand-primary group-hover:bg-brand-primary group-hover:text-white transition-all duration-500">

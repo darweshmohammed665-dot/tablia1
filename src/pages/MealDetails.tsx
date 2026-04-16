@@ -188,7 +188,7 @@ export default function MealDetails() {
                 </div>
                 <div className="flex items-center gap-3 text-sm text-stone-500 bg-stone-100/50 p-4 rounded-2xl">
                   <Bike className="text-brand-secondary" />
-                  <span>توصيل سريع في طنطا</span>
+                  <span>توصيل سريع ومضمون</span>
                 </div>
               </div>
             </div>

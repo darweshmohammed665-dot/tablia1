@@ -1,108 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { MapPin, Phone, CreditCard, CheckCircle2, ArrowRight, ShieldCheck, Info, Coins, Bell, BellOff, UserCircle, MessageSquare, Clock, Plus } from 'lucide-react';
+import { MapPin, Phone, CreditCard, CheckCircle2, ArrowRight, ShieldCheck, Info, Coins, Bell, BellOff, UserCircle, MessageSquare, Clock, Plus, Wallet } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { collection, addDoc, getDoc, doc } from 'firebase/firestore';
 import { db, auth } from '../firebase';
-import { loadStripe } from '@stripe/stripe-js';
 import { useCart } from '../context/CartContext';
 import { toast } from 'sonner';
-import {
-  Elements,
-  CardElement,
-  useStripe,
-  useElements,
-} from '@stripe/react-stripe-js';
-
-const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || '');
-
-function StripeForm({ amount, onSuccess, onLoading }: { amount: number, onSuccess: (paymentIntentId: string) => void, onLoading: (loading: boolean) => void }) {
-  const stripe = useStripe();
-  const elements = useElements();
-  const [error, setError] = useState<string | null>(null);
-
-  const handleSubmit = async (event: React.FormEvent) => {
-    event.preventDefault();
-
-    if (!stripe || !elements) return;
-
-    onLoading(true);
-    setError(null);
-
-    try {
-      const response = await fetch('/api/create-payment-intent', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ amount }),
-      });
-
-      const { clientSecret, error: backendError } = await response.json();
-
-      if (backendError) {
-        setError(backendError);
-        onLoading(false);
-        return;
-      }
-
-      const cardElement = elements.getElement(CardElement);
-      if (!cardElement) return;
-
-      const { error: stripeError, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
-        payment_method: {
-          card: cardElement as any,
-        },
-      });
-
-      if (stripeError) {
-        setError(stripeError.message || 'حدث خطأ أثناء الدفع');
-        onLoading(false);
-      } else if (paymentIntent && paymentIntent.status === 'succeeded') {
-        onSuccess(paymentIntent.id);
-      }
-    } catch (err: any) {
-      setError('فشل الاتصال بالخادم');
-      onLoading(false);
-    }
-  };
-
-  return (
-    <form id="payment-form" onSubmit={handleSubmit} className="space-y-4">
-      <div className="p-4 rounded-xl border border-stone-200 bg-white">
-        <CardElement options={{
-          style: {
-            base: {
-              fontSize: '16px',
-              color: '#35091a',
-              '::placeholder': {
-                color: '#aab7c4',
-              },
-            },
-            invalid: {
-              color: '#f11d58',
-            },
-          },
-        }} />
-      </div>
-      {error && <p className="text-brand-primary text-sm font-bold">{error}</p>}
-      <div className="flex items-center gap-2 text-stone-500 text-xs">
-        <ShieldCheck size={14} />
-        <span>دفع آمن ومسفر عبر Stripe</span>
-      </div>
-    </form>
-  );
-}
 
 export default function Checkout() {
   const [step, setStep] = useState(1);
   const [isSuccess, setIsSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [paymentMethod, setPaymentMethod] = useState<'cod' | 'stripe'>('cod');
+  const [paymentMethod] = useState<'cod'>('cod');
   const [deliveryInstruction, setDeliveryInstruction] = useState('call');
   const [deliveryType, setDeliveryType] = useState<'quick' | 'scheduled'>('quick');
   const [scheduledDay, setScheduledDay] = useState('غداً');
   const [formData, setFormData] = useState({
     address: '',
-    area: 'طنطا - سيجر',
+    area: '',
     phone: '',
     notes: ''
   });
@@ -170,18 +85,6 @@ export default function Checkout() {
 
     setLoading(true);
     try {
-      // If Stripe is selected, we handle it via the StripeForm component's submit
-      // But we need a way to trigger that submit from here or vice versa.
-      // Let's modify the flow: if stripe, we confirm payment first, then create order.
-      
-      if (paymentMethod === 'stripe') {
-        const form = document.getElementById('payment-form') as HTMLFormElement;
-        if (form) {
-          form.requestSubmit();
-          return; // The StripeForm will call handleOrderCreation on success
-        }
-      }
-
       await handleOrderCreation();
     } catch (error) {
       console.error("Error placing order:", error);
@@ -319,17 +222,14 @@ export default function Checkout() {
                       </div>
                     </div>
                     <div>
-                      <label className="block text-sm font-black text-brand-accent mb-2">المنطقة</label>
-                      <select 
+                      <label className="block text-sm font-black text-brand-accent mb-2">المنطقة / المدينة</label>
+                      <input 
+                        type="text" 
+                        placeholder="مثال: طنطا - القحافة"
                         value={formData.area}
                         onChange={(e) => setFormData({ ...formData, area: e.target.value })}
                         className="w-full px-4 py-4 rounded-2xl border border-stone-100 focus:ring-2 focus:ring-brand-primary outline-none font-medium appearance-none bg-white"
-                      >
-                        <option>طنطا - سيجر</option>
-                        <option>طنطا - القحافة</option>
-                        <option>طنطا - الجلاء</option>
-                        <option>طنطا - الاستاد</option>
-                      </select>
+                      />
                     </div>
                     <div>
                       <label className="block text-sm font-black text-brand-accent mb-2">رقم الهاتف المتنقل</label>
@@ -435,51 +335,20 @@ export default function Checkout() {
 
                 {/* Payment Section */}
                 <div className="food-card p-[20px]">
-                  <h2 className="text-2xl font-black mb-8">الدفع من خلال</h2>
+                  <h2 className="text-2xl font-black mb-8">طريقة الدفع</h2>
                   <div className="space-y-4">
-                    <button 
-                      onClick={() => setPaymentMethod('stripe')}
-                      className={`w-full p-6 rounded-2xl border-2 transition-all text-right flex items-center gap-4 ${paymentMethod === 'stripe' ? 'border-brand-primary bg-brand-primary/5' : 'border-stone-100 hover:border-stone-200'}`}
+                    <div 
+                      className="w-full p-6 rounded-2xl border-2 border-brand-primary bg-brand-primary/5 text-right flex items-center gap-4"
                     >
-                      <Plus className="text-stone-400" size={24} />
-                      <div className="flex-grow">
-                        <p className="font-black text-lg">أضف بطاقة جديدة</p>
-                      </div>
-                    </button>
-
-                    <button 
-                      onClick={() => setPaymentMethod('cod')}
-                      className={`w-full p-6 rounded-2xl border-2 transition-all text-right flex items-center gap-4 ${paymentMethod === 'cod' ? 'border-brand-primary bg-brand-primary/5' : 'border-stone-100 hover:border-stone-200'}`}
-                    >
-                      <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${paymentMethod === 'cod' ? 'border-brand-primary' : 'border-stone-300'}`}>
-                        {paymentMethod === 'cod' && <div className="w-3 h-3 rounded-full bg-brand-primary"></div>}
+                      <div className="w-6 h-6 rounded-full border-2 border-brand-primary flex items-center justify-center">
+                        <div className="w-3 h-3 rounded-full bg-brand-primary"></div>
                       </div>
                       <div className="flex-grow">
-                        <p className="font-black text-lg">نقداً</p>
+                        <p className="font-black text-lg">نقداً عند الاستلام</p>
+                        <p className="text-xs text-stone-500 font-bold">الدفع كاش للمندوب عند وصول الطلب</p>
                       </div>
-                      <Coins className={paymentMethod === 'cod' ? 'text-brand-primary' : 'text-stone-400'} size={24} />
-                    </button>
-
-                    <AnimatePresence>
-                      {paymentMethod === 'stripe' && (
-                        <motion.div 
-                          initial={{ height: 0, opacity: 0 }}
-                          animate={{ height: 'auto', opacity: 1 }}
-                          exit={{ height: 0, opacity: 0 }}
-                          className="overflow-hidden"
-                        >
-                          <div className="pt-4 px-2">
-                            <Elements stripe={stripePromise}>
-                              <StripeForm 
-                                amount={total} 
-                                onSuccess={(id) => handleOrderCreation(id)} 
-                                onLoading={(l) => setLoading(l)}
-                              />
-                            </Elements>
-                          </div>
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
+                      <Coins className="text-brand-primary" size={24} />
+                    </div>
                   </div>
                 </div>
               </motion.div>

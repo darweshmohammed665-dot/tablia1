@@ -112,6 +112,11 @@ export default function ChefProfile() {
                   <div className="flex flex-wrap justify-center md:justify-start gap-4 text-stone-500 font-medium">
                     <span className="flex items-center gap-1.5 bg-stone-50 px-3 py-1 rounded-full"><MapPin size={16} className="text-brand-primary" /> {chef.location || 'طنطا'}</span>
                     <span className="flex items-center gap-1.5 bg-stone-50 px-3 py-1 rounded-full"><ChefHat size={16} className="text-brand-primary" /> طاهٍ محترف</span>
+                    {chef.workingHours && (
+                      <span className="flex items-center gap-1.5 bg-brand-primary/10 text-brand-primary px-3 py-1 rounded-full font-bold">
+                        <Clock size={16} /> {chef.workingHours.from} - {chef.workingHours.to}
+                      </span>
+                    )}
                   </div>
                 </div>
 

@@ -3,7 +3,7 @@ import { doc, updateDoc } from 'firebase/firestore';
 import { db } from '../firebase';
 import { UserProfile } from '../types';
 import { motion, AnimatePresence } from 'motion/react';
-import { Camera, MapPin, AlignLeft, Save, X, ChevronRight, ChevronLeft, Check, AlertCircle, Image as ImageIcon, CreditCard, Phone as PhoneIcon, Landmark, Crosshair } from 'lucide-react';
+import { Camera, MapPin, AlignLeft, Save, X, ChevronRight, ChevronLeft, Check, AlertCircle, Image as ImageIcon, CreditCard, Phone as PhoneIcon, Landmark, Crosshair, Clock } from 'lucide-react';
 import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
 import L from 'leaflet';
 import { toast } from 'sonner';
@@ -55,6 +55,10 @@ export default function ChefProfileForm({ profile, onComplete, onCancel }: ChefP
     profile.coordinates ? [profile.coordinates.lat, profile.coordinates.lng] : DEFAULT_CENTER
   );
   const [photoURL, setPhotoURL] = useState(profile.photoURL || '');
+  const [workingHours, setWorkingHours] = useState({
+    from: profile.workingHours?.from || '09:00',
+    to: profile.workingHours?.to || '22:00',
+  });
   const [paymentMethods, setPaymentMethods] = useState({
     vodafoneCash: profile.paymentMethods?.vodafoneCash || '',
     bankName: profile.paymentMethods?.bankName || '',
@@ -172,6 +176,7 @@ export default function ChefProfileForm({ profile, onComplete, onCancel }: ChefP
           accountHolderName: paymentMethods.accountHolderName.trim(),
           instapay: paymentMethods.instapay.trim()
         },
+        workingHours,
         updatedAt: Date.now()
       };
 
@@ -374,6 +379,32 @@ export default function ChefProfileForm({ profile, onComplete, onCancel }: ChefP
 
                 <div>
                   <label className="block text-sm font-black text-stone-700 mb-3 flex items-center gap-2">
+                    <Clock size={18} className="text-brand-primary" /> ساعات العمل
+                  </label>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-1">
+                      <span className="text-[10px] font-bold text-stone-400 uppercase mr-1">من</span>
+                      <input 
+                        type="time" 
+                        value={workingHours.from}
+                        onChange={(e) => setWorkingHours({...workingHours, from: e.target.value})}
+                        className="w-full px-6 py-4 rounded-2xl border border-stone-200 focus:ring-4 focus:ring-brand-primary/10 focus:border-brand-primary outline-none transition-all font-medium"
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <span className="text-[10px] font-bold text-stone-400 uppercase mr-1">إلى</span>
+                      <input 
+                        type="time" 
+                        value={workingHours.to}
+                        onChange={(e) => setWorkingHours({...workingHours, to: e.target.value})}
+                        className="w-full px-6 py-4 rounded-2xl border border-stone-200 focus:ring-4 focus:ring-brand-primary/10 focus:border-brand-primary outline-none transition-all font-medium"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-black text-stone-700 mb-3 flex items-center gap-2">
                     <MapPin size={18} className="text-brand-primary" /> المنطقة / الموقع (نصي)
                   </label>
                   <input 
@@ -549,6 +580,9 @@ export default function ChefProfileForm({ profile, onComplete, onCancel }: ChefP
                         <Crosshair size={10} /> تم تحديد الموقع الجغرافي
                       </p>
                     )}
+                    <p className="text-xs font-bold text-brand-primary mt-2 flex items-center justify-center md:justify-start gap-1">
+                      <Clock size={12} /> ساعات العمل: {workingHours.from} - {workingHours.to}
+                    </p>
                   </div>
                 </div>
                 <div className="bg-white p-6 rounded-2xl border border-stone-100 text-stone-600 leading-relaxed font-medium mb-6">

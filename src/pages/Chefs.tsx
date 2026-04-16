@@ -45,7 +45,7 @@ export default function Chefs() {
         <div className="mb-20 text-center">
           <span className="text-brand-primary font-black tracking-[0.3em] uppercase text-sm mb-6 block">أفضل المطابخ</span>
           <h1 className="text-6xl md:text-[100px] font-black text-brand-secondary leading-[0.9] tracking-tighter mb-8">ملوك <br /> <span className="text-brand-primary italic font-serif">النفس</span> الفلاحي</h1>
-          <p className="text-stone-500 text-2xl max-w-2xl mx-auto font-medium">تعرف على أفضل المطابخ في طنطا.</p>
+          <p className="text-stone-500 text-2xl max-w-2xl mx-auto font-medium">تعرف على أفضل المطابخ حولك.</p>
         </div>
 
         {/* Search */}
@@ -102,11 +102,11 @@ export default function Chefs() {
                 </div>
                 
                 <p className="text-stone-500 mb-8 line-clamp-2 text-sm flex-grow">
-                  {chef.bio || "مطبخ منزلي شغوف يقدم أشهى الوجبات التقليدية في مدينة طنطا."}
+                  {chef.bio || "مطبخ منزلي شغوف يقدم أشهى الوجبات التقليدية بلمسة سحرية."}
                 </p>
                 
                 <div className="flex items-center justify-center gap-4 text-stone-400 text-sm mb-6">
-                  <span className="flex items-center gap-1"><MapPin size={16} /> طنطا</span>
+                  <span className="flex items-center gap-1"><MapPin size={16} /> {chef.location || 'متاح'}</span>
                 </div>
                 
                 <Link to={`/chef/${chef.uid}`} className="btn-secondary w-full py-3 block mt-auto">

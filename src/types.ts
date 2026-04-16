@@ -23,6 +23,11 @@ export interface UserProfile {
     accountHolderName?: string;
     instapay?: string;
   };
+  workingHours?: {
+    from: string;
+    to: string;
+    closedDays?: string[];
+  };
   createdAt: number;
 }
 
