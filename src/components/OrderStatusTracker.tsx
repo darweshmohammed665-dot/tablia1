@@ -1,5 +1,5 @@
 import React from 'react';
-import { CheckCircle2, Clock, Utensils, Truck, PackageCheck, XCircle } from 'lucide-react';
+import { CheckCircle2, Clock, Utensils, Bike, PackageCheck, XCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
 interface OrderStatusTrackerProps {
@@ -9,7 +9,7 @@ interface OrderStatusTrackerProps {
 const steps = [
   { id: 'pending', label: 'قيد الانتظار', icon: Clock, description: 'تم استلام طلبك' },
   { id: 'preparing', label: 'جاري التحضير', icon: Utensils, description: 'الشيف بيجهز الأكل' },
-  { id: 'out_for_delivery', label: 'في الطريق', icon: Truck, description: 'الطلب مع المندوب' },
+  { id: 'out_for_delivery', label: 'في الطريق', icon: Bike, description: 'الطلب مع المندوب' },
   { id: 'delivered', label: 'تم التوصيل', icon: PackageCheck, description: 'بالهنا والشفا' },
 ];
 

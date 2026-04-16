@@ -24,84 +24,11 @@ const AppleIcon = () => (
 );
 
 export default function Login() {
-  const [loginMethod, setLoginMethod] = useState<'email' | 'phone'>('email');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
-  const [otp, setOtp] = useState('');
-  const [confirmationResult, setConfirmationResult] = useState<ConfirmationResult | null>(null);
+  const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-
-  const setupRecaptcha = () => {
-    if (!(window as any).recaptchaVerifier) {
-      (window as any).recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
-        size: 'invisible',
-        callback: () => {
-          console.log('Recaptcha resolved');
-        }
-      });
-    }
-  };
-
-  const handlePhoneSignIn = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setError('');
-    setupRecaptcha();
-    
-    const appVerifier = (window as any).recaptchaVerifier;
-    const formattedPhone = phoneNumber.startsWith('+') ? phoneNumber : `+20${phoneNumber}`;
-
-    try {
-      const result = await signInWithPhoneNumber(auth, formattedPhone, appVerifier);
-      setConfirmationResult(result);
-      toast.success('تم إرسال رمز التحقق لهاتفك');
-    } catch (err: any) {
-      console.error('Phone sign-in error:', err);
-      setError('فشل إرسال الرمز. تأكد من تفعيل الدخول بالهاتف في Firebase.');
-      if ((window as any).recaptchaVerifier) {
-        (window as any).recaptchaVerifier.clear();
-        (window as any).recaptchaVerifier = null;
-      }
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleVerifyOtp = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!confirmationResult) return;
-    setLoading(true);
-    setError('');
-
-    try {
-      const result = await confirmationResult.confirm(otp);
-      
-      if (db) {
-        const userRef = doc(db, 'users', result.user.uid);
-        const userSnap = await getDoc(userRef);
-        if (!userSnap.exists()) {
-          await setDoc(userRef, {
-            uid: result.user.uid,
-            phoneNumber: result.user.phoneNumber,
-            displayName: 'مستخدم جديد',
-            role: 'customer',
-            createdAt: Date.now(),
-          });
-        }
-      }
-
-      toast.success('تم تسجيل الدخول بنجاح!');
-      navigate('/profile');
-    } catch (err: any) {
-      console.error('OTP verification error:', err);
-      setError('رمز التحقق غير صحيح.');
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -197,27 +124,6 @@ export default function Login() {
             <p className="text-stone-500 text-xl font-medium">سجل دخولك أو أنشئ حساباً جديداً للمتابعة</p>
           </div>
 
-          {/* Login Method Toggle */}
-          <div className="flex gap-2 p-1 bg-stone-100 rounded-2xl mb-8">
-            <button 
-              onClick={() => {
-                setLoginMethod('email');
-                setConfirmationResult(null);
-              }}
-              className={`flex-1 py-3 rounded-xl font-bold text-sm transition-all ${loginMethod === 'email' ? 'bg-white text-brand-primary shadow-sm' : 'text-stone-400'}`}
-            >
-              كلمة المرور
-            </button>
-            <button 
-              onClick={() => setLoginMethod('phone')}
-              className={`flex-1 py-3 rounded-xl font-bold text-sm transition-all ${loginMethod === 'phone' ? 'bg-white text-brand-primary shadow-sm' : 'text-stone-400'}`}
-            >
-              رمز التحقق (OTP)
-            </button>
-          </div>
-
-          <div id="recaptcha-container"></div>
-
           {error && (
             <motion.div 
               initial={{ opacity: 0, y: -10 }}
@@ -229,131 +135,55 @@ export default function Login() {
             </motion.div>
           )}
 
-          <AnimatePresence mode="wait">
-            {loginMethod === 'email' ? (
-              <motion.form 
-                key="email-form"
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: 20 }}
-                onSubmit={handleSubmit} 
-                className="space-y-6"
-              >
-                <div className="space-y-2">
-                  <label className="text-sm font-bold text-stone-700 mr-1">رقم الهاتف</label>
-                  <div className="relative group">
-                    <Phone className="absolute right-4 top-1/2 -translate-y-1/2 text-stone-400 group-focus-within:text-brand-primary transition-colors" size={20} />
-                    <input 
-                      type="tel" 
-                      required 
-                      value={phoneNumber}
-                      onChange={(e) => setPhoneNumber(e.target.value)}
-                      className="w-full pr-12 pl-4 py-4 rounded-2xl border border-stone-200 bg-white focus:ring-4 focus:ring-brand-primary/10 focus:border-brand-primary outline-none transition-all text-lg"
-                      placeholder="01xxxxxxxxx"
-                    />
-                  </div>
-                </div>
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="space-y-2">
+              <label className="text-sm font-bold text-stone-700 mr-1">رقم الهاتف</label>
+              <div className="relative group">
+                <Phone className="absolute right-4 top-1/2 -translate-y-1/2 text-stone-400 group-focus-within:text-brand-primary transition-colors" size={20} />
+                <input 
+                  type="tel" 
+                  required 
+                  value={phoneNumber}
+                  onChange={(e) => setPhoneNumber(e.target.value)}
+                  className="w-full pr-12 pl-4 py-4 rounded-2xl border border-stone-200 bg-white focus:ring-4 focus:ring-brand-primary/10 focus:border-brand-primary outline-none transition-all text-lg"
+                  placeholder="01xxxxxxxxx"
+                />
+              </div>
+            </div>
 
-                <div className="space-y-2">
-                  <div className="flex justify-between items-center px-1">
-                    <label className="text-sm font-bold text-stone-700">كلمة المرور</label>
-                    <Link to="#" className="text-sm font-bold text-brand-primary hover:underline">نسيت كلمة المرور؟</Link>
-                  </div>
-                  <div className="relative group">
-                    <Lock className="absolute right-4 top-1/2 -translate-y-1/2 text-stone-400 group-focus-within:text-brand-primary transition-colors" size={20} />
-                    <input 
-                      type="password" 
-                      required 
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      className="w-full pr-12 pl-4 py-4 rounded-2xl border border-stone-200 bg-white focus:ring-4 focus:ring-brand-primary/10 focus:border-brand-primary outline-none transition-all text-lg"
-                      placeholder="••••••••"
-                    />
-                  </div>
-                </div>
+            <div className="space-y-2">
+              <div className="flex justify-between items-center px-1">
+                <label className="text-sm font-bold text-stone-700">كلمة المرور</label>
+                <Link to="#" className="text-sm font-bold text-brand-primary hover:underline">نسيت كلمة المرور؟</Link>
+              </div>
+              <div className="relative group">
+                <Lock className="absolute right-4 top-1/2 -translate-y-1/2 text-stone-400 group-focus-within:text-brand-primary transition-colors" size={20} />
+                <input 
+                  type="password" 
+                  required 
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full pr-12 pl-4 py-4 rounded-2xl border border-stone-200 bg-white focus:ring-4 focus:ring-brand-primary/10 focus:border-brand-primary outline-none transition-all text-lg"
+                  placeholder="••••••••"
+                />
+              </div>
+            </div>
 
-                <button 
-                  type="submit" 
-                  disabled={loading}
-                  className="w-full btn-primary py-4 rounded-2xl text-lg font-bold flex items-center justify-center gap-2"
-                >
-                  {loading ? (
-                    <div className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                  ) : (
-                    <>
-                      تسجيل الدخول
-                      <ArrowRight size={20} className="rotate-180" />
-                    </>
-                  )}
-                </button>
-              </motion.form>
-            ) : (
-              <motion.form 
-                key="phone-form"
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -20 }}
-                onSubmit={confirmationResult ? handleVerifyOtp : handlePhoneSignIn} 
-                className="space-y-6"
-              >
-                {!confirmationResult ? (
-                  <div className="space-y-2">
-                    <label className="text-sm font-bold text-stone-700 mr-1">رقم الهاتف</label>
-                    <div className="relative group">
-                      <Phone className="absolute right-4 top-1/2 -translate-y-1/2 text-stone-400 group-focus-within:text-brand-primary transition-colors" size={20} />
-                      <input 
-                        type="tel" 
-                        required 
-                        value={phoneNumber}
-                        onChange={(e) => setPhoneNumber(e.target.value)}
-                        className="w-full pr-12 pl-4 py-4 rounded-2xl border border-stone-200 bg-white focus:ring-4 focus:ring-brand-primary/10 focus:border-brand-primary outline-none transition-all text-lg"
-                        placeholder="01xxxxxxxxx"
-                      />
-                    </div>
-                    <p className="text-xs text-stone-400 px-1">سيتم إرسال رمز تحقق SMS لهاتفك.</p>
-                  </div>
-                ) : (
-                  <div className="space-y-2">
-                    <label className="text-sm font-bold text-stone-700 mr-1">رمز التحقق (OTP)</label>
-                    <div className="relative group">
-                      <ShieldCheck className="absolute right-4 top-1/2 -translate-y-1/2 text-stone-400 group-focus-within:text-brand-primary transition-colors" size={20} />
-                      <input 
-                        type="text" 
-                        required 
-                        value={otp}
-                        onChange={(e) => setOtp(e.target.value)}
-                        className="w-full pr-12 pl-4 py-4 rounded-2xl border border-stone-200 bg-white focus:ring-4 focus:ring-brand-primary/10 focus:border-brand-primary outline-none transition-all text-lg text-center tracking-[1em]"
-                        placeholder="000000"
-                        maxLength={6}
-                      />
-                    </div>
-                    <button 
-                      type="button" 
-                      onClick={() => setConfirmationResult(null)}
-                      className="text-xs text-brand-primary font-bold hover:underline"
-                    >
-                      تغيير رقم الهاتف؟
-                    </button>
-                  </div>
-                )}
-
-                <button 
-                  type="submit" 
-                  disabled={loading}
-                  className="w-full btn-primary py-4 rounded-2xl text-lg font-bold flex items-center justify-center gap-2"
-                >
-                  {loading ? (
-                    <div className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                  ) : (
-                    <>
-                      {confirmationResult ? 'تأكيد الرمز' : 'إرسال الرمز'}
-                      <ArrowRight size={20} className="rotate-180" />
-                    </>
-                  )}
-                </button>
-              </motion.form>
-            )}
-          </AnimatePresence>
+            <button 
+              type="submit" 
+              disabled={loading}
+              className="w-full btn-primary py-4 rounded-2xl text-lg font-bold flex items-center justify-center gap-2"
+            >
+              {loading ? (
+                <div className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+              ) : (
+                <>
+                  تسجيل الدخول
+                  <ArrowRight size={20} className="rotate-180" />
+                </>
+              )}
+            </button>
+          </form>
 
           <div className="relative my-10">
             <div className="absolute inset-0 flex items-center">

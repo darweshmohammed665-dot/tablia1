@@ -4,7 +4,7 @@ import { db, auth } from '../firebase';
 import { Order, UserProfile } from '../types';
 import { handleFirestoreError, OperationType } from '../lib/firestore-errors';
 import { motion } from 'motion/react';
-import { Package, Clock, ShoppingBag, ChevronLeft, Map, User, Settings, Edit3, MessageCircle, Truck, Utensils, CheckCircle2, XCircle } from 'lucide-react';
+import { Package, Clock, ShoppingBag, ChevronLeft, Map, User, Settings, Edit3, MessageCircle, Bike, Utensils, CheckCircle2, XCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import OrderStatusTracker from '../components/OrderStatusTracker';
 import OrderTrackingMap from '../components/OrderTrackingMap';
@@ -175,7 +175,7 @@ export default function MyOrders() {
                       }`}>
                         {order.status === 'pending' && <Clock size={14} className="animate-pulse" />}
                         {order.status === 'preparing' && <Utensils size={14} className="animate-bounce" />}
-                        {order.status === 'out_for_delivery' && <Truck size={14} className="animate-pulse" />}
+                        {order.status === 'out_for_delivery' && <Bike size={14} className="animate-pulse" />}
                         {order.status === 'delivered' && <CheckCircle2 size={14} />}
                         {order.status === 'cancelled' && <XCircle size={14} />}
                         {order.status === 'pending' ? 'قيد الانتظار' : 

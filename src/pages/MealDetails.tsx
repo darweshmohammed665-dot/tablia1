@@ -5,7 +5,7 @@ import { db } from '../firebase';
 import { Meal } from '../types';
 import { CHEF_IMAGE_URL } from '../constants';
 import { motion } from 'motion/react';
-import { Star, Clock, ChefHat, ShoppingCart, ArrowRight, ShieldCheck, Truck, ShoppingBag } from 'lucide-react';
+import { Star, Clock, ChefHat, ShoppingCart, ArrowRight, ShieldCheck, Bike, ShoppingBag } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { toast } from 'sonner';
 
@@ -187,7 +187,7 @@ export default function MealDetails() {
                   <span>معايير نظافة عالية</span>
                 </div>
                 <div className="flex items-center gap-3 text-sm text-stone-500 bg-stone-100/50 p-4 rounded-2xl">
-                  <Truck className="text-brand-secondary" />
+                  <Bike className="text-brand-secondary" />
                   <span>توصيل سريع في طنطا</span>
                 </div>
               </div>

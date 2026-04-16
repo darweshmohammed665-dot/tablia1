@@ -170,7 +170,7 @@ export default function ChefProfile() {
               <div className="flex items-center justify-center gap-2 text-stone-400 mb-2">
                 <Clock size={28} />
               </div>
-              <span className="text-3xl font-black text-brand-secondary block mb-1">{meals.length > 0 ? Math.min(...meals.map(m => m.deliveryTime || 45)) : '--'}</span>
+              <span className="text-3xl font-black text-brand-secondary block mb-1">{meals.length > 0 ? Math.min(...meals.map(m => m.deliveryTime || 45)) : '45'}</span>
               <p className="text-sm text-stone-500 font-bold">دقيقة للتوصيل</p>
             </div>
           </div>

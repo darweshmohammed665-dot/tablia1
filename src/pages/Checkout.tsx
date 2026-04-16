@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { MapPin, Phone, CreditCard, Truck, CheckCircle2, ArrowRight, ShieldCheck, Info, Coins, Bell, BellOff, UserCircle, MessageSquare, Clock, Plus } from 'lucide-react';
+import { MapPin, Phone, CreditCard, CheckCircle2, ArrowRight, ShieldCheck, Info, Coins, Bell, BellOff, UserCircle, MessageSquare, Clock, Plus } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { collection, addDoc, getDoc, doc } from 'firebase/firestore';
 import { db, auth } from '../firebase';
