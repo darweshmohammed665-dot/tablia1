@@ -252,7 +252,7 @@ export default function Register() {
                   value={location}
                   onChange={(e) => setLocation(e.target.value)}
                   className="w-full pr-12 pl-4 py-4 rounded-2xl border border-stone-200 bg-white focus:ring-4 focus:ring-brand-primary/10 focus:border-brand-primary outline-none transition-all text-lg"
-                  placeholder="مثال: مدينة طنطا - حي القحافة"
+                  placeholder="طنطا"
                 />
               </div>
             </div>

@@ -153,12 +153,12 @@ export default function JoinUs() {
                 />
               </div>
               <div>
-                <label className="block text-stone-700 font-bold mb-3 text-xl">المنطقة في طنطا</label>
+                <label className="block text-stone-700 font-bold mb-3 text-xl">المدينة</label>
                 <input 
                   type="text" 
                   required
                   className="w-full px-6 py-4 rounded-2xl bg-brand-cream/50 border-2 border-transparent focus:border-brand-primary outline-none transition-all text-xl"
-                  placeholder="مثلاً: سيجر، المحطة، الاستاد..."
+                  placeholder="طنطا"
                   value={formData.area}
                   onChange={(e) => setFormData({...formData, area: e.target.value})}
                 />

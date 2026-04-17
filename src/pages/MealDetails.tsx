@@ -1,35 +1,25 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { doc, getDoc } from 'firebase/firestore';
-import { db } from '../firebase';
-import { Meal } from '../types';
+import { doc, getDoc, collection, query, where, orderBy, onSnapshot, addDoc, updateDoc, serverTimestamp, runTransaction } from 'firebase/firestore';
+import { db, auth } from '../firebase';
+import { Meal, Review } from '../types';
 import { CHEF_IMAGE_URL } from '../constants';
-import { motion } from 'motion/react';
-import { Star, Clock, ChefHat, ShoppingCart, ArrowRight, ShieldCheck, Bike, ShoppingBag } from 'lucide-react';
+import { motion, AnimatePresence } from 'motion/react';
+import { Star, Clock, ChefHat, ShoppingCart, ArrowRight, ShieldCheck, Bike, ShoppingBag, MessageSquare, Send, User } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { toast } from 'sonner';
 
 export default function MealDetails() {
   const { id } = useParams();
   const [meal, setMeal] = useState<Meal | null>(null);
+  const [reviews, setReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
   const [activeImage, setActiveImage] = useState<string>('');
+  const [newRating, setNewRating] = useState(5);
+  const [newComment, setNewComment] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { addToCart } = useCart();
-
-  const handleAddToCart = () => {
-    if (!meal) return;
-    addToCart({
-      id: meal.id,
-      title: meal.title,
-      price: meal.price,
-      quantity: quantity,
-      image: meal.image || (meal.images && meal.images[0]) || '',
-      chefId: meal.chefId,
-      chefName: meal.chefName
-    });
-    toast.success(`تم إضافة ${quantity} ${meal.title} إلى السلة`);
-  };
 
   useEffect(() => {
     const fetchMeal = async () => {
@@ -49,7 +39,96 @@ export default function MealDetails() {
     };
 
     fetchMeal();
+
+    // Listen to reviews
+    if (id) {
+      const q = query(
+        collection(db, 'reviews'),
+        where('mealId', '==', id),
+        orderBy('createdAt', 'desc')
+      );
+
+      const unsubscribe = onSnapshot(q, (snapshot) => {
+        const reviewsData = snapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        })) as Review[];
+        setReviews(reviewsData);
+      });
+
+      return () => unsubscribe();
+    }
   }, [id]);
+
+  const handleSubmitReview = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!auth.currentUser) {
+      toast.error('يجب تسجيل الدخول لإضافة تقييم');
+      return;
+    }
+    if (!newComment.trim()) {
+      toast.error('يرجى كتابة تعليق');
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      const reviewData = {
+        mealId: id,
+        customerId: auth.currentUser.uid,
+        customerName: auth.currentUser.displayName || 'عميل طبلية',
+        rating: newRating,
+        comment: newComment,
+        createdAt: Date.now()
+      };
+
+      await addDoc(collection(db, 'reviews'), reviewData);
+
+      // Update meal aggregate rating using a transaction
+      if (id) {
+        const mealRef = doc(db, 'meals', id);
+        await runTransaction(db, async (transaction) => {
+          const mealDoc = await transaction.get(mealRef);
+          if (!mealDoc.exists()) return;
+
+          const data = mealDoc.data();
+          const currentRating = data.rating || 0;
+          const currentCount = data.reviewsCount || 0;
+
+          const newCount = currentCount + 1;
+          const newAvgRating = ((currentRating * currentCount) + newRating) / newCount;
+
+          transaction.update(mealRef, {
+            rating: Number(newAvgRating.toFixed(1)),
+            reviewsCount: newCount
+          });
+        });
+      }
+
+      setNewComment('');
+      setNewRating(5);
+      toast.success('تم إضافة تقييمك بنجاح');
+    } catch (error) {
+      console.error("Error adding review:", error);
+      toast.error('حدث خطأ أثناء إضافة التقييم');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleAddToCart = () => {
+    if (!meal) return;
+    addToCart({
+      id: meal.id,
+      title: meal.title,
+      price: meal.price,
+      quantity: quantity,
+      image: meal.image || (meal.images && meal.images[0]) || '',
+      chefId: meal.chefId,
+      chefName: meal.chefName
+    });
+    toast.success(`تم إضافة ${quantity} ${meal.title} إلى السلة`);
+  };
 
   if (loading) return <div className="min-h-screen flex items-center justify-center"><div className="animate-spin rounded-full h-12 w-12 border-t-2 border-brand-primary"></div></div>;
   if (!meal) return <div className="min-h-screen flex flex-col items-center justify-center"><h2 className="text-2xl font-bold mb-4">الوجبة غير موجودة</h2><Link to="/meals" className="btn-primary">العودة للأكلات</Link></div>;
@@ -193,6 +272,122 @@ export default function MealDetails() {
               </div>
             </div>
           </motion.div>
+        </div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-20">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+          {/* Reviews List */}
+          <div className="lg:col-span-2">
+            <div className="flex items-center justify-between mb-8">
+              <h2 className="text-3xl font-black text-brand-accent">آراء العملاء ({reviews.length})</h2>
+              <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-2xl shadow-sm border border-stone-100">
+                <Star className="fill-brand-primary text-brand-primary" size={20} />
+                <span className="font-bold text-xl">{meal.rating || 0}</span>
+              </div>
+            </div>
+
+            <div className="space-y-6">
+              {reviews.length > 0 ? (
+                reviews.map((review) => (
+                  <motion.div 
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    key={review.id} 
+                    className="bg-white p-6 rounded-[2rem] shadow-sm border border-stone-100"
+                  >
+                    <div className="flex justify-between items-start mb-4">
+                      <div className="flex items-center gap-3">
+                        <div className="w-12 h-12 rounded-full bg-brand-cream flex items-center justify-center text-brand-primary">
+                          <User size={24} />
+                        </div>
+                        <div>
+                          <p className="font-bold text-brand-accent">{review.customerName}</p>
+                          <p className="text-xs text-stone-400">
+                            {new Date(review.createdAt).toLocaleDateString('ar-EG', { year: 'numeric', month: 'long', day: 'numeric' })}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-1 bg-brand-cream px-3 py-1 rounded-full text-brand-primary font-bold text-sm">
+                        <span>{review.rating}</span>
+                        <Star size={14} className="fill-brand-primary" />
+                      </div>
+                    </div>
+                    <p className="text-stone-600 leading-relaxed italic">"{review.comment}"</p>
+                  </motion.div>
+                ))
+              ) : (
+                <div className="bg-white p-12 rounded-[2rem] text-center border-2 border-dashed border-stone-200">
+                  <div className="w-16 h-16 bg-stone-100 rounded-full flex items-center justify-center mx-auto mb-4 text-stone-400">
+                    <MessageSquare size={32} />
+                  </div>
+                  <p className="text-stone-500 font-bold">لا توجد تقييمات بعد. كن أول من يقيم هذه الوجبة!</p>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Add Review Form */}
+          <div className="lg:col-span-1">
+            <div className="bg-white p-8 rounded-[2rem] shadow-xl border border-stone-100 sticky top-[120px]">
+              <h3 className="text-2xl font-black text-brand-accent mb-6">أضف تقييمك</h3>
+              
+              <form onSubmit={handleSubmitReview} className="space-y-6">
+                <div>
+                  <label className="block text-sm font-bold text-stone-500 mb-3">تقييمك للوجبة</label>
+                  <div className="flex gap-2">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <button
+                        key={star}
+                        type="button"
+                        onClick={() => setNewRating(star)}
+                        className="transition-transform active:scale-90"
+                      >
+                        <Star 
+                          size={32} 
+                          className={`${star <= newRating ? 'fill-yellow-400 text-yellow-400' : 'text-stone-200'} transition-colors`}
+                        />
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div>
+                  <label htmlFor="comment" className="block text-sm font-bold text-stone-500 mb-3">رأيك بالتفصيل</label>
+                  <textarea
+                    id="comment"
+                    rows={4}
+                    value={newComment}
+                    onChange={(e) => setNewComment(e.target.value)}
+                    placeholder="اكتب تجربتك مع هذه الوجبة..."
+                    className="w-full bg-brand-cream border-transparent focus:border-brand-primary focus:ring-0 rounded-2xl p-4 text-stone-900 resize-none transition-all"
+                  ></textarea>
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="w-full bg-brand-primary text-white py-4 rounded-full font-black text-lg shadow-lg hover:bg-brand-accent transition-all flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {isSubmitting ? (
+                    <div className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                  ) : (
+                    <>
+                      <Send size={20} />
+                      إرسال التقييم
+                    </>
+                  )}
+                </button>
+              </form>
+
+              {!auth.currentUser && (
+                <div className="mt-6 p-4 bg-brand-cream rounded-2xl text-center">
+                  <p className="text-sm text-stone-600 font-bold mb-2">سجل دخولك لتتمكن من إضافة تقييم</p>
+                  <Link to="/login" className="text-brand-primary font-black hover:underline">تسجيل الدخول</Link>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
       </div>
     </div>

@@ -222,10 +222,10 @@ export default function Checkout() {
                       </div>
                     </div>
                     <div>
-                      <label className="block text-sm font-black text-brand-accent mb-2">المنطقة / المدينة</label>
+                      <label className="block text-sm font-black text-brand-accent mb-2">المدينة</label>
                       <input 
                         type="text" 
-                        placeholder="مثال: طنطا - القحافة"
+                        placeholder="طنطا"
                         value={formData.area}
                         onChange={(e) => setFormData({ ...formData, area: e.target.value })}
                         className="w-full px-4 py-4 rounded-2xl border border-stone-100 focus:ring-2 focus:ring-brand-primary outline-none font-medium appearance-none bg-white"

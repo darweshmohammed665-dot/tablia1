@@ -405,12 +405,12 @@ export default function ChefProfileForm({ profile, onComplete, onCancel }: ChefP
 
                 <div>
                   <label className="block text-sm font-black text-stone-700 mb-3 flex items-center gap-2">
-                    <MapPin size={18} className="text-brand-primary" /> المنطقة / الموقع (نصي)
+                    <MapPin size={18} className="text-brand-primary" /> المدينة
                   </label>
                   <input 
                     type="text" 
                     required
-                    placeholder="مثال: طنطا - حي القحافة"
+                    placeholder="طنطا"
                     value={location}
                     onChange={(e) => setLocation(e.target.value)}
                     className="w-full px-6 py-4 rounded-2xl border border-stone-200 focus:ring-4 focus:ring-brand-primary/10 focus:border-brand-primary outline-none transition-all font-medium mb-4"

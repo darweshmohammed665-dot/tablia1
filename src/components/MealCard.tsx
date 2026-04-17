@@ -17,6 +17,7 @@ interface MealCardProps {
     deliveryTime?: number;
     description?: string;
     orderType?: 'instant' | 'preorder';
+    reviewsCount?: number;
   };
   index?: number;
 }
@@ -75,9 +76,14 @@ export const MealCard: React.FC<MealCardProps> = ({ meal, index = 0 }) => {
       <div className="p-6 flex flex-col flex-grow">
         <div className="flex justify-between items-start mb-3">
           <Link to={`/meal/${meal.id}`} className="text-2xl font-black text-brand-accent hover:text-brand-primary transition-colors leading-tight line-clamp-1">{meal.title}</Link>
-          <div className="flex items-center gap-1 bg-brand-primary/10 px-2 py-1 rounded-lg text-brand-primary shrink-0">
-            <Star size={14} className="fill-brand-primary" />
-            <span className="text-xs font-black">{meal.rating || 4.5}</span>
+          <div className="flex flex-col items-end gap-1">
+            <div className="flex items-center gap-1 bg-brand-primary/10 px-3 py-1 rounded-xl text-brand-primary shrink-0">
+              <Star size={16} className="fill-brand-primary" />
+              <span className="text-sm font-black">{meal.rating || 0}</span>
+            </div>
+            {meal.reviewsCount !== undefined && (
+              <span className="text-[10px] text-stone-400 font-bold">({meal.reviewsCount} تقييم)</span>
+            )}
           </div>
         </div>
         <p className="text-stone-500 mb-6 flex items-center gap-2 text-sm font-bold">
