@@ -128,6 +128,46 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Trending Luxury Ticker - Local Hero Design */}
+      <div className="relative z-30 w-full bg-brand-secondary border-y border-white/10 shadow-xl py-3 md:py-4 overflow-hidden group">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_rgba(241,29,88,0.03)_0%,_transparent_70%)] pointer-events-none" />
+        
+        <div className="flex whitespace-nowrap animate-marquee hover:[animation-play-state:paused] cursor-default">
+          {[...Array(16)].map((_, i) => (
+            <div key={i} className="flex items-center gap-10 md:gap-14 mx-5 md:mx-8">
+              <div className="flex items-center gap-3">
+                <div className="bg-brand-primary text-white text-[10px] px-2 py-0.5 rounded-full font-black animate-pulse">NO. 1</div>
+                <span className="text-white text-sm md:text-xl font-black tracking-tight select-none">طبلية رقم 1 في طنطا 🏆</span>
+              </div>
+              
+              <span className="text-white/20 select-none">•</span>
+              
+              <div className="flex items-center gap-3">
+                <Heart className="text-brand-primary" size={18} />
+                <span className="text-white text-sm md:text-lg font-medium italic font-serif select-none">الأكل البيتي على أصوله</span>
+              </div>
+              
+              <span className="text-white/20 select-none">•</span>
+              
+              <div className="flex items-center gap-3">
+                <MapPin className="text-brand-primary" size={18} />
+                <span className="text-white text-sm md:text-lg font-black tracking-tight select-none">من مطبخنا لبيتك في طنطا 🚀</span>
+              </div>
+              
+              <span className="text-white/20 select-none">•</span>
+              
+              <div className="flex items-center gap-3 px-4 py-1 rounded-full bg-white/5 border border-white/10">
+                <Award className="text-yellow-500" size={16} />
+                <span className="text-white text-[10px] md:text-xs font-bold tracking-widest uppercase select-none">أفضل جودة في التوصيل</span>
+              </div>
+            </div>
+          ))}
+        </div>
+        
+        {/* Decorative Gloss Effect */}
+        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full animate-[shimmer_3s_infinite] pointer-events-none" />
+      </div>
+
       {/* Categories & Search Tags Section */}
       <section className="py-12 bg-white border-b border-stone-100">
         <div className="max-w-7xl mx-auto px-4">
