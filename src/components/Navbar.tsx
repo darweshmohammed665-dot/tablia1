@@ -26,10 +26,40 @@ export default function Navbar({ user, profile }: NavbarProps) {
     <nav className="bg-white sticky top-0 z-50 border-b border-stone-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16 items-center">
-          {/* Logo */}
-          <Link to="/" className="flex items-center gap-2">
-            <img src="https://i.ibb.co/3y9wLQc5/1775915563891.png" alt="طبلية" className="h-10 w-auto" referrerPolicy="no-referrer" />
-          </Link>
+          <div className="flex items-center gap-4">
+            {/* Logo */}
+            <Link to="/" className="flex items-center gap-2">
+              <img src="https://i.ibb.co/3y9wLQc5/1775915563891.png" alt="طبلية" className="h-10 w-auto" referrerPolicy="no-referrer" />
+            </Link>
+
+            {/* Mobile Actions (Visible only on mobile) */}
+            {!user && (
+              <div className="flex md:hidden items-center gap-2">
+                <Link to="/login" className="text-stone-600 font-black text-xs hover:text-brand-primary transition-colors">دخول</Link>
+                <Link to="/register" className="bg-brand-primary text-white px-3 py-1.5 rounded-full font-black text-[10px] shadow-lg shadow-brand-primary/20 whitespace-nowrap">سجل الآن</Link>
+              </div>
+            )}
+
+            {user && (
+              <div className="flex md:hidden items-center gap-3">
+                <Link to="/cart" className="p-1 text-stone-600 relative">
+                  <ShoppingCart size={20} />
+                  {cartCount > 0 && (
+                    <span className="absolute -top-1 -right-1 bg-brand-primary text-white text-[9px] w-4 h-4 flex items-center justify-center rounded-full font-bold shadow-sm">
+                      {cartCount}
+                    </span>
+                  )}
+                </Link>
+                <Link to="/profile" className="w-8 h-8 rounded-full bg-stone-50 flex items-center justify-center border-2 border-white shadow-sm overflow-hidden">
+                  {profile?.photoURL ? (
+                    <img src={profile.photoURL} alt="Profile" className="w-full h-full object-cover" />
+                  ) : (
+                    <UserIcon size={16} className="text-stone-400" />
+                  )}
+                </Link>
+              </div>
+            )}
+          </div>
 
           {/* Desktop Nav */}
           <div className="hidden md:flex items-center gap-8">
