@@ -104,17 +104,25 @@ export default function Home() {
             </button>
           </motion.div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 max-w-5xl mx-auto px-4">
             {[
               "طازج يومياً",
               "مطبوخ بأيادي أشطر ستات بيوت",
               "نضيف ومضمون",
               "توصيل سريع ومخلص"
             ].map((badge, i) => (
-              <div key={i} className="bg-white/10 backdrop-blur-md border border-white/20 px-4 py-2 rounded-full text-white text-sm font-bold flex items-center justify-center gap-2">
-                <ShieldCheck size={16} className="text-brand-primary" />
-                {badge}
-              </div>
+              <motion.div 
+                key={i} 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 + (i * 0.1) }}
+                className="bg-white/20 backdrop-blur-xl border border-white/40 px-6 py-4 rounded-[24px] text-white text-base md:text-lg font-black flex items-center justify-center gap-3 shadow-[0_10px_40px_rgba(0,0,0,0.3)] transition-all hover:bg-white/30 hover:scale-105"
+              >
+                <div className="bg-brand-primary/20 p-2 rounded-xl">
+                  <ShieldCheck size={20} className="text-brand-primary" />
+                </div>
+                <span className="drop-shadow-md text-center">{badge}</span>
+              </motion.div>
             ))}
           </div>
         </div>
