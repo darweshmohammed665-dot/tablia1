@@ -58,10 +58,8 @@ export default function Checkout() {
   const deliveryFee = 18.99;
   const serviceFeeRate = 0.05;
   const serviceFee = subtotal * serviceFeeRate;
-  const commissionRate = 0.15;
-  const commission = subtotal * commissionRate;
   const isFirstOrder = true; // Mock for demo
-  const total = subtotal + commission + (isFirstOrder ? 0 : deliveryFee) + serviceFee;
+  const total = subtotal + (isFirstOrder ? 0 : deliveryFee) + serviceFee;
 
   const handlePlaceOrder = async () => {
     if (!auth.currentUser) {
@@ -118,7 +116,7 @@ export default function Checkout() {
         })),
         total: total || 0,
         subtotal: subtotal || 0,
-        commission: commission || 0,
+        serviceFee: serviceFee || 0,
         status: 'pending',
         paymentMethod: paymentMethod || 'cod',
         paymentId: paymentId || null,
@@ -431,11 +429,6 @@ export default function Checkout() {
                   <div className="flex justify-between text-stone-600">
                     <span>المجموع الفرعي</span>
                     <span>{subtotal.toFixed(2)} ج.م</span>
-                  </div>
-
-                  <div className="flex justify-between text-stone-600">
-                    <span>عمولة المنصة (15%)</span>
-                    <span>{commission.toFixed(2)} ج.م</span>
                   </div>
 
                   <div className="flex justify-between text-stone-600 items-center">
