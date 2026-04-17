@@ -28,6 +28,7 @@ export const MealCard: React.FC<MealCardProps> = ({ meal, index = 0 }) => {
   const handleQuickAdd = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+    
     addToCart({
       id: meal.id.toString(),
       title: meal.title,
@@ -37,7 +38,19 @@ export const MealCard: React.FC<MealCardProps> = ({ meal, index = 0 }) => {
       chefId: meal.chefId,
       chefName: meal.chefName
     });
-    toast.success(`تم إضافة ${meal.title} إلى السلة`);
+
+    // Enhanced Toast with Image and Price
+    toast.success(
+      <div className="flex flex-col gap-1">
+        <span className="font-black text-brand-accent">تمت الإضافة بنجاح!</span>
+        <span className="text-sm font-bold text-stone-500">{meal.title} • {meal.price} ج.م</span>
+      </div>,
+      {
+        icon: <div className="bg-green-100 p-1 rounded-full text-green-600"><Plus size={16} strokeWidth={3} /></div>,
+        duration: 3000,
+        position: 'bottom-center'
+      }
+    );
   };
 
   return (

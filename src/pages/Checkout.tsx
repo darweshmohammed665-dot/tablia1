@@ -56,7 +56,8 @@ export default function Checkout() {
 
   const subtotal = cartTotal;
   const deliveryFee = 18.99;
-  const serviceFee = 5.00;
+  const serviceFeeRate = 0.05;
+  const serviceFee = subtotal * serviceFeeRate;
   const commissionRate = 0.15;
   const commission = subtotal * commissionRate;
   const isFirstOrder = true; // Mock for demo
@@ -451,7 +452,7 @@ export default function Checkout() {
 
                   <div className="flex justify-between text-stone-600 items-center">
                     <div className="flex items-center gap-1">
-                      <span>رسوم الخدمة</span>
+                      <span>رسوم الخدمة (5%)</span>
                       <Info size={14} className="text-stone-400" />
                     </div>
                     <span>{serviceFee.toFixed(2)} ج.م</span>
