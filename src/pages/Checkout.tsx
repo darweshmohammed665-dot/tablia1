@@ -54,12 +54,13 @@ export default function Checkout() {
 
   const { cartItems, cartTotal, clearCart } = useCart();
 
-  const subtotal = cartTotal;
-  const deliveryFee = 18.99;
+  const totalFoodValue = cartTotal;
   const serviceFeeRate = 0.05;
-  const serviceFee = subtotal * serviceFeeRate;
+  const serviceFee = totalFoodValue * serviceFeeRate;
+  const subtotal = totalFoodValue - serviceFee; // Deducted from the price as requested
+  const deliveryFee = 18.99;
   const isFirstOrder = true; // Mock for demo
-  const total = subtotal + (isFirstOrder ? 0 : deliveryFee) + serviceFee;
+  const total = totalFoodValue + (isFirstOrder ? 0 : deliveryFee);
 
   const handlePlaceOrder = async () => {
     if (!auth.currentUser) {
@@ -427,7 +428,7 @@ export default function Checkout() {
                 
                 <div className="space-y-4">
                   <div className="flex justify-between text-stone-600">
-                    <span>المجموع الفرعي</span>
+                    <span>ثمن الأكلة</span>
                     <span>{subtotal.toFixed(2)} ج.م</span>
                   </div>
 
