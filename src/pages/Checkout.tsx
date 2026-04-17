@@ -57,7 +57,7 @@ export default function Checkout() {
   const totalFoodValue = cartTotal;
   const serviceFeeRate = 0.05;
   const serviceFee = totalFoodValue * serviceFeeRate;
-  const subtotal = totalFoodValue - serviceFee; // Deducted from the price as requested
+  const foodBasePrice = totalFoodValue - serviceFee; // The "Meal Price" seen by user after 5% deduction
   const commissionRate = 0.15;
   const commission = totalFoodValue * commissionRate;
   const deliveryFee = 18.99;
@@ -118,7 +118,7 @@ export default function Checkout() {
           price: item.price || 0
         })),
         total: total || 0,
-        subtotal: subtotal || 0,
+        subtotal: foodBasePrice || 0,
         serviceFee: serviceFee || 0,
         commission: commission || 0,
         status: 'pending',
@@ -431,23 +431,26 @@ export default function Checkout() {
                 
                 <div className="space-y-4">
                   <div className="flex justify-between text-stone-600">
-                    <span>ثمن الأكلة</span>
-                    <span>{subtotal.toFixed(2)} ج.م</span>
+                    <span className="font-bold">ثمن الأكلة</span>
+                    <span className="font-bold">{foodBasePrice.toFixed(2)} ج.م</span>
                   </div>
 
                   <div className="flex justify-between text-stone-600">
-                    <span>عمولة المنصة (15%)</span>
+                    <div className="flex items-center gap-1">
+                      <span>عمولة المنصة (15%)</span>
+                      <Info size={14} className="text-stone-300" />
+                    </div>
                     <span>{commission.toFixed(2)} ج.م</span>
                   </div>
 
                   <div className="flex justify-between text-stone-600 items-center">
                     <div className="flex items-center gap-1">
-                      <span className={isFirstOrder ? "bg-yellow-100 text-yellow-700 px-2 py-0.5 rounded text-xs font-bold" : ""}>
+                      <span className={isFirstOrder ? "bg-brand-primary/10 text-brand-primary px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wider" : ""}>
                         توصيل مجاني أول طلب
                       </span>
-                      <Info size={14} className="text-stone-400" />
+                      <Info size={14} className="text-stone-300" />
                     </div>
-                    <span className={isFirstOrder ? "line-through text-stone-400" : ""}>
+                    <span className={isFirstOrder ? "line-through text-stone-300 decoration-brand-primary/50" : ""}>
                       {deliveryFee.toFixed(2)} ج.م
                     </span>
                   </div>
@@ -455,14 +458,19 @@ export default function Checkout() {
                   <div className="flex justify-between text-stone-600 items-center">
                     <div className="flex items-center gap-1">
                       <span>رسوم الخدمة (5%)</span>
-                      <Info size={14} className="text-stone-400" />
+                      <Info size={14} className="text-stone-300" />
                     </div>
                     <span>{serviceFee.toFixed(2)} ج.م</span>
                   </div>
 
-                  <div className="pt-4 border-t border-stone-100 flex justify-between text-2xl font-black text-stone-900">
-                    <span>المبلغ الإجمالي</span>
-                    <span className="text-brand-primary">{total.toFixed(2)} ج.م</span>
+                  <div className="pt-6 border-t border-dashed border-stone-200 flex justify-between items-baseline">
+                    <span className="text-xl font-black text-brand-secondary">المبلغ الإجمالي</span>
+                    <div className="flex items-baseline gap-1">
+                      <span className="text-3xl font-black text-brand-primary tracking-tighter">
+                        {total.toFixed(2)}
+                      </span>
+                      <span className="text-sm font-black text-brand-primary">ج.م</span>
+                    </div>
                   </div>
                 </div>
               </div>
