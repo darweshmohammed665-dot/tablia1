@@ -8,6 +8,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Star, Clock, ChefHat, ShoppingCart, ArrowRight, ShieldCheck, Bike, ShoppingBag, MessageSquare, Send, User } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { toast } from 'sonner';
+import { FoodPriceDisplay } from '../components/FoodPriceDisplay';
 
 export default function MealDetails() {
   const { id } = useParams();
@@ -127,7 +128,21 @@ export default function MealDetails() {
       chefId: meal.chefId,
       chefName: meal.chefName
     });
-    toast.success(`تم إضافة ${quantity} ${meal.title} إلى السلة`);
+
+    const serviceFee = meal.price * 0.05;
+    const finalPrice = meal.price - serviceFee;
+
+    toast.success(
+      <div className="flex flex-col gap-1">
+        <span className="font-bold">تمت الإضافة للسلة!</span>
+        <span className="text-sm font-bold text-stone-500">{meal.title} • {meal.price} ج.م</span>
+        <span className="text-[10px] text-stone-400 font-bold">(ثمن الأكلة: {finalPrice.toFixed(2)} + رسوم: {serviceFee.toFixed(2)})</span>
+      </div>,
+      {
+        duration: 3000,
+        position: 'bottom-center'
+      }
+    );
   };
 
   if (loading) return <div className="min-h-screen flex items-center justify-center"><div className="animate-spin rounded-full h-12 w-12 border-t-2 border-brand-primary"></div></div>;
@@ -151,8 +166,8 @@ export default function MealDetails() {
           >
             <div className="relative rounded-[2rem] md:rounded-[3rem] overflow-hidden shadow-2xl h-[300px] md:h-[500px]">
               <img src={activeImage} alt={meal.title} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
-              <div className="absolute top-4 left-4 md:top-6 md:left-6 bg-white/90 backdrop-blur-md px-4 md:px-6 py-1 md:py-2 rounded-full text-lg md:text-xl font-bold text-brand-primary shadow-lg">
-                {meal.price} ج.م
+              <div className="absolute top-4 left-4 md:top-6 md:left-6 z-10 pointer-events-none transform scale-90 origin-top-left md:scale-100">
+                <FoodPriceDisplay originalPrice={meal.price} />
               </div>
             </div>
             {allImages.length > 1 && (

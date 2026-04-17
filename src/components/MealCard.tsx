@@ -1,9 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Star, Clock, ShoppingCart, Plus } from 'lucide-react';
+import { Star, Clock, ShoppingCart, Plus, Info } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { toast } from 'sonner';
+import { FoodPriceDisplay } from './FoodPriceDisplay';
 
 interface MealCardProps {
   meal: {
@@ -39,11 +40,15 @@ export const MealCard: React.FC<MealCardProps> = ({ meal, index = 0 }) => {
       chefName: meal.chefName
     });
 
+    const serviceFee = meal.price * 0.05;
+    const finalPrice = meal.price - serviceFee;
+
     // Enhanced Toast with Image and Price
     toast.success(
       <div className="flex flex-col gap-1">
         <span className="font-black text-brand-accent">تمت الإضافة بنجاح!</span>
         <span className="text-sm font-bold text-stone-500">{meal.title} • {meal.price} ج.م</span>
+        <span className="text-[10px] text-stone-400 font-bold">(ثمن الأكلة: {finalPrice.toFixed(2)} + رسوم: {serviceFee.toFixed(2)})</span>
       </div>,
       {
         icon: <div className="bg-green-100 p-1 rounded-full text-green-600"><Plus size={16} strokeWidth={3} /></div>,
@@ -82,8 +87,8 @@ export const MealCard: React.FC<MealCardProps> = ({ meal, index = 0 }) => {
           <Plus size={24} strokeWidth={3} />
         </button>
 
-        <div className="absolute bottom-4 left-4 bg-white/95 backdrop-blur-sm px-4 py-1.5 rounded-2xl text-sm font-black text-brand-primary shadow-lg pointer-events-none">
-          {meal.price} ج.م
+        <div className="absolute bottom-4 left-4 z-10 pointer-events-none transform scale-75 origin-bottom-left">
+          <FoodPriceDisplay originalPrice={meal.price} />
         </div>
       </div>
       <div className="p-6 flex flex-col flex-grow">

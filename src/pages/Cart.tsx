@@ -6,13 +6,13 @@ import { useCart } from '../context/CartContext';
 export default function Cart() {
   const { cartItems, removeFromCart, updateQuantity, cartTotal } = useCart();
 
-  const subtotal = cartTotal;
+  const totalFoodValue = cartTotal;
+  const serviceFeeRate = 0.05;
+  const serviceFee = totalFoodValue * serviceFeeRate;
+  const subtotal = totalFoodValue - serviceFee;
   const deliveryFee = 18.99;
-  const serviceFee = 5.00;
-  const commissionRate = 0.15;
-  const commission = subtotal * commissionRate;
   const isFirstOrder = true; // Mock for demo
-  const total = subtotal + commission + (isFirstOrder ? 0 : deliveryFee) + serviceFee;
+  const total = totalFoodValue + (isFirstOrder ? 0 : deliveryFee);
 
   if (cartItems.length === 0) {
     return (
@@ -126,15 +126,10 @@ export default function Cart() {
                 
                 <div className="space-y-4">
                   <div className="flex justify-between text-stone-600">
-                    <span>المجموع الفرعي</span>
+                    <span>ثمن الأكلة</span>
                     <span>{subtotal.toFixed(2)} ج.م</span>
                   </div>
 
-                  <div className="flex justify-between text-stone-600">
-                    <span>عمولة المنصة (15%)</span>
-                    <span>{commission.toFixed(2)} ج.م</span>
-                  </div>
-                  
                   <div className="flex justify-between text-stone-600 items-center">
                     <div className="flex items-center gap-1">
                       <span className={isFirstOrder ? "bg-yellow-100 text-yellow-700 px-2 py-0.5 rounded text-xs font-bold" : ""}>
@@ -149,7 +144,7 @@ export default function Cart() {
 
                   <div className="flex justify-between text-stone-600 items-center">
                     <div className="flex items-center gap-1">
-                      <span>رسوم الخدمة</span>
+                      <span>رسوم الخدمة (5%)</span>
                       <Info size={14} className="text-stone-400" />
                     </div>
                     <span>{serviceFee.toFixed(2)} ج.م</span>
