@@ -130,13 +130,14 @@ export default function MealDetails() {
     });
 
     const serviceFee = meal.price * 0.05;
+    const commission = meal.price * 0.15;
     const finalPrice = meal.price - serviceFee;
 
     toast.success(
       <div className="flex flex-col gap-1">
         <span className="font-bold">تمت الإضافة للسلة!</span>
         <span className="text-sm font-bold text-stone-500">{meal.title} • {meal.price} ج.م</span>
-        <span className="text-[10px] text-stone-400 font-bold">(ثمن الأكلة: {finalPrice.toFixed(2)} + رسوم: {serviceFee.toFixed(2)})</span>
+        <span className="text-[10px] text-stone-400 font-bold">(ثمن الأكلة: {finalPrice.toFixed(2)} + رسوم: {serviceFee.toFixed(2)} + عمولة: {commission.toFixed(2)})</span>
       </div>,
       {
         duration: 3000,

@@ -10,9 +10,11 @@ export default function Cart() {
   const serviceFeeRate = 0.05;
   const serviceFee = totalFoodValue * serviceFeeRate;
   const subtotal = totalFoodValue - serviceFee;
+  const commissionRate = 0.15;
+  const commission = totalFoodValue * commissionRate;
   const deliveryFee = 18.99;
   const isFirstOrder = true; // Mock for demo
-  const total = totalFoodValue + (isFirstOrder ? 0 : deliveryFee);
+  const total = totalFoodValue + commission + (isFirstOrder ? 0 : deliveryFee);
 
   if (cartItems.length === 0) {
     return (
@@ -128,6 +130,11 @@ export default function Cart() {
                   <div className="flex justify-between text-stone-600">
                     <span>ثمن الأكلة</span>
                     <span>{subtotal.toFixed(2)} ج.م</span>
+                  </div>
+
+                  <div className="flex justify-between text-stone-600">
+                    <span>عمولة المنصة (15%)</span>
+                    <span>{commission.toFixed(2)} ج.م</span>
                   </div>
 
                   <div className="flex justify-between text-stone-600 items-center">
