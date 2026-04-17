@@ -103,38 +103,6 @@ export default function Home() {
               محتار تاكل إيه؟
             </button>
           </motion.div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto px-4 mt-12">
-            {[
-              {
-                text: "نكهة البيت الأصيلة مطبوخة بحب وشغف، لتصلك طازجة ونظيفة أينما كنت في طنطا.",
-                icon: <Sparkles size={24} className="text-brand-primary" />
-              },
-              {
-                text: "جودة تليق بعائلتك وخدمة تعتني بأدق التفاصيل، لنقدم لك طعاماً منزلياً آمناً ومضموناً.",
-                icon: <ShieldCheck size={24} className="text-brand-primary" />
-              },
-              {
-                text: "نجمع بين براعة الطهي المنزلي وسرعة التوصيل الاحترافي، لنعيد إليك دفء اللمة في كل وجبة.",
-                icon: <Clock size={24} className="text-brand-primary" />
-              }
-            ].map((item, i) => (
-              <motion.div 
-                key={i} 
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3 + (i * 0.1) }}
-                className="bg-white/10 backdrop-blur-xl border border-white/20 p-8 rounded-[32px] text-white flex flex-col items-center gap-4 shadow-2xl transition-all hover:bg-white/20 hover:scale-105 group"
-              >
-                <div className="bg-brand-primary/20 p-4 rounded-2xl group-hover:bg-brand-primary/30 transition-colors">
-                  {item.icon}
-                </div>
-                <p className="text-lg md:text-xl font-bold leading-relaxed text-center text-white/95 drop-shadow-sm">
-                  {item.text}
-                </p>
-              </motion.div>
-            ))}
-          </div>
         </div>
       </section>
 
@@ -178,51 +146,285 @@ export default function Home() {
         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full animate-[shimmer_3s_infinite] pointer-events-none" />
       </div>
 
-      {/* Categories & Search Tags Section */}
-      <section className="py-12 bg-white border-b border-stone-100">
-        <div className="max-w-7xl mx-auto px-4">
-          {/* What are you craving today? */}
-          <div className="mb-12">
-            <h2 className="text-2xl font-black text-stone-900 mb-6 text-right">ماذا تشتهي اليوم؟</h2>
-            <div className="flex gap-6 overflow-x-auto pb-4 no-scrollbar justify-start md:justify-end flex-row-reverse">
-              {[
-                { name: "حلويات", icon: "🍰" },
-                { name: "مخبوزات", icon: "🥐" },
-                { name: "طواجن", icon: "🥘" },
-                { name: "مشويات", icon: "🍗" },
-                { name: "محاشي", icon: "🍲" }
-              ].map((cat, i) => (
-                <Link to={`/meals?category=${cat.name}`} key={i} className="flex flex-col items-center gap-3 min-w-[90px] group">
-                  <div className="w-24 h-24 rounded-full bg-white shadow-sm border-4 border-transparent group-hover:border-brand-primary transition-all duration-300 flex items-center justify-center text-4xl">
-                    {cat.icon}
+      {/* Professional Bento Grid Categories Section */}
+      <section className="py-32 bg-white relative overflow-hidden">
+        {/* Background Accents */}
+        <div className="absolute top-0 left-0 w-full h-full pointer-events-none overflow-hidden">
+          <div className="absolute top-[-10%] right-[-5%] w-[400px] h-[400px] bg-brand-primary/5 rounded-full blur-[120px]" />
+          <div className="absolute bottom-[-10%] left-[-5%] w-[400px] h-[400px] bg-brand-accent/5 rounded-full blur-[120px]" />
+        </div>
+
+        <div className="max-w-7xl mx-auto px-4 relative z-10">
+          <div className="flex flex-col md:flex-row items-end justify-between mb-16 gap-6">
+            <div className="text-right">
+              <motion.div
+                initial={{ opacity: 0, x: 20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                className="flex items-center justify-end gap-3 mb-4"
+              >
+                <div className="h-px w-12 bg-brand-primary" />
+                <span className="text-brand-primary font-black tracking-[0.2em] uppercase text-xs">قائمة طبلية</span>
+              </motion.div>
+              <motion.h2 
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1 }}
+                className="text-5xl md:text-7xl font-serif font-bold text-brand-secondary leading-[1.1]"
+              >
+                خريطة المذاق <br /> <span className="text-brand-primary">المصري</span>
+              </motion.h2>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-8 auto-rows-[260px]">
+            {/* Box 1: Egyptian Home Cooking (Large - span 8) */}
+            <motion.div 
+              whileHover={{ y: -8, shadow: "0 25px 50px -12px rgba(220, 38, 38, 0.25)" }}
+              initial={{ opacity: 0, scale: 0.98 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              className="md:col-span-8 md:row-span-2 rounded-[48px] overflow-hidden group relative shadow-2xl border-4 border-white"
+            >
+              <Link to="/meals?category=أكل بيتي مصري" className="block w-full h-full relative">
+                <img 
+                  src="https://images.unsplash.com/photo-1541518763669-27fef04b14ea?auto=format&fit=crop&q=80&w=1400" 
+                  className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-[2.5s] ease-out" 
+                  alt="Egyptian Home Cooking" 
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-brand-secondary/95 via-brand-secondary/40 to-transparent p-12 flex flex-col justify-end">
+                  <div className="flex items-center gap-3 mb-6">
+                    <span className="bg-brand-primary text-white text-[10px] font-black px-4 py-1.5 rounded-full uppercase tracking-widest shadow-xl flex items-center gap-2">
+                       <Sparkles size={12} /> أصل الطعم واللمة
+                    </span>
                   </div>
-                  <span className="font-bold text-stone-800 text-sm group-hover:text-brand-primary transition-colors">{cat.name}</span>
-                </Link>
-              ))}
-            </div>
+                  <h3 className="text-5xl md:text-7xl font-black text-white mb-6 drop-shadow-lg">أكل بيتي مصري</h3>
+                  <div className="flex flex-wrap gap-3">
+                    {["محشي", "ملوخية", "طبيخ"].map(tag => (
+                      <span key={tag} className="px-5 py-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl text-white font-bold text-sm">
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </Link>
+            </motion.div>
+
+            {/* Box 2: Grills (span 4) */}
+            <motion.div 
+              whileHover={{ y: -8 }}
+              initial={{ opacity: 0, scale: 0.98 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.1 }}
+              className="md:col-span-4 md:row-span-1 rounded-[40px] overflow-hidden group relative shadow-xl border border-stone-100"
+            >
+              <Link to="/meals?category=مشويات" className="block w-full h-full relative">
+                <img 
+                  src="https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&q=80&w=1000" 
+                  className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-[2s]" 
+                  alt="Grills" 
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-orange-900/90 via-orange-900/40 to-transparent p-8 flex flex-col justify-end">
+                  <h3 className="text-3xl font-black text-white mb-3">مشويات</h3>
+                  <p className="text-white/70 text-sm font-bold flex flex-wrap gap-2">
+                    <span>كباب</span> • <span>كفتة</span> • <span>فراخ</span>
+                  </p>
+                </div>
+              </Link>
+            </motion.div>
+
+            {/* Box 3: Rural Food (span 4) */}
+            <motion.div 
+              whileHover={{ y: -8 }}
+              initial={{ opacity: 0, scale: 0.98 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.2 }}
+              className="md:col-span-4 md:row-span-1 rounded-[40px] overflow-hidden group relative shadow-xl border border-stone-100"
+            >
+              <Link to="/meals?category=أكل فلاحي / ريفي" className="block w-full h-full relative">
+                <img 
+                  src="https://images.unsplash.com/photo-1626074353765-517a681e40be?auto=format&fit=crop&q=80&w=1000" 
+                  className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-[2s]" 
+                  alt="Rural Food" 
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-green-900/90 via-green-900/40 to-transparent p-8 flex flex-col justify-end">
+                  <h3 className="text-3xl font-black text-white mb-3">أكل فلاحي</h3>
+                  <p className="text-white/70 text-sm font-bold">بط • فطير • عيش بلدي</p>
+                </div>
+              </Link>
+            </motion.div>
+
+            {/* Box 4: Fast Food (span 4) */}
+            <motion.div 
+              whileHover={{ y: -8 }}
+              initial={{ opacity: 0, scale: 0.98 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.3 }}
+              className="md:col-span-4 md:row-span-2 rounded-[48px] overflow-hidden group relative shadow-xl border border-stone-100 bg-brand-accent/5"
+            >
+              <Link to="/meals?category=أكلات سريعة ومطلوبة" className="block w-full h-full relative">
+                <img 
+                  src="https://images.unsplash.com/photo-1512152272829-e3139592d56f?auto=format&fit=crop&q=80&w=1000" 
+                  className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-[2s]" 
+                  alt="Fast Food" 
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-brand-accent/95 via-brand-accent/50 to-transparent p-10 flex flex-col justify-end">
+                  <h3 className="text-4xl font-black text-white mb-6">أكلات سريعة</h3>
+                  <div className="space-y-3">
+                    {[
+                      { l: "ساندوتشات", s: "شاورما، برجر" },
+                      { l: "فرايد تشيكن", s: "كرسبي وسخن" },
+                      { l: "سوري", s: "زنجر وبطاطس" }
+                    ].map((item, i) => (
+                      <div key={i} className="bg-white/10 backdrop-blur-md rounded-2xl p-3 border border-white/10">
+                        <p className="text-white font-black text-sm mb-0.5">{item.l}</p>
+                        <p className="text-white/60 text-[10px] font-bold">{item.s}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </Link>
+            </motion.div>
+
+            {/* Box 5: Popular/Street Food (span 4) */}
+            <motion.div 
+              whileHover={{ y: -8 }}
+              initial={{ opacity: 0, scale: 0.98 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.4 }}
+              className="md:col-span-4 md:row-span-1 rounded-[40px] bg-stone-50 p-10 border border-stone-100 relative overflow-hidden group shadow-lg"
+            >
+              <Link to="/meals?category=أكلات شعبية" className="block w-full h-full flex flex-col justify-center text-right">
+                <motion.div 
+                  animate={{ rotate: [0, 10, -10, 0] }}
+                  transition={{ duration: 4, repeat: Infinity }}
+                  className="text-6xl mb-6 relative z-10"
+                >
+                  🥙
+                </motion.div>
+                <div className="relative z-10">
+                  <h3 className="text-4xl font-black text-brand-secondary mb-3">أكلات شعبية</h3>
+                  <p className="text-stone-500 font-bold text-lg">كشري • فول • طعمية</p>
+                </div>
+                {/* Large Background Arabic Text for "Professional" look */}
+                <div className="absolute bottom-0 left-0 text-stone-200/50 font-black text-[140px] leading-none select-none pointer-events-none transition-transform group-hover:scale-110">
+                  شعبية
+                </div>
+              </Link>
+            </motion.div>
+
+            {/* Box 6: International (span 4) */}
+            <motion.div 
+              whileHover={{ y: -8 }}
+              initial={{ opacity: 0, scale: 0.98 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.5 }}
+              className="md:col-span-4 md:row-span-2 rounded-[48px] overflow-hidden group relative shadow-2xl border-4 border-white"
+            >
+              <Link to="/meals?category=أكلات عالمية منتشرة في مصر" className="block w-full h-full relative">
+                <img 
+                  src="https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&q=80&w=1000" 
+                  className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-[3s]" 
+                  alt="International Food" 
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-stone-900/95 via-stone-900/40 to-transparent p-12 flex flex-col justify-end">
+                  <div className="mb-6">
+                    <span className="text-stone-400 font-black text-[10px] uppercase tracking-[0.4em] mb-2 block">World Cuisine</span>
+                    <h3 className="text-4xl font-black text-white">أكلات عالمية</h3>
+                  </div>
+                  <div className="grid grid-cols-1 gap-3">
+                    {[
+                      { n: "إيطالي", d: "باستا - بيتزا", i: "🇮🇹" },
+                      { n: "آسيوي / صيني", d: "نودلز - رايس", i: "🎋" },
+                      { n: "كوري", d: "رامن - توكبوكي", i: "🥢" },
+                      { n: "سوشي ياباني", d: "أصناف السلمون", i: "🍣" }
+                    ].map((item, i) => (
+                      <div key={i} className="flex items-center justify-between p-4 bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl group/item hover:bg-white/10 transition-colors">
+                        <div>
+                          <p className="text-white font-black text-sm">{item.n}</p>
+                          <p className="text-white/40 text-[10px] font-bold">{item.d}</p>
+                        </div>
+                        <span className="text-xl">{item.i}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </Link>
+            </motion.div>
+
+            {/* Box 7: Diet/Healthy (span 4) */}
+            <motion.div 
+              whileHover={{ y: -8 }}
+              initial={{ opacity: 0, scale: 0.98 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.6 }}
+              className="md:col-span-4 md:row-span-1 rounded-[40px] bg-emerald-500 p-10 relative overflow-hidden group shadow-2xl"
+            >
+              <Link to="/meals?category=وجبات دايت / صحي" className="block w-full h-full relative z-10 flex flex-col justify-center">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="bg-white/20 w-16 h-16 rounded-2xl flex items-center justify-center text-3xl backdrop-blur-md border border-white/20">🥗</div>
+                  <span className="text-[10px] font-black text-emerald-100 uppercase tracking-widest px-3 py-1 bg-white/10 rounded-full">Healthy Choice</span>
+                </div>
+                <h3 className="text-3xl font-black text-white mb-2">دايت وصحي</h3>
+                <p className="text-emerald-100/70 font-bold">كل اللي بتحبه بس خفيف</p>
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-white/10 rounded-full blur-[80px] pointer-events-none" />
+              </Link>
+            </motion.div>
+
+            {/* Box 8: Desserts (span 8) */}
+            <motion.div 
+              whileHover={{ y: -8 }}
+              initial={{ opacity: 0, scale: 0.98 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.7 }}
+              className="md:col-span-8 md:row-span-1 rounded-[40px] overflow-hidden group relative shadow-2xl border-4 border-white"
+            >
+              <Link to="/meals?category=الحلويات" className="block w-full h-full relative">
+                <img 
+                  src="https://images.unsplash.com/photo-1551024601-bec78aea704b?auto=format&fit=crop&q=80&w=1500" 
+                  className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-[4s]" 
+                  alt="Desserts" 
+                />
+                <div className="absolute inset-0 bg-gradient-to-r from-rose-950/90 via-rose-950/40 to-transparent p-12 flex flex-col justify-center text-right">
+                   <div className="flex flex-col items-end gap-2 mb-6">
+                    <span className="text-rose-300 text-6xl group-hover:scale-110 transition-transform">🍰</span>
+                    <h3 className="text-5xl md:text-6xl font-black text-white">الحلويات</h3>
+                  </div>
+                  <div className="flex flex-wrap gap-4 justify-end max-w-2xl">
+                    {[
+                      { t: "حلويات شرقي", s: "بسبوسة، كنافة، قطايف" },
+                      { t: "حلويات غربي", s: "كيك، تشيز كيك، براونيز" },
+                      { t: "مخبوزات", s: "كرواسون، دونات، سينابون" }
+                    ].map((item, i) => (
+                      <div key={i} className="text-right p-4 bg-white/10 backdrop-blur-md rounded-3xl border border-white/10 min-w-[200px]">
+                        <p className="text-white font-black text-lg mb-1">{item.t}</p>
+                        <p className="text-white/60 text-xs font-bold leading-relaxed">{item.s}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </Link>
+            </motion.div>
           </div>
 
-          {/* Most Searched */}
-          <div>
-            <h2 className="text-2xl font-black text-stone-900 mb-6 text-right">الأكثر بحثاً على طبلية</h2>
-            <div className="flex flex-wrap gap-3 justify-end">
-              {['بيتزا', 'كشري', 'مشويات', 'حلويات النصر', 'كريب', 'برجر'].map((tag, i) => (
-                <Link to={`/meals?search=${tag}`} key={i} className="px-5 py-2.5 bg-stone-50 rounded-full border border-stone-200 text-stone-700 font-bold text-sm hover:bg-brand-primary hover:text-white hover:border-brand-primary transition-colors flex items-center gap-2 shadow-sm">
-                  <span className="text-brand-primary bg-white rounded-full w-6 h-6 flex items-center justify-center text-xs shadow-sm">📈</span> {tag}
-                </Link>
-              ))}
-            </div>
-          </div>
-
-          {/* Big Stores Near You */}
-          <div className="mt-12">
-            <h2 className="text-2xl font-black text-stone-900 mb-6 text-right">أشهر المطابخ بالقرب منك</h2>
-            <div className="flex gap-4 overflow-x-auto pb-4 no-scrollbar justify-end flex-row-reverse">
-              <div className="text-stone-400 font-bold py-8 text-center w-full">
-                قريباً... أفضل المطابخ في منطقتك
+          <motion.div 
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            className="mt-20 flex flex-col items-center gap-6"
+          >
+            <Link to="/meals" className="group flex items-center gap-4 text-stone-400 font-bold hover:text-brand-primary transition-all">
+              <span className="text-lg">تصفح القائمة الكاملة للأصناف</span>
+              <div className="w-12 h-12 rounded-full border border-stone-200 flex items-center justify-center group-hover:bg-brand-primary group-hover:border-brand-primary group-hover:text-white transition-all">
+                <ArrowRight size={20} />
               </div>
-            </div>
-          </div>
+            </Link>
+          </motion.div>
         </div>
       </section>
 
@@ -311,80 +513,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Bento Grid Categories */}
-      <section className="py-20 bg-brand-peach/10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-8">
-            <div className="text-right">
-              <span className="text-brand-primary font-black tracking-[0.3em] uppercase text-sm mb-4 block">لمحة من الاكلات</span>
-              <h2 className="text-4xl md:text-[70px] font-black text-brand-secondary leading-[1] tracking-tighter">عندنا ايه <br /> النهاردة؟</h2>
-            </div>
-            <Link to="/meals" className="btn-secondary group">
-              تصفح الاكلات 
-              <ArrowRight className="group-hover:translate-x-2 transition-transform" size={20} />
-            </Link>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-6 auto-rows-[320px]">
-            <motion.div 
-              whileHover={{ y: -15 }}
-              className="md:col-span-8 rounded-[40px] overflow-hidden relative group shadow-2xl"
-            >
-              <img src="https://images.unsplash.com/photo-1541518763669-27fef04b14ea?auto=format&fit=crop&q=80&w=1200" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" alt="Mahshi" />
-              <div className="absolute inset-0 bg-gradient-to-t from-brand-secondary via-brand-secondary/20 to-transparent p-12 flex flex-col justify-end text-white">
-                <h3 className="text-5xl md:text-7xl font-black mb-4">المحاشي الفلاحي</h3>
-                <p className="text-white/70 text-xl font-medium">طعم بيتي أصيل ملوش زي</p>
-              </div>
-            </motion.div>
-            
-            <motion.div 
-              whileHover={{ y: -15 }}
-              className="md:col-span-4 rounded-[40px] overflow-hidden relative group shadow-2xl"
-            >
-              <img src="https://images.unsplash.com/photo-1626074353765-517a681e40be?auto=format&fit=crop&q=80&w=800" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" alt="Feteer" />
-              <div className="absolute inset-0 bg-gradient-to-t from-brand-secondary via-brand-secondary/20 to-transparent p-10 flex flex-col justify-end text-white">
-                <h3 className="text-4xl font-black mb-2">فطير مشلتت</h3>
-                <p className="text-white/70 font-medium">بالسمن البلدي الأصلي</p>
-              </div>
-            </motion.div>
-
-            <motion.div 
-              whileHover={{ y: -15 }}
-              className="md:col-span-4 rounded-[40px] overflow-hidden relative group shadow-2xl"
-            >
-              <img src="https://images.unsplash.com/photo-1551024601-bec78aea704b?auto=format&fit=crop&q=80&w=800" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" alt="Desserts" />
-              <div className="absolute inset-0 bg-gradient-to-t from-brand-secondary via-brand-secondary/20 to-transparent p-10 flex flex-col justify-end text-white">
-                <h3 className="text-4xl font-black">حلويات</h3>
-              </div>
-            </motion.div>
-
-            <motion.div 
-              whileHover={{ y: -15 }}
-              className="md:col-span-4 rounded-[40px] bg-brand-primary p-12 flex flex-col justify-center text-white relative overflow-hidden group shadow-2xl"
-            >
-              <div className="relative z-10">
-                <h3 className="text-5xl font-black mb-6">اكتشف <br /> المزيد</h3>
-                <p className="text-xl opacity-80 mb-10">أكثر من 20 قسم متنوع بانتظارك لتجربة فريدة!</p>
-                <Link to="/meals" className="inline-flex items-center gap-3 bg-white text-brand-primary px-10 py-4 rounded-full font-black text-lg hover:bg-brand-cream transition-colors">
-                  تصفح الأقسام <ArrowRight size={22} />
-                </Link>
-              </div>
-              <Utensils className="absolute -bottom-20 -right-20 text-white/10 group-hover:scale-110 transition-transform duration-1000" size={350} />
-            </motion.div>
-
-            <motion.div 
-              whileHover={{ y: -15 }}
-              className="md:col-span-4 rounded-[40px] overflow-hidden relative group shadow-2xl"
-            >
-              <img src="https://images.unsplash.com/photo-1547592166-23ac45744acd?auto=format&fit=crop&q=80&w=800" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" alt="Soups" />
-              <div className="absolute inset-0 bg-gradient-to-t from-brand-secondary via-brand-secondary/20 to-transparent p-10 flex flex-col justify-end text-white">
-                <h3 className="text-4xl font-black">شوربات</h3>
-              </div>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
       {/* Why Tablia Section */}
       <section className="py-24 bg-white">
         <div className="max-w-7xl mx-auto px-4">
@@ -407,6 +535,84 @@ export default function Home() {
                 <h3 className="text-xl font-bold mb-3">{item.title}</h3>
                 <p className="text-stone-500 font-medium leading-relaxed">{item.desc}</p>
               </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Latest Reviews Section */}
+      <section className="py-24 bg-stone-50 overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
+            <div className="text-right">
+              <span className="text-brand-primary font-black tracking-[0.3em] uppercase text-sm mb-4 block">كلمات من القلب</span>
+              <h2 className="text-4xl md:text-6xl font-serif font-bold text-brand-secondary">قالوا إيه عن <br /> طبلية؟</h2>
+            </div>
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-1 bg-white px-4 py-2 rounded-2xl shadow-sm border border-stone-100">
+                <Star className="fill-brand-primary text-brand-primary" size={20} />
+                <span className="text-2xl font-black text-brand-secondary">4.9</span>
+                <span className="text-stone-400 font-bold text-sm">/ 5</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex gap-8 overflow-x-auto pb-12 no-scrollbar">
+            {[
+              { 
+                name: "سارة محمد", 
+                comment: "المحشي طعمه زي بتاع ماما بالظبط، وصل سخن وفي ميعاده. شكراً طبلية!", 
+                chef: "مطبخ الست أمينة",
+                rating: 5,
+                image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&q=80&w=200"
+              },
+              { 
+                name: "أحمد علي", 
+                comment: "أول مرة أجرب المشويات وفوجئت بالنضافة والطعم الممتاز. الكفتة متبلة صح جداً.", 
+                chef: "شواية الكابتن",
+                rating: 5,
+                image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=200"
+              },
+              { 
+                name: "منى محمود", 
+                comment: "الحلويات الشرقية تجنن، البسبوسة مرملة وجميلة. التغليف شيك جداً ينفع للهدايا.", 
+                chef: "حلويات ريم",
+                rating: 4,
+                image: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=200"
+              },
+              { 
+                name: "ياسر إبراهيم", 
+                comment: "خدمة توصيل سريعة والأكل وصل بجودته الكاملة. تجربة ممتازة وهكررها تاني.", 
+                chef: "مطبخ ريفي",
+                rating: 5,
+                image: "https://images.unsplash.com/photo-1547037579-f0fc020ac3be?auto=format&fit=crop&q=80&w=200"
+              }
+            ].map((review, i) => (
+              <motion.div 
+                key={i}
+                whileHover={{ y: -10 }}
+                className="min-w-[350px] md:min-w-[450px] bg-white p-10 rounded-[40px] shadow-xl border border-stone-100 relative group"
+              >
+                <div className="absolute top-8 right-8 text-6xl text-brand-primary/10 font-serif leading-none opacity-0 group-hover:opacity-100 transition-opacity">"</div>
+                <div className="flex items-center gap-4 mb-8">
+                  <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-brand-primary/20 shadow-lg">
+                    <img src={review.image} alt={review.name} className="w-full h-full object-cover" />
+                  </div>
+                  <div>
+                    <h4 className="font-black text-brand-secondary text-lg">{review.name}</h4>
+                    <div className="flex items-center gap-1 text-yellow-500">
+                      {[...Array(review.rating)].map((_, i) => <Star key={i} size={14} className="fill-current" />)}
+                    </div>
+                  </div>
+                </div>
+                <p className="text-xl text-stone-600 leading-relaxed font-medium mb-8 italic">
+                  "{review.comment}"
+                </p>
+                <div className="pt-6 border-t border-stone-100 flex items-center justify-between">
+                  <span className="text-sm font-bold text-stone-400">تقييم لـ:</span>
+                  <span className="bg-brand-primary/5 text-brand-primary px-4 py-1.5 rounded-full text-sm font-black">{review.chef}</span>
+                </div>
+              </motion.div>
             ))}
           </div>
         </div>

@@ -59,6 +59,24 @@
         "createdAt": { "type": "number" }
       },
       "required": ["customerId", "chefId", "items", "total", "status"]
+    },
+    "Review": {
+      "title": "Review",
+      "description": "Represents a rating and comment left by a customer for a chef or meal.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "chefId": { "type": "string" },
+        "mealId": { "type": "string" },
+        "customerId": { "type": "string" },
+        "customerName": { "type": "string" },
+        "customerPhoto": { "type": "string", "format": "url" },
+        "rating": { "type": "number" },
+        "comment": { "type": "string" },
+        "orderId": { "type": "string" },
+        "createdAt": { "type": "number" }
+      },
+      "required": ["chefId", "customerId", "rating", "comment", "createdAt"]
     }
   },
   "firestore": {
@@ -73,6 +91,10 @@
     "/orders/{orderId}": {
       "schema": "Order",
       "description": "Customer orders."
+    },
+    "/reviews/{reviewId}": {
+      "schema": "Review",
+      "description": "Customer reviews and ratings."
     }
   }
 }

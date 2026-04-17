@@ -8,6 +8,7 @@ interface CartItem {
   image: string;
   chefId: string;
   chefName: string;
+  orderType: 'instant' | 'preorder';
 }
 
 interface CartContextType {

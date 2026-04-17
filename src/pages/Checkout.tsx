@@ -54,6 +54,17 @@ export default function Checkout() {
 
   const { cartItems, cartTotal, clearCart } = useCart();
 
+  const hasPreorder = cartItems.some(item => item.orderType === 'preorder');
+  const hasInstant = cartItems.some(item => item.orderType === 'instant');
+
+  useEffect(() => {
+    if (hasPreorder) {
+      setDeliveryType('scheduled');
+    } else if (hasInstant) {
+      setDeliveryType('quick');
+    }
+  }, [hasPreorder, hasInstant]);
+
   const totalFoodValue = cartTotal;
   const serviceFeeRate = 0.05;
   const serviceFee = totalFoodValue * serviceFeeRate;
@@ -111,6 +122,7 @@ export default function Checkout() {
         deliveryType: deliveryType || 'quick',
         scheduledDay: deliveryType === 'scheduled' ? (scheduledDay || 'غداً') : null,
         chefId: cartItems[0]?.chefId || 'unknown',
+        chefName: cartItems[0]?.chefName || 'مطبخ طبلية',
         items: cartItems.map(item => ({
           mealId: item.mealId || 'unknown',
           title: item.title || 'بدون اسم',
@@ -251,54 +263,70 @@ export default function Checkout() {
 
                   <div className="mt-8 space-y-4">
                     <h3 className="text-lg font-black text-brand-accent mb-4">نوع الطلب</h3>
-                    <div 
-                      onClick={() => setDeliveryType('quick')}
-                      className={`p-4 rounded-2xl border-2 cursor-pointer transition-all flex items-center justify-between ${deliveryType === 'quick' ? 'border-brand-accent bg-brand-accent/5' : 'border-stone-100 bg-white hover:border-stone-200'}`}
-                    >
-                      <div className="flex items-center gap-4">
-                        <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${deliveryType === 'quick' ? 'border-brand-accent' : 'border-stone-300'}`}>
-                          {deliveryType === 'quick' && <div className="w-2.5 h-2.5 rounded-full bg-brand-accent"></div>}
-                        </div>
-                        <div>
-                          <p className="font-black">وجبة سريعة (الآن)</p>
-                          <p className="text-xs text-stone-500 font-bold mt-1">يصل خلال 30-45 دقيقة</p>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div 
-                      onClick={() => setDeliveryType('scheduled')}
-                      className={`p-4 rounded-2xl border-2 cursor-pointer transition-all flex flex-col gap-4 ${deliveryType === 'scheduled' ? 'border-brand-primary bg-brand-primary/5' : 'border-stone-100 bg-white hover:border-stone-200'}`}
-                    >
-                      <div className="flex items-center justify-between">
+                    
+                    {!hasPreorder && (
+                      <div 
+                        onClick={() => setDeliveryType('quick')}
+                        className={`p-4 rounded-2xl border-2 cursor-pointer transition-all flex items-center justify-between ${deliveryType === 'quick' ? 'border-brand-accent bg-brand-accent/5' : 'border-stone-100 bg-white hover:border-stone-200'}`}
+                      >
                         <div className="flex items-center gap-4">
-                          <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${deliveryType === 'scheduled' ? 'border-brand-primary' : 'border-stone-300'}`}>
-                            {deliveryType === 'scheduled' && <div className="w-2.5 h-2.5 rounded-full bg-brand-primary"></div>}
+                          <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${deliveryType === 'quick' ? 'border-brand-accent' : 'border-stone-300'}`}>
+                            {deliveryType === 'quick' && <div className="w-2.5 h-2.5 rounded-full bg-brand-accent"></div>}
                           </div>
                           <div>
-                            <p className="font-black">وجبة يومية (مجدولة)</p>
-                            <p className="text-xs text-stone-500 font-bold mt-1">اطلب اليوم، يوصلك في اليوم المحدد</p>
+                            <p className="font-black">وجبة سريعة (الآن)</p>
+                            <p className="text-xs text-stone-500 font-bold mt-1">يصل خلال 30-45 دقيقة</p>
                           </div>
                         </div>
                       </div>
-                      
-                      {deliveryType === 'scheduled' && (
-                        <div className="pl-9 pr-4">
-                          <label className="block text-xs font-bold text-stone-600 mb-2">اختر يوم التوصيل:</label>
-                          <select 
-                            value={scheduledDay}
-                            onChange={(e) => setScheduledDay(e.target.value)}
-                            className="w-full p-3 rounded-xl border border-stone-200 bg-white focus:ring-2 focus:ring-brand-primary outline-none font-bold text-sm"
-                          >
-                            <option value="غداً">غداً</option>
-                            <option value="بعد غد">بعد غد</option>
-                            <option value="الأحد القادم">الأحد القادم</option>
-                            <option value="الاثنين القادم">الاثنين القادم</option>
-                            <option value="الثلاثاء القادم">الثلاثاء القادم</option>
-                          </select>
+                    )}
+
+                    {(hasPreorder || !hasInstant) && (
+                      <div 
+                        onClick={() => setDeliveryType('scheduled')}
+                        className={`p-4 rounded-2xl border-2 cursor-pointer transition-all flex flex-col gap-4 ${deliveryType === 'scheduled' ? 'border-brand-primary bg-brand-primary/5' : 'border-stone-100 bg-white hover:border-stone-200'}`}
+                      >
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-4">
+                            <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${deliveryType === 'scheduled' ? 'border-brand-primary' : 'border-stone-300'}`}>
+                              {deliveryType === 'scheduled' && <div className="w-2.5 h-2.5 rounded-full bg-brand-primary"></div>}
+                            </div>
+                            <div>
+                              <p className="font-black">وجبة يومية (مجدولة)</p>
+                              <p className="text-xs text-stone-500 font-bold mt-1">
+                                {hasPreorder ? "هذا الطلب يحتوي على وجبات يومية تتطلب حجز مسبق" : "اطلب اليوم، يوصلك في اليوم المحدد"}
+                              </p>
+                            </div>
+                          </div>
                         </div>
-                      )}
-                    </div>
+                        
+                        {deliveryType === 'scheduled' && (
+                          <div className="pl-9 pr-4">
+                            <label className="block text-xs font-bold text-stone-600 mb-2">اختر يوم التوصيل:</label>
+                            <select 
+                              value={scheduledDay}
+                              onChange={(e) => setScheduledDay(e.target.value)}
+                              className="w-full p-3 rounded-xl border border-stone-200 bg-white focus:ring-2 focus:ring-brand-primary outline-none font-bold text-sm"
+                            >
+                              <option value="غداً">غداً</option>
+                              <option value="بعد غد">بعد غد</option>
+                              <option value="الأحد القادم">الأحد القادم</option>
+                              <option value="الاثنين القادم">الاثنين القادم</option>
+                              <option value="الثلاثاء القادم">الثلاثاء القادم</option>
+                            </select>
+                          </div>
+                        )}
+                      </div>
+                    )}
+
+                    {hasPreorder && hasInstant && (
+                      <div className="p-4 bg-amber-50 rounded-2xl border border-amber-100 flex items-center gap-3">
+                        <Info className="text-amber-500 shrink-0" size={20} />
+                        <p className="text-xs text-amber-700 font-bold">
+                          سلة التسوق تحتوي على مزيج من الوجبات الفورية واليومية. تم اختيار التوصيل المجدول لضمان وصول كل الوجبات معاً.
+                        </p>
+                      </div>
+                    )}
                   </div>
                 </div>
               </motion.div>

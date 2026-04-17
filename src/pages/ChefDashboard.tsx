@@ -415,7 +415,12 @@ export default function ChefDashboard({ profile }: ChefDashboardProps) {
                         {meal.featured && <span className="bg-brand-accent/20 text-brand-accent text-[10px] px-2 py-0.5 rounded-full font-bold">مميز</span>}
                       </div>
                       <p className="text-stone-500 text-sm mb-1">{meal.category}</p>
-                      <p className="text-brand-primary font-bold">{meal.price} ج.م</p>
+                      <div className="flex items-center gap-2">
+                        <p className="text-brand-primary font-bold">{meal.price} ج.م</p>
+                        <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${meal.orderType === 'instant' ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700'}`}>
+                          {meal.orderType === 'instant' ? 'فوري' : 'طلب يوم بيومه'}
+                        </span>
+                      </div>
                     </div>
                     <div className="flex gap-2 w-full sm:w-auto justify-end">
                       <button 

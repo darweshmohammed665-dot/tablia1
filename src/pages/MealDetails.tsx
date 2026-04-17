@@ -126,7 +126,8 @@ export default function MealDetails() {
       quantity: quantity,
       image: meal.image || (meal.images && meal.images[0]) || '',
       chefId: meal.chefId,
-      chefName: meal.chefName
+      chefName: meal.chefName,
+      orderType: meal.orderType || 'instant'
     });
 
     const serviceFee = meal.price * 0.05;

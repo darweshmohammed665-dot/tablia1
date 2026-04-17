@@ -4,8 +4,8 @@ import { db } from '../firebase';
 import { Meal } from '../types';
 import { handleFirestoreError, OperationType } from '../lib/firestore-errors';
 import { motion, AnimatePresence } from 'motion/react';
-import { Search, Filter, Star, Clock, X, ChevronDown, SlidersHorizontal, ArrowUpDown, ShoppingCart, ShoppingBag, UtensilsCrossed, Coffee, Pizza, IceCream, Sandwich, Flame, Award, Sparkles, BadgeCheck } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Search, Filter, Star, Clock, X, ChevronDown, SlidersHorizontal, ArrowUpDown, ShoppingCart, ShoppingBag, UtensilsCrossed, Coffee, Pizza, IceCream, Sandwich, Flame, Award, Sparkles, BadgeCheck, ChefHat, Salad, Soup, Utensils } from 'lucide-react';
+import { Link, useSearchParams } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { MealCard } from '../components/MealCard';
 import { toast } from 'sonner';
@@ -15,7 +15,17 @@ export default function Meals() {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
+  const [searchParams, setSearchParams] = useSearchParams();
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  
+  // Initialize categories from URL
+  useEffect(() => {
+    const cat = searchParams.get('category');
+    if (cat) {
+      setSelectedCategories([cat]);
+    }
+  }, [searchParams]);
+
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   
   // Debounce search term
@@ -33,6 +43,7 @@ export default function Meals() {
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 1000]);
   const [minRating, setMinRating] = useState(0);
   const [maxDeliveryTime, setMaxDeliveryTime] = useState(120);
+  const [orderTypeFilter, setOrderTypeFilter] = useState<'all' | 'instant' | 'preorder'>('all');
   const [sortBy, setSortBy] = useState('newest');
   const { addToCart } = useCart();
 
@@ -73,8 +84,9 @@ export default function Meals() {
       const matchesPrice = meal.price >= priceRange[0] && meal.price <= priceRange[1];
       const matchesRating = meal.rating >= minRating;
       const matchesDelivery = (meal.deliveryTime || 45) <= maxDeliveryTime;
+      const matchesOrderType = orderTypeFilter === 'all' || meal.orderType === orderTypeFilter;
       
-      return matchesSearch && matchesCategory && matchesPrice && matchesRating && matchesDelivery;
+      return matchesSearch && matchesCategory && matchesPrice && matchesRating && matchesDelivery && matchesOrderType;
     });
 
     // Sorting
@@ -99,12 +111,23 @@ export default function Meals() {
     return result;
   }, [meals, searchTerm, selectedCategories, priceRange, minRating, maxDeliveryTime, sortBy]);
 
-  const categories = ['الكل', 'أكلات رئيسية', 'شوربة وأطباق جانبية', 'حلويات', 'الوجبات الأسبوعية'];
+  const categories = [
+    'الكل', 
+    'أكل بيتي مصري', 
+    'أكلات شعبية', 
+    'مشويات', 
+    'أكل فلاحي / ريفي', 
+    'أكلات سريعة ومطلوبة', 
+    'وجبات دايت / صحي', 
+    'أكلات عالمية منتشرة في مصر', 
+    'الحلويات'
+  ];
 
   const resetFilters = () => {
     setPriceRange([0, 1000]);
     setMinRating(0);
     setMaxDeliveryTime(120);
+    setOrderTypeFilter('all');
     setSelectedCategories([]);
   };
 
@@ -142,25 +165,38 @@ export default function Meals() {
             </div>
           </div>
 
-          {/* Categories Icons */}
+          {/* Categories Horizontal */}
           <div className="space-y-8">
             <h3 className="text-2xl font-black text-brand-accent">ماذا تشتهي اليوم؟</h3>
-            <div className="flex gap-8 overflow-x-auto pb-4 scrollbar-hide">
+            <div className="flex gap-8 overflow-x-auto pb-4 scrollbar-hide flex-row-reverse">
               {[
-                { id: 'main', label: 'أكلات رئيسية', icon: '🥘' },
-                { id: 'soup', label: 'شوربة وأطباق جانبية', icon: '🥣' },
-                { id: 'sweets', label: 'حلويات', icon: '🍰' },
-                { id: 'weekly', label: 'الوجبات الأسبوعية', icon: '📅' }
+                { label: 'أكل بيتي مصري', icon: '🍲' },
+                { label: 'أكلات شعبية', icon: '🥙' },
+                { label: 'مشويات', icon: '🍗' },
+                { label: 'أكل فلاحي / ريفي', icon: '🚜' },
+                { label: 'أكلات سريعة ومطلوبة', icon: '🍔' },
+                { label: 'أكلات عالمية منتشرة في مصر', icon: '🍝' },
+                { label: 'الحلويات', icon: '🍰' },
+                { label: 'وجبات دايت / صحي', icon: '🥗' }
               ].map((cat) => (
                 <button 
-                  key={cat.id}
-                  onClick={() => setSelectedCategories([cat.label])}
-                  className="flex flex-col items-center gap-4 min-w-[100px] group"
+                  key={cat.label}
+                  onClick={() => {
+                    const newCats = selectedCategories.includes(cat.label) ? [] : [cat.label];
+                    setSelectedCategories(newCats);
+                    if (newCats.length > 0) {
+                      setSearchParams({ category: cat.label });
+                    } else {
+                      searchParams.delete('category');
+                      setSearchParams(searchParams);
+                    }
+                  }}
+                  className="flex flex-col items-center gap-4 min-w-[120px] group"
                 >
-                  <div className={`w-20 h-20 rounded-full flex items-center justify-center text-4xl shadow-lg transition-all border ${selectedCategories.includes(cat.label) ? 'bg-brand-primary border-brand-primary scale-110' : 'bg-white border-stone-50 group-hover:scale-110'}`}>
+                  <div className={`w-24 h-24 rounded-3xl flex items-center justify-center text-4xl shadow-xl transition-all border-4 ${selectedCategories.includes(cat.label) ? 'bg-brand-primary border-white rotate-6 scale-110' : 'bg-white border-transparent group-hover:scale-110 group-hover:border-brand-primary/20'}`}>
                     {cat.icon}
                   </div>
-                  <span className={`font-black transition-colors ${selectedCategories.includes(cat.label) ? 'text-brand-primary' : 'text-stone-600 group-hover:text-brand-primary'}`}>{cat.label}</span>
+                  <span className={`font-black text-sm text-center transition-colors ${selectedCategories.includes(cat.label) ? 'text-brand-primary' : 'text-stone-600 group-hover:text-brand-primary'}`}>{cat.label}</span>
                 </button>
               ))}
             </div>
@@ -278,6 +314,31 @@ export default function Meals() {
                           )}
                         </button>
                       ))}
+                    </div>
+                  </div>
+
+                  {/* Order Type */}
+                  <div className="space-y-4">
+                    <h3 className="font-bold text-stone-900">طريقة الطلب</h3>
+                    <div className="flex gap-4">
+                      <button
+                        onClick={() => setOrderTypeFilter('all')}
+                        className={`flex-1 py-4 rounded-2xl font-black transition-all border-2 ${orderTypeFilter === 'all' ? 'bg-brand-secondary text-white border-brand-secondary shadow-lg' : 'bg-white text-stone-500 border-stone-100 hover:border-brand-secondary'}`}
+                      >
+                        الكل
+                      </button>
+                      <button
+                        onClick={() => setOrderTypeFilter('instant')}
+                        className={`flex-1 py-4 rounded-2xl font-black transition-all border-2 ${orderTypeFilter === 'instant' ? 'bg-green-500 text-white border-green-500 shadow-lg' : 'bg-white text-stone-500 border-stone-100 hover:border-green-500'}`}
+                      >
+                        فوري ⚡
+                      </button>
+                      <button
+                        onClick={() => setOrderTypeFilter('preorder')}
+                        className={`flex-1 py-4 rounded-2xl font-black transition-all border-2 ${orderTypeFilter === 'preorder' ? 'bg-blue-500 text-white border-blue-500 shadow-lg' : 'bg-white text-stone-500 border-stone-100 hover:border-blue-500'}`}
+                      >
+                        يوم بيومه 🗓️
+                      </button>
                     </div>
                   </div>
 

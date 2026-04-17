@@ -1,11 +1,11 @@
 import { useState, useEffect, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { doc, getDoc, collection, query, where, getDocs } from 'firebase/firestore';
+import { doc, getDoc, collection, query, where, getDocs, orderBy } from 'firebase/firestore';
 import { db, auth } from '../firebase';
-import { UserProfile, Meal } from '../types';
+import { UserProfile, Meal, Review } from '../types';
 import { CHEF_IMAGE_URL } from '../constants';
 import { motion, AnimatePresence } from 'motion/react';
-import { MapPin, Star, ChefHat, Clock, Edit3, UtensilsCrossed, Share2, Users, ShoppingBag, Heart, ShieldCheck } from 'lucide-react';
+import { MapPin, Star, ChefHat, Clock, Edit3, UtensilsCrossed, Share2, Users, ShoppingBag, Heart, ShieldCheck, MessageSquareQuote } from 'lucide-react';
 import ChefProfileForm from '../components/ChefProfileForm';
 import { MealCard } from '../components/MealCard';
 import { useCart } from '../context/CartContext';
@@ -16,8 +16,10 @@ export default function ChefProfile() {
   const { addToCart } = useCart();
   const [chef, setChef] = useState<UserProfile | null>(null);
   const [meals, setMeals] = useState<Meal[]>([]);
+  const [reviews, setReviews] = useState<Review[]>([]);
   const [popularMeals, setPopularMeals] = useState<Meal[]>([]);
   const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState<'menu' | 'reviews'>('menu');
   const [showEditModal, setShowEditModal] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -48,6 +50,11 @@ export default function ChefProfile() {
         return b.rating - a.rating;
       });
       setPopularMeals(sortedForPopular.slice(0, 3));
+
+      // Fetch Reviews
+      const reviewsQ = query(collection(db, 'reviews'), where('chefId', '==', id), orderBy('createdAt', 'desc'));
+      const reviewsSnap = await getDocs(reviewsQ);
+      setReviews(reviewsSnap.docs.map(doc => ({ id: doc.id, ...doc.data() } as Review)));
     } catch (error) {
       console.error("Error fetching chef profile:", error);
     } finally {
@@ -246,61 +253,155 @@ export default function ChefProfile() {
           )}
         </AnimatePresence>
 
-        {/* Chef's Menu */}
-        <div className="mb-12" ref={menuRef}>
-          <div className="flex items-center justify-between mb-10">
-            <h2 className="text-3xl font-black text-brand-secondary flex items-center gap-3">
-              <UtensilsCrossed size={32} className="text-brand-primary" />
-              تصفح الأكلات
-            </h2>
-            <div className="h-px flex-grow mx-8 bg-stone-200 hidden md:block"></div>
-          </div>
-
-          {/* Menu Categories */}
-          <div className="flex gap-3 overflow-x-auto pb-6 no-scrollbar mb-8">
-            {['الكل', 'عروض لحظية', 'أطباق رئيسية', 'مشويات', 'طواجن', 'حلويات', 'مشروبات'].map((cat, i) => (
-              <button 
-                key={i} 
-                className={`px-6 py-3 rounded-full font-bold text-sm whitespace-nowrap transition-all ${i === 0 ? 'bg-brand-secondary text-white shadow-lg' : 'bg-white text-stone-600 border border-stone-200 hover:border-brand-primary hover:text-brand-primary hover:shadow-md'}`}
-              >
-                {cat}
-              </button>
-            ))}
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {meals.length > 0 ? meals.map((meal, i) => (
-              <div key={meal.id} className="relative">
-                <MealCard 
-                  meal={{
-                    id: meal.id,
-                    title: meal.title,
-                    price: meal.price,
-                    image: meal.image,
-                    chefId: chef.uid,
-                    chefName: chef.displayName,
-                    rating: meal.rating,
-                    deliveryTime: 45,
-                    description: meal.description,
-                    orderType: meal.orderType
-                  }}
-                  index={i}
-                />
-                {meal.featured && (
-                  <div className="absolute top-4 right-4 bg-brand-secondary text-white px-3 py-1.5 rounded-full text-xs font-black uppercase tracking-widest pointer-events-none z-20 shadow-md">
-                    مميز
-                  </div>
-                )}
-              </div>
-            )) : (
-              <div className="col-span-full text-center py-20 bg-white rounded-[32px] border border-stone-100 shadow-sm">
-                <UtensilsCrossed size={48} className="mx-auto text-stone-300 mb-4" />
-                <h3 className="text-xl font-bold text-brand-secondary mb-2">لا توجد وجبات متاحة حالياً</h3>
-                <p className="text-stone-500">يقوم المطبخ بتجهيز قائمة طعام جديدة، يرجى العودة لاحقاً.</p>
-              </div>
-            )}
+        {/* Tab Selection */}
+        <div className="flex justify-center mb-12">
+          <div className="bg-white p-2 rounded-2xl shadow-sm border border-stone-100 flex gap-2">
+            <button 
+              onClick={() => setActiveTab('menu')}
+              className={`px-8 py-3 rounded-xl font-black transition-all flex items-center gap-2 ${activeTab === 'menu' ? 'bg-brand-secondary text-white shadow-lg' : 'text-stone-500 hover:bg-stone-50'}`}
+            >
+              <UtensilsCrossed size={18} />
+              قائمة الطعام
+            </button>
+            <button 
+              onClick={() => setActiveTab('reviews')}
+              className={`px-8 py-3 rounded-xl font-black transition-all flex items-center gap-2 ${activeTab === 'reviews' ? 'bg-brand-secondary text-white shadow-lg' : 'text-stone-500 hover:bg-stone-50'}`}
+            >
+              <Star size={18} />
+              التقييمات ({reviews.length})
+            </button>
           </div>
         </div>
+
+        {/* Chef's Content */}
+        {activeTab === 'menu' ? (
+          <div className="mb-12" ref={menuRef}>
+            <div className="flex items-center justify-between mb-10">
+              <h2 className="text-3xl font-black text-brand-secondary flex items-center gap-3">
+                <UtensilsCrossed size={32} className="text-brand-primary" />
+                تصفح الأكلات
+              </h2>
+              <div className="h-px flex-grow mx-8 bg-stone-200 hidden md:block"></div>
+            </div>
+
+            {/* Menu Categories */}
+            <div className="flex gap-3 overflow-x-auto pb-6 no-scrollbar mb-8">
+              {['الكل', 'عروض لحظية', 'أطباق رئيسية', 'مشويات', 'طواجن', 'حلويات', 'مشروبات'].map((cat, i) => (
+                <button 
+                  key={i} 
+                  className={`px-6 py-3 rounded-full font-bold text-sm whitespace-nowrap transition-all ${i === 0 ? 'bg-stone-100 text-stone-600 border border-stone-200 hover:border-brand-primary hover:text-brand-primary hover:shadow-md' : 'bg-white text-stone-600 border border-stone-200 hover:border-brand-primary hover:text-brand-primary hover:shadow-md'}`}
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {meals.length > 0 ? meals.map((meal, i) => (
+                <div key={meal.id} className="relative">
+                  <MealCard 
+                    meal={{
+                      id: meal.id,
+                      title: meal.title,
+                      price: meal.price,
+                      image: meal.image,
+                      chefId: chef.uid,
+                      chefName: chef.displayName,
+                      rating: meal.rating,
+                      deliveryTime: 45,
+                      description: meal.description,
+                      orderType: meal.orderType
+                    }}
+                    index={i}
+                  />
+                  {meal.featured && (
+                    <div className="absolute top-4 right-4 bg-brand-secondary text-white px-3 py-1.5 rounded-full text-xs font-black uppercase tracking-widest pointer-events-none z-20 shadow-md">
+                      مميز
+                    </div>
+                  )}
+                </div>
+              )) : (
+                <div className="col-span-full text-center py-20 bg-white rounded-[32px] border border-stone-100 shadow-sm">
+                  <UtensilsCrossed size={48} className="mx-auto text-stone-300 mb-4" />
+                  <h3 className="text-xl font-bold text-brand-secondary mb-2">لا توجد وجبات متاحة حالياً</h3>
+                  <p className="text-stone-500">يقوم المطبخ بتجهيز قائمة طعام جديدة، يرجى العودة لاحقاً.</p>
+                </div>
+              )}
+            </div>
+          </div>
+        ) : (
+          <div className="mb-12">
+            <div className="flex items-center gap-4 mb-10">
+              <div className="bg-brand-primary/10 p-4 rounded-2xl text-brand-primary">
+                <MessageSquareQuote size={28} />
+              </div>
+              <div>
+                <h2 className="text-3xl font-black text-brand-secondary">آراء العملاء</h2>
+                <p className="text-stone-500 font-medium mt-1">تجارب حقيقية من أشخاص جربوا أكل المطبخ</p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Info Card for Verified Reviews */}
+              <div className="col-span-full mb-4 bg-blue-50 border border-blue-100 p-6 rounded-[24px] flex flex-col md:flex-row items-center gap-6">
+                <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center text-blue-500 shadow-sm shrink-0">
+                  <ShieldCheck size={32} />
+                </div>
+                <div>
+                  <h4 className="text-xl font-black text-blue-900 mb-1">تقييمات موثوقة 100%</h4>
+                  <p className="text-blue-800/70 font-medium">في طبلية، لا يمكن إضافة تقييم إلا من العملاء الذين قاموا بطلب وتجربة الأكل بالفعل. لتقييم هذا المطبخ، اذهب إلى صفحة "طلباتي" بعد استلام طلبك.</p>
+                </div>
+                <Link to="/orders" className="mr-auto whitespace-nowrap bg-blue-500 text-white px-6 py-3 rounded-xl font-bold shadow-lg shadow-blue-500/20 hover:bg-blue-600 transition-all">
+                  طلباتي
+                </Link>
+              </div>
+
+              {reviews.length > 0 ? reviews.map((review, i) => (
+                <motion.div 
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: i * 0.1 }}
+                  key={review.id} 
+                  className="bg-white p-8 rounded-[24px] shadow-sm border border-stone-100 relative"
+                >
+                  <div className="flex items-center gap-4 mb-6">
+                    <div className="w-14 h-14 rounded-full bg-brand-peach flex items-center justify-center overflow-hidden border-2 border-white shadow-md">
+                      {review.customerPhoto ? (
+                        <img src={review.customerPhoto} alt={review.customerName} className="w-full h-full object-cover" />
+                      ) : (
+                        <Users size={24} className="text-brand-primary opacity-50" />
+                      )}
+                    </div>
+                    <div>
+                      <h4 className="font-black text-brand-secondary">{review.customerName}</h4>
+                      <div className="flex items-center gap-1 text-yellow-400 mt-1">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <Star 
+                            key={star} 
+                            size={14} 
+                            className={star <= review.rating ? "fill-current" : "text-stone-200"} 
+                          />
+                        ))}
+                      </div>
+                    </div>
+                    <div className="mr-auto text-xs text-stone-400 font-bold">
+                      {new Date(review.createdAt).toLocaleDateString('ar-EG')}
+                    </div>
+                  </div>
+                  <p className="text-stone-600 leading-relaxed font-medium italic">
+                    "{review.comment}"
+                  </p>
+                </motion.div>
+              )) : (
+                <div className="col-span-full text-center py-20 bg-white rounded-[32px] border border-stone-100 shadow-sm">
+                  <MessageSquareQuote size={48} className="mx-auto text-stone-300 mb-4" />
+                  <h3 className="text-xl font-bold text-brand-secondary mb-2">لا يوجد تقييمات بعد</h3>
+                  <p className="text-stone-500">سجل أول تقييم لهذا المطبخ بعد تجربتك للأكل!</p>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Floating Cart Bar */}

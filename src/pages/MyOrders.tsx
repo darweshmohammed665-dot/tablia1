@@ -9,6 +9,7 @@ import { Link } from 'react-router-dom';
 import OrderStatusTracker from '../components/OrderStatusTracker';
 import OrderTrackingMap from '../components/OrderTrackingMap';
 import Chat from '../components/Chat';
+import ReviewModal from '../components/ReviewModal';
 import { onLocationUpdated } from '../services/socketService';
 
 export default function MyOrders() {
@@ -20,6 +21,7 @@ export default function MyOrders() {
   const [chatRecipient, setChatRecipient] = useState<string>('');
   const [driverLocations, setDriverLocations] = useState<Record<string, { lat: number; lng: number }>>({});
   const [activeTab, setActiveTab] = useState<'upcoming' | 'previous'>('upcoming');
+  const [reviewOrder, setReviewOrder] = useState<Order | null>(null);
 
   useEffect(() => {
     if (!auth?.currentUser || !db) {
@@ -243,18 +245,29 @@ export default function MyOrders() {
                   <OrderStatusTracker status={order.status} />
                 </div>
 
-                <div className="pt-6 border-t border-stone-100 flex flex-wrap gap-3">
-                  {order.items.map((item, idx) => (
-                    <div key={idx} className="flex items-center gap-3 bg-white px-4 py-2 rounded-xl border border-stone-100 shadow-sm">
-                      <div className="w-8 h-8 bg-brand-peach rounded-lg flex items-center justify-center text-brand-primary">
-                        <Package size={16} />
+                <div className="pt-6 border-t border-stone-100 flex flex-wrap gap-3 items-center justify-between">
+                  <div className="flex flex-wrap gap-3">
+                    {order.items.map((item, idx) => (
+                      <div key={idx} className="flex items-center gap-3 bg-white px-4 py-2 rounded-xl border border-stone-100 shadow-sm">
+                        <div className="w-8 h-8 bg-brand-peach rounded-lg flex items-center justify-center text-brand-primary">
+                          <Package size={16} />
+                        </div>
+                        <div>
+                          <p className="text-sm font-bold text-brand-secondary">{item.title}</p>
+                          <p className="text-xs text-stone-500 font-bold">{item.quantity} × {item.price} ج.م</p>
+                        </div>
                       </div>
-                      <div>
-                        <p className="text-sm font-bold text-brand-secondary">{item.title}</p>
-                        <p className="text-xs text-stone-500 font-bold">{item.quantity} × {item.price} ج.م</p>
-                      </div>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
+
+                  {order.status === 'delivered' && (
+                    <button 
+                      onClick={() => setReviewOrder(order)}
+                      className="px-6 py-2 bg-brand-primary text-white rounded-xl font-bold hover:scale-105 active:scale-95 transition-all text-sm shadow-lg shadow-brand-primary/20"
+                    >
+                      تقييم المطبخ
+                    </button>
+                  )}
                 </div>
               </motion.div>
             ))}
@@ -277,6 +290,16 @@ export default function MyOrders() {
         isOpen={!!chatOrderId} 
         onClose={() => setChatOrderId(null)} 
       />
+
+      {reviewOrder && (
+        <ReviewModal 
+          isOpen={!!reviewOrder}
+          onClose={() => setReviewOrder(null)}
+          chefId={reviewOrder.chefId}
+          chefName={reviewOrder.chefName || 'المطبخ'} 
+          orderId={reviewOrder.id}
+        />
+      )}
     </div>
   );
 }

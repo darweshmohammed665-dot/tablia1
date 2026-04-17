@@ -54,6 +54,7 @@ export interface Order {
   id: string;
   customerId: string;
   chefId: string;
+  chefName: string;
   items: {
     mealId: string;
     title: string;
@@ -70,10 +71,13 @@ export interface Order {
 
 export interface Review {
   id: string;
-  mealId: string;
+  chefId: string;
+  mealId?: string;
   customerId: string;
   customerName: string;
+  customerPhoto?: string;
   rating: number;
   comment: string;
+  orderId?: string;
   createdAt: number;
 }

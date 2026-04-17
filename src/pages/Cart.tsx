@@ -1,10 +1,45 @@
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'motion/react';
-import { ShoppingCart, Trash2, ArrowRight, ShoppingBag, ChevronLeft, Plus, Minus, Info } from 'lucide-react';
+import { ShoppingCart, Trash2, ArrowRight, ShoppingBag, ChevronLeft, Plus, Minus, Info, Sparkles } from 'lucide-react';
 import { useCart } from '../context/CartContext';
+import { db } from '../firebase';
+import { collection, query, where, limit, getDocs } from 'firebase/firestore';
+import { Meal } from '../types';
 
 export default function Cart() {
-  const { cartItems, removeFromCart, updateQuantity, cartTotal } = useCart();
+  const { cartItems, removeFromCart, updateQuantity, cartTotal, addToCart } = useCart();
+  const [recommendations, setRecommendations] = useState<Meal[]>([]);
+
+  useEffect(() => {
+    const fetchRecommendations = async () => {
+      if (cartItems.length > 0 && db) {
+        // Get unique chefIds from cart
+        const chefIds = [...new Set(cartItems.map(item => item.chefId))];
+        const currentMealIds = cartItems.map(item => item.id);
+
+        try {
+          const q = query(
+            collection(db, 'meals'),
+            where('chefId', 'in', chefIds.slice(0, 10)), // Firestore limits 'in' to 10
+            limit(10)
+          );
+          
+          const querySnapshot = await getDocs(q);
+          const suggestedMeals = querySnapshot.docs
+            .map(doc => ({ id: doc.id, ...doc.data() } as Meal))
+            .filter(meal => !currentMealIds.includes(meal.id))
+            .slice(0, 6);
+            
+          setRecommendations(suggestedMeals);
+        } catch (error) {
+          console.error("Error fetching recommendations:", error);
+        }
+      }
+    };
+
+    fetchRecommendations();
+  }, [cartItems]);
 
   const totalFoodValue = cartTotal;
   const serviceFeeRate = 0.05;
@@ -93,31 +128,51 @@ export default function Cart() {
               <ArrowRight size={20} /> إضافة المزيد من الوجبات
             </Link>
 
-            {/* You might also like */}
-            <div className="mt-16">
-              <h3 className="text-2xl font-black text-brand-accent mb-8">قد تعجبك أيضًا...</h3>
-              <div className="flex gap-4 overflow-x-auto pb-6 scrollbar-hide">
-                {[
-                  { id: 'm1', title: 'كنافة كريمة', price: 100, image: 'https://images.unsplash.com/photo-1517427294546-5aa121f68e8a?auto=format&fit=crop&q=80&w=400' },
-                  { id: 'm2', title: 'بسبوسة مكسرات', price: 45, image: 'https://images.unsplash.com/photo-1541773935662-328b32742952?auto=format&fit=crop&q=80&w=400' },
-                  { id: 'm3', title: 'كنافة نوتيلا', price: 120, image: 'https://images.unsplash.com/photo-1599785209707-a456fc1337bb?auto=format&fit=crop&q=80&w=400' },
-                  { id: 'm4', title: 'أرز بلبن', price: 30, image: 'https://images.unsplash.com/photo-1589113103503-1212cf480c51?auto=format&fit=crop&q=80&w=400' }
-                ].map((meal) => (
-                  <div key={meal.id} className="min-w-[160px] bg-white rounded-3xl p-3 border border-stone-100 shadow-sm hover:shadow-md transition-all group">
-                    <div className="aspect-square rounded-2xl overflow-hidden mb-3">
-                      <img src={meal.image} alt={meal.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform" />
-                    </div>
-                    <h4 className="font-bold text-brand-accent text-sm mb-1">{meal.title}</h4>
-                    <div className="flex items-center justify-between">
-                      <span className="text-brand-primary font-black text-xs">{meal.price} ج.م</span>
-                      <button className="w-8 h-8 bg-brand-cream rounded-full flex items-center justify-center text-brand-primary hover:bg-brand-primary hover:text-white transition-all">
-                        <Plus size={16} />
-                      </button>
-                    </div>
+            {/* Recommendation from the kitchen */}
+            {recommendations.length > 0 && (
+              <div className="mt-16">
+                <div className="flex items-center gap-3 mb-8">
+                  <div className="w-12 h-12 bg-brand-primary/10 rounded-2xl flex items-center justify-center text-brand-primary">
+                    <Sparkles size={24} />
                   </div>
-                ))}
+                  <h3 className="text-2xl font-black text-brand-accent">إقتراح من المطبخ...</h3>
+                </div>
+                
+                <div className="flex gap-4 overflow-x-auto pb-6 scrollbar-hide">
+                  {recommendations.map((meal) => (
+                    <div key={meal.id} className="min-w-[180px] bg-white rounded-[2rem] p-4 border border-stone-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all group">
+                      <div className="aspect-square rounded-2xl overflow-hidden mb-4 relative">
+                        <img src={meal.image} alt={meal.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                        {meal.orderType === 'instant' && (
+                          <div className="absolute top-2 right-2 bg-green-500 text-white text-[10px] font-black px-2 py-1 rounded-lg shadow-lg">فوري ⚡</div>
+                        )}
+                      </div>
+                      <h4 className="font-bold text-brand-accent text-sm mb-1 truncate">{meal.title}</h4>
+                      <p className="text-[10px] text-stone-400 mb-3 truncate">{meal.chefName}</p>
+                      
+                      <div className="flex items-center justify-between">
+                        <span className="text-brand-primary font-black text-sm">{meal.price} ج.م</span>
+                        <button 
+                          onClick={() => addToCart({
+                            id: meal.id,
+                            title: meal.title,
+                            price: meal.price,
+                            quantity: 1,
+                            image: meal.image,
+                            chefId: meal.chefId,
+                            chefName: meal.chefName,
+                            orderType: meal.orderType || 'instant'
+                          })}
+                          className="w-10 h-10 bg-brand-cream rounded-full flex items-center justify-center text-brand-primary hover:bg-brand-primary hover:text-white transition-all shadow-sm"
+                        >
+                          <Plus size={20} />
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
           </div>
 
           {/* Summary */}

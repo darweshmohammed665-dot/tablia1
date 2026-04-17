@@ -37,7 +37,8 @@ export const MealCard: React.FC<MealCardProps> = ({ meal, index = 0 }) => {
       quantity: 1,
       image: meal.image,
       chefId: meal.chefId,
-      chefName: meal.chefName
+      chefName: meal.chefName,
+      orderType: meal.orderType || 'instant'
     });
 
     const serviceFee = meal.price * 0.05;
