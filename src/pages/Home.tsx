@@ -104,24 +104,34 @@ export default function Home() {
             </button>
           </motion.div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 max-w-5xl mx-auto px-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto px-4 mt-12">
             {[
-              "طازج يومياً",
-              "مطبوخ بأيادي أشطر ستات بيوت",
-              "نضيف ومضمون",
-              "توصيل سريع ومخلص"
-            ].map((badge, i) => (
+              {
+                text: "نكهة البيت الأصيلة مطبوخة بحب وشغف، لتصلك طازجة ونظيفة أينما كنت في طنطا.",
+                icon: <Sparkles size={24} className="text-brand-primary" />
+              },
+              {
+                text: "جودة تليق بعائلتك وخدمة تعتني بأدق التفاصيل، لنقدم لك طعاماً منزلياً آمناً ومضموناً.",
+                icon: <ShieldCheck size={24} className="text-brand-primary" />
+              },
+              {
+                text: "نجمع بين براعة الطهي المنزلي وسرعة التوصيل الاحترافي، لنعيد إليك دفء اللمة في كل وجبة.",
+                icon: <Clock size={24} className="text-brand-primary" />
+              }
+            ].map((item, i) => (
               <motion.div 
                 key={i} 
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3 + (i * 0.1) }}
-                className="bg-white/20 backdrop-blur-xl border border-white/40 px-6 py-4 rounded-[24px] text-white text-base md:text-lg font-black flex items-center justify-center gap-3 shadow-[0_10px_40px_rgba(0,0,0,0.3)] transition-all hover:bg-white/30 hover:scale-105"
+                className="bg-white/10 backdrop-blur-xl border border-white/20 p-8 rounded-[32px] text-white flex flex-col items-center gap-4 shadow-2xl transition-all hover:bg-white/20 hover:scale-105 group"
               >
-                <div className="bg-brand-primary/20 p-2 rounded-xl">
-                  <ShieldCheck size={20} className="text-brand-primary" />
+                <div className="bg-brand-primary/20 p-4 rounded-2xl group-hover:bg-brand-primary/30 transition-colors">
+                  {item.icon}
                 </div>
-                <span className="drop-shadow-md text-center">{badge}</span>
+                <p className="text-lg md:text-xl font-bold leading-relaxed text-center text-white/95 drop-shadow-sm">
+                  {item.text}
+                </p>
               </motion.div>
             ))}
           </div>
