@@ -82,7 +82,7 @@ export const MealCard: React.FC<MealCardProps> = ({ meal, index = 0 }) => {
         <button 
           onClick={handleQuickAdd}
           className="absolute bottom-4 right-4 bg-brand-primary text-white p-3 rounded-full shadow-lg hover:scale-110 hover:bg-brand-accent transition-all z-10 flex items-center justify-center"
-          title="إضافة سريعة للسلة"
+          title="إضافة فورية للسلة"
         >
           <Plus size={24} strokeWidth={3} />
         </button>

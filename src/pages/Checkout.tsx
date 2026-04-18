@@ -270,7 +270,7 @@ export default function Checkout() {
                             {deliveryType === 'quick' && <div className="w-2.5 h-2.5 rounded-full bg-brand-accent"></div>}
                           </div>
                           <div>
-                            <p className="font-black">وجبة سريعة (الآن)</p>
+                            <p className="font-black">وجبة فورية (الآن)</p>
                             <p className="text-xs text-stone-500 font-bold mt-1">يصل خلال 30-45 دقيقة</p>
                           </div>
                         </div>
