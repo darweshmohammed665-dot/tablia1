@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'motion/react';
-import { ShoppingCart, Trash2, ArrowRight, ShoppingBag, ChevronLeft, Plus, Minus, Info, Sparkles } from 'lucide-react';
+import { ShoppingCart, Trash2, ArrowRight, ShoppingBag, ChevronLeft, Plus, Minus, Info, Sparkles, Clock, Calendar } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { db } from '../firebase';
 import { collection, query, where, limit, getDocs } from 'firebase/firestore';
 import { Meal } from '../types';
+import { formatTime12h } from '../lib/date-utils';
 
 export default function Cart() {
   const { cartItems, removeFromCart, updateQuantity, cartTotal, addToCart } = useCart();
@@ -89,7 +90,15 @@ export default function Cart() {
                 <img src={item.image} alt={item.title} className="w-32 h-32 rounded-[18px] object-cover shadow-sm" />
                 <div className="flex-grow text-center sm:text-right">
                   <h3 className="text-xl font-bold text-brand-accent mb-1">{item.title}</h3>
-                  <p className="text-brand-primary font-bold mb-4">{item.price} ج.م</p>
+                  <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 mb-3">
+                    <span className="text-brand-primary font-bold">{item.price} ج.م</span>
+                    {item.scheduledTime && (
+                      <span className="bg-brand-peach/30 text-brand-secondary px-2 py-0.5 rounded-lg text-[10px] font-bold flex items-center gap-1">
+                        <Calendar size={10} /> {item.scheduledDate} 
+                        <Clock size={10} className="mr-1" /> {formatTime12h(item.scheduledTime)}
+                      </span>
+                    )}
+                  </div>
                   
                   <div className="flex items-center justify-center sm:justify-start gap-4">
                     <div className="flex items-center bg-brand-cream rounded-full border border-stone-200 p-1">
@@ -199,8 +208,8 @@ export default function Cart() {
                       </span>
                       <Info size={14} className="text-stone-300" />
                     </div>
-                    <span className={isFirstOrder ? "line-through text-stone-300 decoration-brand-primary/50" : ""}>
-                      {deliveryFee.toFixed(2)} ج.م
+                    <span className={isFirstOrder ? "font-bold text-brand-primary" : ""}>
+                      {isFirstOrder ? "00.00" : deliveryFee.toFixed(2)} ج.م
                     </span>
                   </div>
 

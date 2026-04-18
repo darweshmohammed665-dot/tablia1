@@ -11,6 +11,7 @@ import OrderTrackingMap from '../components/OrderTrackingMap';
 import Chat from '../components/Chat';
 import ReviewModal from '../components/ReviewModal';
 import { onLocationUpdated } from '../services/socketService';
+import { formatDateTime12h, formatTime12h } from '../lib/date-utils';
 
 export default function MyOrders() {
   const [orders, setOrders] = useState<Order[]>([]);
@@ -190,6 +191,16 @@ export default function MyOrders() {
                       {order.items.map(item => item.title).join('، ')}
                     </h3>
                     
+                    {order.items.some(i => i.scheduledTime) && (
+                      <div className="flex flex-wrap gap-2 mt-2">
+                        {order.items.map((item, idx) => item.scheduledTime && (
+                          <span key={idx} className="bg-brand-peach/30 text-brand-secondary px-2 py-0.5 rounded-lg text-[10px] font-bold flex items-center gap-1">
+                            <Clock size={12} /> استلام {item.title}: {formatTime12h(item.scheduledTime)}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+
                     {/* Mini Progress Bar for Mobile/Quick View */}
                     {['pending', 'preparing', 'out_for_delivery'].includes(order.status) && (
                       <div className="mt-4 w-full max-w-[200px] h-1.5 bg-stone-100 rounded-full overflow-hidden">
@@ -230,7 +241,7 @@ export default function MyOrders() {
                   <div className="text-left md:text-right">
                     <p className="text-2xl font-black text-brand-primary mb-1">{order.total} <span className="text-sm text-stone-500">ج.م</span></p>
                     <p className="text-xs text-stone-400 flex items-center gap-1 justify-end font-bold">
-                      <Clock size={14} /> {new Date(order.createdAt).toLocaleDateString('ar-EG')}
+                      <Clock size={14} /> {formatDateTime12h(order.createdAt)}
                     </p>
                   </div>
                 </div>

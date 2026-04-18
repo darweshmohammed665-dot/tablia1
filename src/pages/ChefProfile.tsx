@@ -10,6 +10,7 @@ import ChefProfileForm from '../components/ChefProfileForm';
 import { MealCard } from '../components/MealCard';
 import { useCart } from '../context/CartContext';
 import { toast } from 'sonner';
+import { formatTime12h } from '../lib/date-utils';
 
 export default function ChefProfile() {
   const { id } = useParams();
@@ -160,7 +161,7 @@ export default function ChefProfile() {
                     <span className="flex items-center gap-1.5 bg-stone-50 px-3 py-1 rounded-full"><ChefHat size={16} className="text-brand-primary" /> طاهٍ محترف</span>
                     {chef.workingHours && (
                       <span className="flex items-center gap-1.5 bg-brand-primary/10 text-brand-primary px-3 py-1 rounded-full font-bold">
-                        <Clock size={16} /> {chef.workingHours.from} - {chef.workingHours.to}
+                        <Clock size={16} /> {formatTime12h(chef.workingHours.from)} - {formatTime12h(chef.workingHours.to)}
                       </span>
                     )}
                   </div>

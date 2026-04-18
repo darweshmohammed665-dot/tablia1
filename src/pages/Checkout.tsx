@@ -121,10 +121,12 @@ export default function Checkout() {
         chefId: cartItems[0]?.chefId || 'unknown',
         chefName: cartItems[0]?.chefName || 'مطبخ طبلية',
         items: cartItems.map(item => ({
-          mealId: item.mealId || 'unknown',
+          mealId: item.id || 'unknown',
           title: item.title || 'بدون اسم',
           quantity: item.quantity || 1,
-          price: item.price || 0
+          price: item.price || 0,
+          scheduledDate: item.scheduledDate || null,
+          scheduledTime: item.scheduledTime || null
         })),
         total: total || 0,
         subtotal: totalFoodValue || 0,
@@ -474,8 +476,8 @@ export default function Checkout() {
                       </span>
                       <Info size={14} className="text-stone-300" />
                     </div>
-                    <span className={isFirstOrder ? "line-through text-stone-300 decoration-brand-primary/50" : ""}>
-                      {deliveryFee.toFixed(2)} ج.م
+                    <span className={isFirstOrder ? "font-bold text-brand-primary" : ""}>
+                      {isFirstOrder ? "00.00" : deliveryFee.toFixed(2)} ج.م
                     </span>
                   </div>
 

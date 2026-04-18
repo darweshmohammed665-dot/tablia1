@@ -2,17 +2,19 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { doc, getDoc, collection, query, where, orderBy, onSnapshot, addDoc, updateDoc, serverTimestamp, runTransaction } from 'firebase/firestore';
 import { db, auth } from '../firebase';
-import { Meal, Review } from '../types';
+import { Meal, Review, UserProfile } from '../types';
 import { CHEF_IMAGE_URL } from '../constants';
 import { motion, AnimatePresence } from 'motion/react';
-import { Star, Clock, ChefHat, ShoppingCart, ArrowRight, ShieldCheck, Bike, ShoppingBag, MessageSquare, Send, User } from 'lucide-react';
+import { Star, Clock, ChefHat, ShoppingCart, ArrowRight, ShieldCheck, Bike, ShoppingBag, MessageSquare, Send, User, Calendar } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { toast } from 'sonner';
 import { FoodPriceDisplay } from '../components/FoodPriceDisplay';
+import { formatTime12h } from '../lib/date-utils';
 
 export default function MealDetails() {
   const { id } = useParams();
   const [meal, setMeal] = useState<Meal | null>(null);
+  const [chef, setChef] = useState<UserProfile | null>(null);
   const [reviews, setReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
@@ -20,10 +22,29 @@ export default function MealDetails() {
   const [newRating, setNewRating] = useState(5);
   const [newComment, setNewComment] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [scheduledDate, setScheduledDate] = useState<string>(new Date().toISOString().split('T')[0]);
+  const [scheduledTime, setScheduledTime] = useState<string>('');
   const { addToCart } = useCart();
 
+  const getTimeSlots = () => {
+    if (!chef?.workingHours) return [];
+    const slots = [];
+    const { from, to } = chef.workingHours;
+    
+    // Simple parsing as we only care about HH:mm relative to each other
+    let current = new Date(`2024-01-01T${from}:00`);
+    const end = new Date(`2024-01-01T${to}:00`);
+    
+    while (current < end) {
+      const timeStr = current.toTimeString().slice(0, 5);
+      slots.push(timeStr);
+      current.setMinutes(current.getMinutes() + 60); // 1 hour slots for preorders might be better, or 30 mins
+    }
+    return slots;
+  };
+
   useEffect(() => {
-    const fetchMeal = async () => {
+    const fetchMealAndChef = async () => {
       if (!id) return;
       try {
         const docSnap = await getDoc(doc(db, 'meals', id));
@@ -31,15 +52,21 @@ export default function MealDetails() {
           const mealData = { id: docSnap.id, ...docSnap.data() } as Meal;
           setMeal(mealData);
           setActiveImage(mealData.image || (mealData.images && mealData.images[0]) || '');
+
+          // Fetch Chef Profile
+          const chefSnap = await getDoc(doc(db, 'users', mealData.chefId));
+          if (chefSnap.exists()) {
+            setChef(chefSnap.data() as UserProfile);
+          }
         }
       } catch (error) {
-        console.error("Error fetching meal details:", error);
+        console.error("Error fetching details:", error);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchMeal();
+    fetchMealAndChef();
 
     // Listen to reviews
     if (id) {
@@ -119,6 +146,13 @@ export default function MealDetails() {
 
   const handleAddToCart = () => {
     if (!meal) return;
+    
+    // Validation for time selection
+    if (meal.orderType === 'preorder' && !scheduledTime) {
+      toast.error('يرجى اختيار وقت استلام الطلب');
+      return;
+    }
+
     addToCart({
       id: meal.id,
       title: meal.title,
@@ -127,7 +161,9 @@ export default function MealDetails() {
       image: meal.image || (meal.images && meal.images[0]) || '',
       chefId: meal.chefId,
       chefName: meal.chefName,
-      orderType: meal.orderType || 'instant'
+      orderType: meal.orderType || 'instant',
+      scheduledDate: meal.orderType === 'preorder' ? scheduledDate : undefined,
+      scheduledTime: meal.orderType === 'preorder' ? scheduledTime : undefined
     });
 
     const serviceFee = meal.price * 0.05;
@@ -228,9 +264,9 @@ export default function MealDetails() {
               <Link to={`/chef/${meal.chefId}`} className="flex items-center gap-4 group">
                 <div className="w-14 h-14 rounded-full bg-brand-secondary flex items-center justify-center border-2 border-white shadow-sm group-hover:border-brand-primary transition-all overflow-hidden">
                   <img 
-                    src={CHEF_IMAGE_URL} 
+                    src={chef?.photoURL || CHEF_IMAGE_URL} 
                     alt={meal.chefName} 
-                    className="w-full h-full object-cover opacity-80"
+                    className="w-full h-full object-cover"
                     referrerPolicy="no-referrer"
                   />
                 </div>
@@ -240,6 +276,51 @@ export default function MealDetails() {
                 </div>
               </Link>
             </div>
+
+            {/* Scheduling Section for Pre-orders */}
+            {meal.orderType === 'preorder' && (
+              <div className="food-card p-6 mb-8 bg-brand-peach/20 border-brand-peach/30">
+                <div className="flex items-center gap-2 mb-4 text-brand-secondary">
+                  <Calendar size={20} />
+                  <h3 className="font-bold">موعد استلام الطلب</h3>
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs font-bold text-stone-400 mb-2 uppercase">التاريخ</label>
+                    <input 
+                      type="date" 
+                      min={new Date().toISOString().split('T')[0]}
+                      value={scheduledDate}
+                      onChange={(e) => setScheduledDate(e.target.value)}
+                      className="w-full bg-white border border-stone-200 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-brand-primary transition-all text-sm font-bold"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-stone-400 mb-2 uppercase">الوقت</label>
+                    <select 
+                      value={scheduledTime}
+                      onChange={(e) => setScheduledTime(e.target.value)}
+                      className="w-full bg-white border border-stone-200 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-brand-primary transition-all text-sm font-bold"
+                    >
+                      <option value="">اختر الوقت</option>
+                      {getTimeSlots().map((time) => (
+                        <option key={time} value={time}>
+                          {formatTime12h(time)}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+                
+                {chef?.workingHours && (
+                  <p className="mt-3 text-[10px] text-stone-500 font-bold flex items-center gap-1">
+                    <Clock size={12} /> 
+                    أوقات عمل المطبخ: {formatTime12h(chef.workingHours.from)} إلى {formatTime12h(chef.workingHours.to)}
+                  </p>
+                )}
+              </div>
+            )}
 
             <div className="mt-auto space-y-6">
                 <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6">

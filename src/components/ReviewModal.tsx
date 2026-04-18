@@ -61,6 +61,14 @@ export default function ReviewModal({ isOpen, onClose, chefId, chefName, orderId
         });
       }
 
+      // 3. Mark Order as reviewed
+      if (orderId) {
+        const orderRef = doc(db, 'orders', orderId);
+        await updateDoc(orderRef, {
+          isReviewed: true
+        });
+      }
+
       toast.success('شكراً لتقييمك! تم إرسال تعليقك بنجاح');
       onClose();
     } catch (error) {

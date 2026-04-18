@@ -60,6 +60,8 @@ export interface Order {
     title: string;
     quantity: number;
     price: number;
+    scheduledDate?: string;
+    scheduledTime?: string;
   }[];
   total: number;
   status: 'pending' | 'preparing' | 'out_for_delivery' | 'delivered' | 'cancelled';
@@ -67,6 +69,7 @@ export interface Order {
   customerPhone: string;
   customerAddress: string;
   createdAt: number;
+  isReviewed?: boolean;
 }
 
 export interface Review {

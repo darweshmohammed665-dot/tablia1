@@ -9,6 +9,8 @@ interface CartItem {
   chefId: string;
   chefName: string;
   orderType: 'instant' | 'preorder';
+  scheduledDate?: string;
+  scheduledTime?: string;
 }
 
 interface CartContextType {

@@ -9,6 +9,7 @@ import { Link, useSearchParams } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { MealCard } from '../components/MealCard';
 import { toast } from 'sonner';
+import { MEAL_CATEGORIES } from '../lib/constants';
 
 export default function Meals() {
   const [meals, setMeals] = useState<Meal[]>([]);
@@ -166,16 +167,7 @@ export default function Meals() {
           <div className="space-y-8">
             <h3 className="text-2xl font-black text-brand-accent">ماذا تشتهي اليوم؟</h3>
             <div className="flex gap-8 overflow-x-auto pb-4 scrollbar-hide flex-row-reverse">
-              {[
-                { label: 'أكل بيتي مصري', icon: '🍲' },
-                { label: 'أكلات شعبية', icon: '🥙' },
-                { label: 'مشويات', icon: '🍗' },
-                { label: 'أكل فلاحي / ريفي', icon: '🚜' },
-                { label: 'أكلات فورية ومطلوبة', icon: '🍔' },
-                { label: 'أكلات عالمية منتشرة في مصر', icon: '🍝' },
-                { label: 'الحلويات', icon: '🍰' },
-                { label: 'وجبات دايت / صحي', icon: '🥗' }
-              ].map((cat) => (
+              {MEAL_CATEGORIES.map((cat) => (
                 <button 
                   key={cat.label}
                   onClick={() => {

@@ -4,12 +4,14 @@ import { db, auth } from '../firebase';
 import { Meal, UserProfile, Order } from '../types';
 import { handleFirestoreError, OperationType } from '../lib/firestore-errors';
 import { motion, AnimatePresence } from 'motion/react';
-import { Plus, Trash2, Package, DollarSign, Star, Utensils, Settings, Clock, ChevronDown, UserCheck, MapPin, Phone, Map, MessageCircle, Share2, ChefHat, X, Camera } from 'lucide-react';
+import { Plus, Trash2, Package, DollarSign, Star, Utensils, Settings, Clock, ChevronDown, UserCheck, MapPin, Phone, Map, MessageCircle, Share2, ChefHat, X, Camera, Calendar } from 'lucide-react';
 import OrderStatusTracker from '../components/OrderStatusTracker';
 import ChefProfileForm from '../components/ChefProfileForm';
 import OrderTrackingMap from '../components/OrderTrackingMap';
 import Chat from '../components/Chat';
 import { toast } from 'sonner';
+import { MEAL_CATEGORY_NAMES } from '../lib/constants';
+import { formatDateTime12h, formatTime12h } from '../lib/date-utils';
 
 interface ChefDashboardProps {
   profile: UserProfile;
@@ -36,7 +38,7 @@ export default function ChefDashboard({ profile }: ChefDashboardProps) {
     title: '',
     description: '',
     price: 0,
-    category: 'محاشي',
+    category: MEAL_CATEGORY_NAMES[0],
     image: '',
     images: [] as string[],
     orderType: 'instant' as 'instant' | 'preorder',
@@ -157,7 +159,7 @@ export default function ChefDashboard({ profile }: ChefDashboardProps) {
       }
       setShowAddModal(false);
       setMealToEdit(null);
-      setNewMeal({ title: '', description: '', price: 0, category: 'محاشي', image: '', images: [], orderType: 'instant', featured: false });
+      setNewMeal({ title: '', description: '', price: 0, category: MEAL_CATEGORY_NAMES[0], image: '', images: [], orderType: 'instant', featured: false });
     } catch (error) {
       handleFirestoreError(error, OperationType.CREATE, 'meals');
     }
@@ -397,7 +399,7 @@ export default function ChefDashboard({ profile }: ChefDashboardProps) {
                   <button 
                     onClick={() => {
                       setMealToEdit(null);
-                      setNewMeal({ title: '', description: '', price: 0, category: 'محاشي', image: '', images: [], orderType: 'instant', featured: false });
+                      setNewMeal({ title: '', description: '', price: 0, category: MEAL_CATEGORY_NAMES[0], image: '', images: [], orderType: 'instant', featured: false });
                       setShowAddModal(true);
                     }}
                     className="bg-brand-primary hover:bg-brand-primary/90 text-white px-6 py-2.5 rounded-xl font-bold transition-all flex items-center justify-center gap-2 shadow-lg hover:scale-105"
@@ -412,7 +414,7 @@ export default function ChefDashboard({ profile }: ChefDashboardProps) {
                   className="bg-brand-cream border border-stone-100 rounded-full px-4 py-2 text-sm font-bold text-stone-700 outline-none w-full md:w-auto"
                 >
                   <option value="الكل">الكل</option>
-                  {['محاشي', 'مشويات', 'مكرونات', 'حلويات', 'مخبوزات', 'أكل صحي'].map(c => (
+                  {MEAL_CATEGORY_NAMES.map(c => (
                     <option key={c} value={c}>{c}</option>
                   ))}
                 </select>
@@ -467,7 +469,7 @@ export default function ChefDashboard({ profile }: ChefDashboardProps) {
                     <button 
                       onClick={() => {
                         setMealToEdit(null);
-                        setNewMeal({ title: '', description: '', price: 0, category: 'محاشي', image: '', images: [], orderType: 'instant', featured: false });
+                        setNewMeal({ title: '', description: '', price: 0, category: MEAL_CATEGORY_NAMES[0], image: '', images: [], orderType: 'instant', featured: false });
                         setShowAddModal(true);
                       }}
                       className="btn-primary py-4 px-10 text-xl shadow-xl shadow-brand-primary/20 hover:-translate-y-1"
@@ -528,8 +530,16 @@ export default function ChefDashboard({ profile }: ChefDashboardProps) {
                           <div className="bg-white/50 rounded-xl p-3 mb-3">
                             <p className="text-xs text-stone-400 mb-2 font-bold uppercase tracking-wider">الأصناف المطلوبة:</p>
                             {order.items.map((item, idx) => (
-                              <div key={idx} className="flex justify-between text-sm py-1 border-b border-stone-100 last:border-0">
-                                <span className="text-stone-700">{item.quantity}x {item.title}</span>
+                              <div key={idx} className="flex justify-between items-start py-2 border-b border-stone-100 last:border-0">
+                                <div className="flex flex-col gap-1">
+                                  <span className="text-stone-700 font-bold">{item.quantity}x {item.title}</span>
+                                  {item.scheduledTime && (
+                                    <span className="inline-flex items-center gap-1.5 bg-brand-primary/10 text-brand-primary px-2 py-0.5 rounded-lg text-[10px] font-black">
+                                      <Calendar size={10} /> {item.scheduledDate} 
+                                      <Clock size={10} className="mr-1" /> {formatTime12h(item.scheduledTime)}
+                                    </span>
+                                  )}
+                                </div>
                                 <span className="text-stone-500 font-bold">{item.price * item.quantity} ج.م</span>
                               </div>
                             ))}
@@ -588,7 +598,7 @@ export default function ChefDashboard({ profile }: ChefDashboardProps) {
                     <div className="flex justify-between items-center mt-6 pt-6 border-t border-stone-200">
                       <div className="flex items-center gap-2 text-stone-500 text-sm">
                         <Clock size={16} />
-                        <span>تم الطلب: {new Date(order.createdAt).toLocaleTimeString('ar-EG')}</span>
+                        <span>تم الطلب: {formatDateTime12h(order.createdAt)}</span>
                       </div>
                       <span className="font-bold text-xl text-brand-primary">{order.total} ج.م</span>
                     </div>
@@ -675,7 +685,7 @@ export default function ChefDashboard({ profile }: ChefDashboardProps) {
                     </div>
                     <div className="flex justify-between items-center pt-3 border-t border-stone-200">
                       <span className="font-bold text-stone-900">{order.total} ج.م</span>
-                      <span className="text-xs text-stone-400">{new Date(order.createdAt).toLocaleDateString('ar-EG')}</span>
+                      <span className="text-xs text-stone-400">{formatDateTime12h(order.createdAt)}</span>
                     </div>
                   </div>
                 )) : (
@@ -809,7 +819,7 @@ export default function ChefDashboard({ profile }: ChefDashboardProps) {
                   onChange={(e) => setNewMeal({...newMeal, category: e.target.value})}
                   className="w-full px-4 py-3 rounded-xl border border-stone-200 focus:ring-2 focus:ring-brand-primary outline-none"
                 >
-                  {['محاشي', 'مشويات', 'مكرونات', 'حلويات', 'مخبوزات', 'أكل صحي'].map(c => (
+                  {MEAL_CATEGORY_NAMES.map(c => (
                     <option key={c} value={c}>{c}</option>
                   ))}
                 </select>

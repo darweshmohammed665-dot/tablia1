@@ -7,13 +7,15 @@ import { motion, AnimatePresence } from 'motion/react';
 import { 
   Package, Clock, ShoppingBag, ChevronLeft, Map, User, 
   Settings, Edit3, MessageCircle, Heart, MapPin, Phone, 
-  CreditCard, Bell, Shield, LogOut, Camera, Save
+  CreditCard, Bell, Shield, LogOut, Camera, Save, Star
 } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import OrderStatusTracker from '../components/OrderStatusTracker';
 import OrderTrackingMap from '../components/OrderTrackingMap';
 import Chat from '../components/Chat';
+import ReviewModal from '../components/ReviewModal';
 import { toast } from 'sonner';
+import { formatDateTime12h, formatTime12h } from '../lib/date-utils';
 
 interface CustomerDashboardProps {
   profile: UserProfile;
@@ -27,6 +29,7 @@ export default function CustomerDashboard({ profile: initialProfile }: CustomerD
   const [trackingOrderId, setTrackingOrderId] = useState<string | null>(null);
   const [chatOrderId, setChatOrderId] = useState<string | null>(null);
   const [chatRecipient, setChatRecipient] = useState<string>('');
+  const [reviewOrder, setReviewOrder] = useState<Order | null>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [editForm, setEditForm] = useState({
     displayName: '',
@@ -227,7 +230,7 @@ export default function CustomerDashboard({ profile: initialProfile }: CustomerD
                   <div className="mb-6 bg-white/20 w-14 h-14 rounded-2xl flex items-center justify-center">
                     <Heart size={32} />
                   </div>
-                  <p className="text-4xl font-black mb-2">12</p>
+                  <p className="text-4xl font-black mb-2">0</p>
                   <p className="text-white/80 font-bold">أكلات مفضلة</p>
                 </div>
               </div>
@@ -254,9 +257,20 @@ export default function CustomerDashboard({ profile: initialProfile }: CustomerD
                                  order.status === 'preparing' ? 'يتم التحضير الآن' : 'في الطريق إليك'}
                               </span>
                             </div>
-                            <h3 className="text-2xl font-black text-brand-secondary mb-6">
+                            <h3 className="text-2xl font-black text-brand-secondary mb-4">
                               {order.items.map(i => i.title).join(' + ')}
                             </h3>
+
+                            {order.items.some(i => i.scheduledTime) && (
+                              <div className="mb-6 flex flex-wrap gap-2">
+                                {order.items.map((item, idx) => item.scheduledTime && (
+                                  <span key={idx} className="bg-brand-peach/30 text-brand-secondary px-3 py-1 rounded-full text-[10px] font-bold flex items-center gap-1">
+                                    <Clock size={12} /> استلام {item.title}: {formatTime12h(item.scheduledTime)}
+                                  </span>
+                                ))}
+                              </div>
+                            )}
+
                             <OrderStatusTracker status={order.status} />
                           </div>
                           
@@ -309,14 +323,29 @@ export default function CustomerDashboard({ profile: initialProfile }: CustomerD
                         </div>
                         <div>
                           <h4 className="font-black text-brand-secondary line-clamp-1">{order.items.map(i => i.title).join('، ')}</h4>
-                          <p className="text-xs text-stone-400 font-bold">{new Date(order.createdAt).toLocaleDateString('ar-EG')}</p>
+                          <p className="text-xs text-stone-400 font-bold">{formatDateTime12h(order.createdAt)}</p>
                         </div>
                       </div>
-                      <div className="text-left">
-                        <p className="font-black text-brand-primary">{order.total} ج.م</p>
-                        <span className={`text-[10px] font-black ${order.status === 'delivered' ? 'text-green-600' : 'text-red-600'}`}>
-                          {order.status === 'delivered' ? 'تم التوصيل' : 'ملغي'}
-                        </span>
+                      <div className="text-left flex flex-col items-end gap-2">
+                        <div>
+                          <p className="font-black text-brand-primary">{order.total} ج.م</p>
+                          <span className={`text-[10px] font-black ${order.status === 'delivered' ? 'text-green-600' : 'text-red-600'}`}>
+                            {order.status === 'delivered' ? 'تم التوصيل' : 'ملغي'}
+                          </span>
+                        </div>
+                        {order.status === 'delivered' && !order.isReviewed && (
+                          <button
+                            onClick={() => setReviewOrder(order)}
+                            className="flex items-center gap-1 text-[10px] font-bold bg-brand-peach text-brand-primary px-2 py-1 rounded-lg hover:bg-brand-primary hover:text-white transition-colors"
+                          >
+                            <Star size={12} className={order.isReviewed ? "fill-current" : ""} /> من فضلك قيم الطباخ
+                          </button>
+                        )}
+                        {order.isReviewed && order.status === 'delivered' && (
+                           <span className="flex items-center gap-1 text-[10px] font-bold text-green-600 bg-green-50 px-2 py-1 rounded-lg">
+                             <Star size={12} className="fill-current" /> تم التقييم
+                           </span>
+                        )}
                       </div>
                     </div>
                   ))}
@@ -361,16 +390,31 @@ export default function CustomerDashboard({ profile: initialProfile }: CustomerD
                                order.status === 'cancelled' ? 'ملغي' : 'نشط'}
                             </span>
                             <span className="text-xs text-stone-400 font-bold flex items-center gap-1">
-                              <Clock size={14} /> {new Date(order.createdAt).toLocaleDateString('ar-EG')}
+                              <Clock size={14} /> {formatDateTime12h(order.createdAt)}
                             </span>
                           </div>
                         </div>
                       </div>
-                      <div className="text-left md:text-right w-full md:w-auto border-t md:border-t-0 pt-4 md:pt-0">
+                      <div className="text-left md:text-right w-full md:w-auto border-t md:border-t-0 pt-4 md:pt-0 flex flex-col md:items-end gap-2">
                         <p className="text-3xl font-black text-brand-primary mb-1">{order.total} <span className="text-sm text-stone-500">ج.م</span></p>
-                        <Link to={`/meal/${order.items[0].mealId}`} className="text-xs font-bold text-brand-secondary hover:underline">
-                          طلب مرة أخرى
-                        </Link>
+                        <div className="flex items-center gap-3 justify-end w-full">
+                           <Link to={`/meal/${order.items[0].mealId}`} className="text-xs font-bold text-brand-secondary hover:underline">
+                             طلب مرة أخرى
+                           </Link>
+                           {order.status === 'delivered' && !order.isReviewed && (
+                             <button
+                               onClick={() => setReviewOrder(order)}
+                               className="flex items-center gap-1 text-[10px] font-bold bg-brand-peach text-brand-primary px-3 py-1.5 rounded-lg hover:bg-brand-primary hover:text-white transition-colors"
+                             >
+                               <Star size={12} className={order.isReviewed ? "fill-current" : ""} /> قيم الطباخ
+                             </button>
+                           )}
+                           {order.isReviewed && order.status === 'delivered' && (
+                              <span className="flex items-center gap-1 text-[10px] font-bold text-green-600 bg-green-50 px-3 py-1.5 rounded-lg border border-green-100">
+                                <Star size={12} className="fill-current" /> تم التقييم
+                              </span>
+                           )}
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -510,6 +554,15 @@ export default function CustomerDashboard({ profile: initialProfile }: CustomerD
         isOpen={!!chatOrderId} 
         onClose={() => setChatOrderId(null)} 
       />
+      {reviewOrder && (
+        <ReviewModal
+          isOpen={!!reviewOrder}
+          onClose={() => setReviewOrder(null)}
+          chefId={reviewOrder.chefId}
+          chefName={reviewOrder.chefName}
+          orderId={reviewOrder.id}
+        />
+      )}
     </div>
   );
 }
