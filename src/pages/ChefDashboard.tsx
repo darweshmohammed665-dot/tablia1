@@ -339,7 +339,18 @@ export default function ChefDashboard({ profile }: ChefDashboardProps) {
               </div>
               <div>
                 <h1 className="text-3xl md:text-5xl font-black text-white mb-2">أهلاً بك يا شيف {profile.displayName}</h1>
-                <p className="text-brand-cream/80 text-lg">إليك ملخص نشاط مطبخك اليوم</p>
+                <p className="text-brand-cream/80 text-lg mb-4">إليك ملخص نشاط مطبخك اليوم</p>
+                
+                {profile.workingHours && profile.workingHours.shifts?.length > 0 && (
+                  <div className="flex flex-wrap items-center justify-center md:justify-start gap-2">
+                    {profile.workingHours.shifts.map((shift, idx) => (
+                      <span key={idx} className="bg-white/10 backdrop-blur-sm text-white px-3 py-1.5 rounded-xl text-xs font-bold border border-white/20 flex items-center gap-2">
+                        <Clock size={14} className="text-brand-primary" />
+                        {formatTime12h(shift.from)} - {formatTime12h(shift.to)}
+                      </span>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
             <div className="flex flex-col sm:flex-row gap-3">
@@ -768,7 +779,23 @@ export default function ChefDashboard({ profile }: ChefDashboardProps) {
             animate={{ opacity: 1, scale: 1 }}
             className="bg-white rounded-[2.5rem] p-8 max-w-lg w-full shadow-2xl"
           >
-            <h2 className="text-2xl font-bold mb-6">{mealToEdit ? 'تعديل الوجبة' : 'إضافة وجبة جديدة'}</h2>
+            <h2 className="text-2xl font-bold mb-2">{mealToEdit ? 'تعديل الوجبة' : 'إضافة وجبة جديدة'}</h2>
+            
+            {profile.workingHours && profile.workingHours.shifts?.length > 0 && (
+              <div className="mb-6 p-3 bg-brand-primary/5 rounded-xl border border-brand-primary/10">
+                <p className="text-[10px] font-bold text-brand-primary uppercase mb-2 flex items-center gap-1">
+                  <Clock size={12} /> للتذكير: فترات عملك الحالية
+                </p>
+                <div className="flex flex-wrap gap-2 text-stone-600 font-bold text-[10px]">
+                  {profile.workingHours.shifts.map((shift, idx) => (
+                    <span key={idx} className="bg-white px-2 py-1 rounded-lg shadow-sm">
+                      {formatTime12h(shift.from)} - {formatTime12h(shift.to)}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+
             <form onSubmit={handleAddMeal} className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-stone-700 mb-1">اسم الوجبة</label>
