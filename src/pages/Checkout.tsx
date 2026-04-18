@@ -66,14 +66,10 @@ export default function Checkout() {
   }, [hasPreorder, hasInstant]);
 
   const totalFoodValue = cartTotal;
-  const serviceFeeRate = 0.05;
-  const serviceFee = totalFoodValue * serviceFeeRate;
-  const foodBasePrice = totalFoodValue - serviceFee; // The "Meal Price" seen by user after 5% deduction
-  const commissionRate = 0.15;
-  const commission = totalFoodValue * commissionRate;
+  const foodBasePrice = totalFoodValue;
   const deliveryFee = 18.99;
   const isFirstOrder = true; // Mock for demo
-  const total = totalFoodValue + commission + (isFirstOrder ? 0 : deliveryFee);
+  const total = totalFoodValue + (isFirstOrder ? 0 : deliveryFee);
 
   const handlePlaceOrder = async () => {
     if (!auth.currentUser) {
@@ -131,8 +127,6 @@ export default function Checkout() {
         })),
         total: total || 0,
         subtotal: foodBasePrice || 0,
-        serviceFee: serviceFee || 0,
-        commission: commission || 0,
         status: 'pending',
         paymentMethod: paymentMethod || 'cod',
         paymentId: paymentId || null,
@@ -463,14 +457,6 @@ export default function Checkout() {
                     <span className="font-bold">{foodBasePrice.toFixed(2)} ج.م</span>
                   </div>
 
-                  <div className="flex justify-between text-stone-600">
-                    <div className="flex items-center gap-1">
-                      <span>عمولة المنصة (15%)</span>
-                      <Info size={14} className="text-stone-300" />
-                    </div>
-                    <span>{commission.toFixed(2)} ج.م</span>
-                  </div>
-
                   <div className="flex justify-between text-stone-600 items-center">
                     <div className="flex items-center gap-1">
                       <span className={isFirstOrder ? "bg-brand-primary/10 text-brand-primary px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wider" : ""}>
@@ -481,14 +467,6 @@ export default function Checkout() {
                     <span className={isFirstOrder ? "line-through text-stone-300 decoration-brand-primary/50" : ""}>
                       {deliveryFee.toFixed(2)} ج.م
                     </span>
-                  </div>
-
-                  <div className="flex justify-between text-stone-600 items-center">
-                    <div className="flex items-center gap-1">
-                      <span>رسوم الخدمة (5%)</span>
-                      <Info size={14} className="text-stone-300" />
-                    </div>
-                    <span>{serviceFee.toFixed(2)} ج.م</span>
                   </div>
 
                   <div className="pt-6 border-t border-dashed border-stone-200 flex justify-between items-baseline">
