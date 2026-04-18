@@ -27,7 +27,7 @@ export default function JoinUs() {
       <section className="relative py-24 bg-brand-secondary text-white overflow-hidden egyptian-pattern">
         <div className="absolute inset-0 opacity-30">
           <img 
-            src="https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&q=80&w=2000" 
+            src="https://images.unsplash.com/photo-1547846543-9833777f9812?auto=format&fit=crop&q=80&w=2000" 
             alt="Chef Cooking" 
             className="w-full h-full object-cover"
           />

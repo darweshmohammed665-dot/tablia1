@@ -40,8 +40,8 @@ export default function Chefs() {
   );
 
   return (
-    <div className="bg-brand-cream min-h-screen py-[100px]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen py-[100px] relative overflow-hidden bg-white">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="mb-20 text-center">
           <span className="text-brand-primary font-black tracking-[0.3em] uppercase text-sm mb-6 block">أفضل المطابخ</span>
           <h1 className="text-6xl md:text-[100px] font-black text-brand-secondary leading-[0.9] tracking-tighter mb-8">ملوك <br /> <span className="text-brand-primary italic font-serif">النفس</span> الفلاحي</h1>

@@ -1,6 +1,6 @@
-import { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { doc, getDoc, collection, query, where, getDocs, orderBy } from 'firebase/firestore';
+import { doc, getDoc, collection, query, where, getDocs, orderBy, addDoc, serverTimestamp } from 'firebase/firestore';
 import { db, auth } from '../firebase';
 import { UserProfile, Meal, Review } from '../types';
 import { CHEF_IMAGE_URL } from '../constants';
@@ -21,6 +21,8 @@ export default function ChefProfile() {
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<'menu' | 'reviews'>('menu');
   const [showEditModal, setShowEditModal] = useState(false);
+  const [newReview, setNewReview] = useState({ rating: 5, comment: '' });
+  const [isSubmittingReview, setIsSubmittingReview] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
   const isOwner = auth.currentUser?.uid === id;
@@ -68,6 +70,43 @@ export default function ChefProfile() {
 
   const scrollToMenu = () => {
     menuRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  const handleSubmitReview = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!auth.currentUser) {
+      toast.error('يرجى تسجيل الدخول لإضافة تقييم');
+      return;
+    }
+
+    if (!newReview.comment.trim()) {
+      toast.error('يرجى كتابة تعليق');
+      return;
+    }
+
+    setIsSubmittingReview(true);
+    try {
+      const reviewData = {
+        chefId: id,
+        customerId: auth.currentUser.uid,
+        customerName: auth.currentUser.displayName || 'عميل طبلية',
+        customerPhoto: auth.currentUser.photoURL || null,
+        rating: newReview.rating,
+        comment: newReview.comment,
+        createdAt: Date.now(), // Keeping consistent with existing code's date handling or use serverTimestamp
+      };
+
+      await addDoc(collection(db, 'reviews'), reviewData);
+      setNewReview({ rating: 5, comment: '' });
+      toast.success('تم إضافة تقييمك بنجاح! شكراً لك.');
+      fetchData(); // Refresh reviews
+      setActiveTab('reviews');
+    } catch (error) {
+      console.error("Error submitting review:", error);
+      toast.error('حدث خطأ أثناء إضافة التقييم');
+    } finally {
+      setIsSubmittingReview(false);
+    }
   };
 
   if (loading) return <div className="min-h-screen flex items-center justify-center"><div className="animate-spin rounded-full h-12 w-12 border-t-2 border-brand-primary"></div></div>;
@@ -342,18 +381,48 @@ export default function ChefProfile() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Info Card for Verified Reviews */}
-              <div className="col-span-full mb-4 bg-blue-50 border border-blue-100 p-6 rounded-[24px] flex flex-col md:flex-row items-center gap-6">
-                <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center text-blue-500 shadow-sm shrink-0">
-                  <ShieldCheck size={32} />
-                </div>
-                <div>
-                  <h4 className="text-xl font-black text-blue-900 mb-1">تقييمات موثوقة 100%</h4>
-                  <p className="text-blue-800/70 font-medium">في طبلية، لا يمكن إضافة تقييم إلا من العملاء الذين قاموا بطلب وتجربة الأكل بالفعل. لتقييم هذا المطبخ، اذهب إلى صفحة "طلباتي" بعد استلام طلبك.</p>
-                </div>
-                <Link to="/orders" className="mr-auto whitespace-nowrap bg-blue-500 text-white px-6 py-3 rounded-xl font-bold shadow-lg shadow-blue-500/20 hover:bg-blue-600 transition-all">
-                  طلباتي
-                </Link>
+              {/* Review Submission Form */}
+              <div className="col-span-full mb-8 bg-white p-8 rounded-[32px] shadow-xl border-4 border-brand-primary/5">
+                <h3 className="text-2xl font-black text-brand-secondary mb-6 flex items-center gap-2">
+                  <Edit3 className="text-brand-primary" />
+                  أضف تقييمك للمطبخ
+                </h3>
+                
+                <form onSubmit={handleSubmitReview} className="space-y-6">
+                  <div>
+                    <label className="block text-sm font-black text-stone-500 mb-3">تقييمك بالنجوم</label>
+                    <div className="flex gap-2">
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <button
+                          key={star}
+                          type="button"
+                          onClick={() => setNewReview({ ...newReview, rating: star })}
+                          className={`p-2 rounded-xl transition-all ${newReview.rating >= star ? 'text-yellow-400 scale-110' : 'text-stone-200'}`}
+                        >
+                          <Star size={32} className={newReview.rating >= star ? 'fill-current' : ''} />
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-black text-stone-500 mb-3">تعليقك</label>
+                    <textarea
+                      value={newReview.comment}
+                      onChange={(e) => setNewReview({ ...newReview, comment: e.target.value })}
+                      placeholder="اكتب رأيك بصراحة في جودة الأكل، النضافة، وسرعة التوصيل..."
+                      className="w-full p-6 rounded-2xl bg-stone-50 border border-stone-100 outline-none focus:ring-4 focus:ring-brand-primary/10 focus:border-brand-primary transition-all text-lg font-medium min-h-[120px]"
+                    />
+                  </div>
+
+                  <button
+                    type="submit"
+                    disabled={isSubmittingReview}
+                    className="btn-primary w-full md:w-auto px-12 py-4 disabled:opacity-50"
+                  >
+                    {isSubmittingReview ? 'جاري الإرسال...' : 'نشر التقييم'}
+                  </button>
+                </form>
               </div>
 
               {reviews.length > 0 ? reviews.map((review, i) => (

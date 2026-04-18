@@ -132,15 +132,12 @@ export default function Meals() {
   };
 
   return (
-    <div className="bg-brand-cream min-h-screen py-[100px] relative">
-      {/* Background Grain Overlay */}
-      <div className="fixed inset-0 pointer-events-none z-[99] opacity-[0.03] bg-grain"></div>
-
+    <div className="min-h-screen py-[100px] relative overflow-hidden bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="mb-20 text-center">
           <span className="text-brand-primary font-black tracking-[0.3em] uppercase text-sm mb-6 block">تصفح الاكلات</span>
-          <h1 className="text-6xl md:text-[100px] font-black text-brand-secondary leading-[0.9] tracking-tighter mb-8">أشهى الأكلات <br /> <span className="text-brand-primary italic font-serif">البيتي</span></h1>
-          <p className="text-stone-500 text-2xl max-w-2xl mx-auto font-medium mb-8">كل اللي نفسك فيه وأكتر.. أكل بيتي سخن وطازة بيوصلك لحد الباب.</p>
+          <h1 className="text-6xl md:text-[100px] font-black text-brand-secondary leading-[0.9] tracking-tighter mb-8 drop-shadow-sm">أشهى الأكلات <br /> <span className="text-brand-primary italic font-serif">البيتي</span></h1>
+          <p className="text-brand-secondary/70 text-2xl max-w-2xl mx-auto font-medium mb-8">كل اللي نفسك فيه وأكتر.. أكل بيتي سخن وطازة بيوصلك لحد الباب.</p>
           
           <div className="inline-block px-8 py-4 bg-brand-primary/10 border-2 border-brand-primary border-dashed rounded-2xl mb-8">
             <p className="text-lg font-bold text-brand-primary">
