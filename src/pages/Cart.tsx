@@ -186,7 +186,7 @@ export default function Cart() {
 
                   <div className="flex justify-between text-stone-600 items-center">
                     <div className="flex items-center gap-1">
-                      <span>رسوم الخدمة (5%)</span>
+                      <span>رسوم خدمة (5%)</span>
                       <Info size={14} className="text-stone-300" />
                     </div>
                     <span>{serviceFee.toFixed(2)} ج.م</span>
