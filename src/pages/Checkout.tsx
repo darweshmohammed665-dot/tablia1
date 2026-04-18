@@ -136,6 +136,11 @@ export default function Checkout() {
       return;
     }
 
+    if (chef?.isClosed) {
+      toast.error('عذراً، المطبخ مغلق حالياً ولا يستقبل طلبات. يرجى إزالة الوجبات من السلة أو المحاولة لاحقاً.');
+      return;
+    }
+
     setLoading(true);
     try {
       await handleOrderCreation();

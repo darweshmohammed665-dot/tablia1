@@ -27,6 +27,7 @@ export interface UserProfile {
     shifts: { from: string; to: string }[];
     closedDays?: string[];
   };
+  isClosed?: boolean;
   createdAt: number;
 }
 

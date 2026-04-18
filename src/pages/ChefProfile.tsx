@@ -5,7 +5,7 @@ import { db, auth } from '../firebase';
 import { UserProfile, Meal, Review } from '../types';
 import { CHEF_IMAGE_URL } from '../constants';
 import { motion, AnimatePresence } from 'motion/react';
-import { MapPin, Star, ChefHat, Clock, Edit3, UtensilsCrossed, Share2, Users, ShoppingBag, Heart, ShieldCheck, MessageSquareQuote } from 'lucide-react';
+import { MapPin, Star, ChefHat, Clock, Edit3, UtensilsCrossed, Share2, Users, ShoppingBag, Heart, ShieldCheck, MessageSquareQuote, Power } from 'lucide-react';
 import ChefProfileForm from '../components/ChefProfileForm';
 import { MealCard } from '../components/MealCard';
 import { useCart } from '../context/CartContext';
@@ -144,8 +144,14 @@ export default function ChefProfile() {
             <div className="flex-grow text-center md:text-right pt-2">
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
                 <div>
-                  <div className="flex items-center justify-center md:justify-start gap-4 mb-2">
+                  <div className="flex items-center justify-center md:justify-start gap-4 mb-2 flex-wrap">
                     <h1 className="text-4xl md:text-5xl font-black text-brand-secondary">{chef.displayName}</h1>
+                    {chef.isClosed && (
+                      <div className="bg-red-500 text-white px-4 py-1.5 rounded-full text-xs font-black flex items-center gap-2 shadow-lg animate-pulse">
+                        <Power size={14} />
+                        مغلق حالياً
+                      </div>
+                    )}
                     {isOwner && (
                       <button 
                         onClick={() => setShowEditModal(true)}
@@ -266,7 +272,8 @@ export default function ChefProfile() {
                       rating: meal.rating,
                       deliveryTime: 45,
                       description: meal.description,
-                      orderType: meal.orderType
+                      orderType: meal.orderType,
+                      isClosed: chef.isClosed
                     }}
                     index={i}
                   />
@@ -354,7 +361,8 @@ export default function ChefProfile() {
                       rating: meal.rating,
                       deliveryTime: 45,
                       description: meal.description,
-                      orderType: meal.orderType
+                      orderType: meal.orderType,
+                      isClosed: chef.isClosed
                     }}
                     index={i}
                   />

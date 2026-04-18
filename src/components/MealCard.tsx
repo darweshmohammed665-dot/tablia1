@@ -19,6 +19,7 @@ interface MealCardProps {
     description?: string;
     orderType?: 'instant' | 'preorder';
     reviewsCount?: number;
+    isClosed?: boolean;
   };
   index?: number;
 }
@@ -29,6 +30,11 @@ export const MealCard: React.FC<MealCardProps> = ({ meal, index = 0 }) => {
   const handleQuickAdd = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+    
+    if (meal.isClosed) {
+      toast.error('عذراً، المطبخ مغلق حالياً ولا يستقبل طلبات.');
+      return;
+    }
     
     addToCart({
       id: meal.id.toString(),
@@ -78,14 +84,25 @@ export const MealCard: React.FC<MealCardProps> = ({ meal, index = 0 }) => {
           </div>
         )}
 
+        {meal.isClosed && (
+          <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px] z-[15] flex items-center justify-center p-4">
+            <div className="bg-white/90 backdrop-blur-md px-6 py-3 rounded-2xl shadow-xl flex items-center gap-3 border-2 border-red-500/20">
+              <span className="w-3 h-3 rounded-full bg-red-500 animate-pulse"></span>
+              <span className="text-red-600 font-black uppercase tracking-wider text-sm">المطبخ مغلق حالياً</span>
+            </div>
+          </div>
+        )}
+
         {/* Quick Add to Cart Button directly on the image */}
-        <button 
-          onClick={handleQuickAdd}
-          className="absolute bottom-4 right-4 bg-brand-primary text-white p-3 rounded-full shadow-lg hover:scale-110 hover:bg-brand-accent transition-all z-10 flex items-center justify-center"
-          title="إضافة فورية للسلة"
-        >
-          <Plus size={24} strokeWidth={3} />
-        </button>
+        {!meal.isClosed && (
+          <button 
+            onClick={handleQuickAdd}
+            className="absolute bottom-4 right-4 bg-brand-primary text-white p-3 rounded-full shadow-lg hover:scale-110 hover:bg-brand-accent transition-all z-10 flex items-center justify-center"
+            title="إضافة فورية للسلة"
+          >
+            <Plus size={24} strokeWidth={3} />
+          </button>
+        )}
 
         <div className="absolute bottom-4 left-4 z-10 pointer-events-none transform scale-75 origin-bottom-left">
           <FoodPriceDisplay originalPrice={meal.price} />
@@ -114,10 +131,11 @@ export const MealCard: React.FC<MealCardProps> = ({ meal, index = 0 }) => {
           <div className="flex gap-2">
             <button 
               onClick={handleQuickAdd}
-              className="w-full bg-stone-900 text-white py-2.5 px-5 rounded-2xl text-sm font-black hover:bg-brand-primary transition-colors shadow-lg flex items-center justify-center gap-2"
+              disabled={meal.isClosed}
+              className={`w-full py-2.5 px-5 rounded-2xl text-sm font-black transition-colors shadow-lg flex items-center justify-center gap-2 ${meal.isClosed ? 'bg-stone-100 text-stone-400 cursor-not-allowed shadow-none' : 'bg-stone-900 text-white hover:bg-brand-primary'}`}
             >
               <ShoppingCart size={18} />
-              أضف للسلة
+              {meal.isClosed ? 'مغلق' : 'أضف للسلة'}
             </button>
           </div>
         </div>

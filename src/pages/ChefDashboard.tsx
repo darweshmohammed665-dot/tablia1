@@ -4,7 +4,7 @@ import { db, auth } from '../firebase';
 import { Meal, UserProfile, Order } from '../types';
 import { handleFirestoreError, OperationType } from '../lib/firestore-errors';
 import { motion, AnimatePresence } from 'motion/react';
-import { Plus, Trash2, Package, DollarSign, Star, Utensils, Settings, Clock, ChevronDown, UserCheck, MapPin, Phone, Map, MessageCircle, Share2, ChefHat, X, Camera, Calendar } from 'lucide-react';
+import { Plus, Trash2, Package, DollarSign, Star, Utensils, Settings, Clock, ChevronDown, UserCheck, MapPin, Phone, Map, MessageCircle, Share2, ChefHat, X, Camera, Calendar, Power } from 'lucide-react';
 import OrderStatusTracker from '../components/OrderStatusTracker';
 import ChefProfileForm from '../components/ChefProfileForm';
 import OrderTrackingMap from '../components/OrderTrackingMap';
@@ -298,6 +298,23 @@ export default function ChefDashboard({ profile }: ChefDashboardProps) {
     { value: 'cancelled', label: 'إلغاء الطلب' },
   ];
 
+  const handleToggleStatus = async () => {
+    if (!auth.currentUser || !db) return;
+    
+    try {
+      const isNowClosed = !profile.isClosed;
+      await updateDoc(doc(db, 'users', auth.currentUser.uid), {
+        isClosed: isNowClosed
+      });
+      toast.success(isNowClosed ? 'تم إغلاق المطبخ بنجاح' : 'تم فتح المطبخ بنجاح', {
+        icon: isNowClosed ? <Power className="text-red-500" /> : <Power className="text-green-500" />
+      });
+    } catch (error) {
+      console.error("Error toggling status:", error);
+      toast.error('حدث خطأ أثناء تغيير حالة المطبخ');
+    }
+  };
+
   if (!isProfileComplete) {
     return (
       <div className="bg-brand-cream min-h-screen py-[100px] px-4">
@@ -354,6 +371,13 @@ export default function ChefDashboard({ profile }: ChefDashboardProps) {
               </div>
             </div>
             <div className="flex flex-col sm:flex-row gap-3">
+              <button 
+                onClick={handleToggleStatus}
+                className={`px-6 py-3 rounded-2xl font-bold transition-all flex items-center justify-center gap-2 border-2 ${profile.isClosed ? 'bg-red-500/10 border-red-500/20 text-red-100 hover:bg-red-500/20' : 'bg-green-500/10 border-green-500/20 text-green-100 hover:bg-green-500/20'}`}
+              >
+                <Power size={20} className={profile.isClosed ? 'text-red-400' : 'text-green-400'} />
+                {profile.isClosed ? 'المطبخ مغلق' : 'المطبخ مفتوح'}
+              </button>
               <button 
                 onClick={() => setShowProfileEdit(true)}
                 className="bg-white/10 hover:bg-white/20 text-white px-6 py-3 rounded-2xl font-bold transition-all flex items-center justify-center gap-2 backdrop-blur-sm"

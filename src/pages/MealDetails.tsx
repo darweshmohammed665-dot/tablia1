@@ -5,7 +5,7 @@ import { db, auth } from '../firebase';
 import { Meal, Review, UserProfile } from '../types';
 import { CHEF_IMAGE_URL } from '../constants';
 import { motion, AnimatePresence } from 'motion/react';
-import { Star, Clock, ChefHat, ShoppingCart, ArrowRight, ShieldCheck, Bike, ShoppingBag, MessageSquare, Send, User, Calendar } from 'lucide-react';
+import { Star, Clock, ChefHat, ShoppingCart, ArrowRight, ShieldCheck, Bike, ShoppingBag, MessageSquare, Send, User, Calendar, Power } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { toast } from 'sonner';
 import { FoodPriceDisplay } from '../components/FoodPriceDisplay';
@@ -243,6 +243,16 @@ export default function MealDetails() {
               </div>
               <h1 className="text-4xl md:text-[56px] font-bold text-brand-accent mb-4 leading-tight">{meal.title}</h1>
               
+              {chef?.isClosed && (
+                <div className="bg-red-50 text-red-600 p-4 rounded-2xl border border-red-100 flex items-center gap-3 mb-6 shadow-sm animate-pulse">
+                  <Power size={24} />
+                  <div className="flex flex-col">
+                    <span className="font-black text-lg">المطبخ مغلق حالياً</span>
+                    <span className="text-xs font-bold opacity-80">عذراً، الشيف لا يستقبل طلبات في الوقت الحالي</span>
+                  </div>
+                </div>
+              )}
+
               <div className="flex flex-wrap items-center gap-4 md:gap-6 text-stone-500">
                 <div className="flex items-center gap-1 text-brand-accent">
                   <Star size={20} className="fill-brand-accent" />
@@ -351,17 +361,20 @@ export default function MealDetails() {
                   <div className="flex gap-4 w-full sm:flex-grow">
                     <button 
                       onClick={handleAddToCart}
-                      className="bg-brand-secondary text-white w-full py-4 flex items-center justify-center gap-3 text-lg rounded-full font-bold hover:bg-brand-accent transition-colors shadow-lg"
+                      disabled={chef?.isClosed}
+                      className={`w-full py-4 flex items-center justify-center gap-3 text-lg rounded-full font-bold transition-colors shadow-lg ${chef?.isClosed ? 'bg-stone-200 text-stone-400 cursor-not-allowed' : 'bg-brand-secondary text-white hover:bg-brand-accent'}`}
                     >
-                      <ShoppingBag size={24} /> أضف للسلة
+                      <ShoppingBag size={24} /> {chef?.isClosed ? 'المطبخ مغلق' : 'أضف للسلة'}
                     </button>
-                    <Link 
-                      to="/checkout" 
-                      onClick={handleAddToCart}
-                      className="btn-primary w-full py-4 flex items-center justify-center gap-3 text-lg"
-                    >
-                      <ShoppingCart size={24} /> اشتري الآن
-                    </Link>
+                    {!chef?.isClosed && (
+                      <Link 
+                        to="/checkout" 
+                        onClick={handleAddToCart}
+                        className="btn-primary w-full py-4 flex items-center justify-center gap-3 text-lg"
+                      >
+                        <ShoppingCart size={24} /> اشتري الآن
+                      </Link>
+                    )}
                   </div>
                 </div>
 
