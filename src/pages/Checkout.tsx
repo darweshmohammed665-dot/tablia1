@@ -66,10 +66,11 @@ export default function Checkout() {
   }, [hasPreorder, hasInstant]);
 
   const totalFoodValue = cartTotal;
-  const foodBasePrice = totalFoodValue;
+  const serviceFeeRate = 0.05;
+  const serviceFee = totalFoodValue * serviceFeeRate;
   const deliveryFee = 18.99;
   const isFirstOrder = true; // Mock for demo
-  const total = totalFoodValue + (isFirstOrder ? 0 : deliveryFee);
+  const total = totalFoodValue + serviceFee + (isFirstOrder ? 0 : deliveryFee);
 
   const handlePlaceOrder = async () => {
     if (!auth.currentUser) {
@@ -126,7 +127,8 @@ export default function Checkout() {
           price: item.price || 0
         })),
         total: total || 0,
-        subtotal: foodBasePrice || 0,
+        subtotal: totalFoodValue || 0,
+        serviceFee: serviceFee || 0,
         status: 'pending',
         paymentMethod: paymentMethod || 'cod',
         paymentId: paymentId || null,
@@ -453,8 +455,16 @@ export default function Checkout() {
                 
                 <div className="space-y-4">
                   <div className="flex justify-between text-stone-600">
-                    <span className="font-bold">ثمن الأكلة</span>
-                    <span className="font-bold">{foodBasePrice.toFixed(2)} ج.م</span>
+                    <span className="font-bold">ثمن الوجبات</span>
+                    <span className="font-bold">{totalFoodValue.toFixed(2)} ج.م</span>
+                  </div>
+
+                  <div className="flex justify-between text-stone-600 items-center">
+                    <div className="flex items-center gap-1">
+                      <span>رسوم الخدمة (5%)</span>
+                      <Info size={14} className="text-stone-300" />
+                    </div>
+                    <span>{serviceFee.toFixed(2)} ج.م</span>
                   </div>
 
                   <div className="flex justify-between text-stone-600 items-center">
