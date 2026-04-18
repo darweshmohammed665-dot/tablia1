@@ -24,8 +24,7 @@ export interface UserProfile {
     instapay?: string;
   };
   workingHours?: {
-    from: string;
-    to: string;
+    shifts: { from: string; to: string }[];
     closedDays?: string[];
   };
   createdAt: number;

@@ -7,7 +7,9 @@ import { Camera, MapPin, AlignLeft, Save, X, ChevronRight, ChevronLeft, Check, A
 import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
 import L from 'leaflet';
 import { toast } from 'sonner';
-import { formatTime12h } from '../lib/date-utils';
+import { formatTime12h, generateTimeOptions } from '../lib/date-utils';
+
+const TIME_OPTIONS = generateTimeOptions();
 
 // Fix for default marker icon
 import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';
@@ -56,10 +58,32 @@ export default function ChefProfileForm({ profile, onComplete, onCancel }: ChefP
     profile.coordinates ? [profile.coordinates.lat, profile.coordinates.lng] : DEFAULT_CENTER
   );
   const [photoURL, setPhotoURL] = useState(profile.photoURL || '');
-  const [workingHours, setWorkingHours] = useState({
-    from: profile.workingHours?.from || '09:00',
-    to: profile.workingHours?.to || '22:00',
-  });
+  const [workingHours, setWorkingHours] = useState<{ shifts: { from: string; to: string }[] }>(
+    profile.workingHours?.shifts?.length ? { shifts: profile.workingHours.shifts } : { shifts: [{ from: '09:00', to: '22:00' }] }
+  );
+
+  const addShift = () => {
+    setWorkingHours({
+      ...workingHours,
+      shifts: [...workingHours.shifts, { from: '09:00', to: '22:00' }]
+    });
+  };
+
+  const removeShift = (index: number) => {
+    if (workingHours.shifts.length <= 1) {
+      toast.error('يجب تحديد فترة عمل واحدة على الأقل');
+      return;
+    }
+    const newShifts = [...workingHours.shifts];
+    newShifts.splice(index, 1);
+    setWorkingHours({ ...workingHours, shifts: newShifts });
+  };
+
+  const updateShift = (index: number, field: 'from' | 'to', value: string) => {
+    const newShifts = [...workingHours.shifts];
+    newShifts[index][field] = value;
+    setWorkingHours({ ...workingHours, shifts: newShifts });
+  };
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [imageError, setImageError] = useState('');
@@ -364,28 +388,59 @@ export default function ChefProfileForm({ profile, onComplete, onCancel }: ChefP
                 </div>
 
                 <div>
-                  <label className="block text-sm font-black text-stone-700 mb-3 flex items-center gap-2">
-                    <Clock size={18} className="text-brand-primary" /> ساعات العمل
-                  </label>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-1">
-                      <span className="text-[10px] font-bold text-stone-400 uppercase mr-1">من</span>
-                      <input 
-                        type="time" 
-                        value={workingHours.from}
-                        onChange={(e) => setWorkingHours({...workingHours, from: e.target.value})}
-                        className="w-full px-6 py-4 rounded-2xl border border-stone-200 focus:ring-4 focus:ring-brand-primary/10 focus:border-brand-primary outline-none transition-all font-medium"
-                      />
-                    </div>
-                    <div className="space-y-1">
-                      <span className="text-[10px] font-bold text-stone-400 uppercase mr-1">إلى</span>
-                      <input 
-                        type="time" 
-                        value={workingHours.to}
-                        onChange={(e) => setWorkingHours({...workingHours, to: e.target.value})}
-                        className="w-full px-6 py-4 rounded-2xl border border-stone-200 focus:ring-4 focus:ring-brand-primary/10 focus:border-brand-primary outline-none transition-all font-medium"
-                      />
-                    </div>
+                  <div className="flex items-center justify-between mb-3">
+                    <label className="text-sm font-black text-stone-700 flex items-center gap-2">
+                      <Clock size={18} className="text-brand-primary" /> فترات العمل
+                    </label>
+                    <button 
+                      type="button"
+                      onClick={addShift}
+                      className="text-[10px] font-bold text-brand-primary bg-brand-primary/10 px-3 py-1 rounded-full hover:bg-brand-primary/20 transition-colors"
+                    >
+                      + إضافة فترة عمل
+                    </button>
+                  </div>
+                  
+                  <div className="space-y-4">
+                    {workingHours.shifts.map((shift, idx) => (
+                      <div key={idx} className="bg-white border border-stone-100 p-4 rounded-2xl relative group">
+                        {workingHours.shifts.length > 1 && (
+                          <button 
+                            type="button"
+                            onClick={() => removeShift(idx)}
+                            className="absolute -top-2 -right-2 bg-red-500 text-white p-1 rounded-full shadow-md opacity-0 group-hover:opacity-100 transition-opacity"
+                          >
+                            <X size={12} />
+                          </button>
+                        )}
+                        <div className="grid grid-cols-2 gap-4">
+                          <div className="space-y-1">
+                            <span className="text-[10px] font-bold text-stone-400 uppercase mr-1">من</span>
+                            <select 
+                              value={shift.from}
+                              onChange={(e) => updateShift(idx, 'from', e.target.value)}
+                              className="w-full px-4 py-3 rounded-xl border border-stone-200 focus:ring-4 focus:ring-brand-primary/10 focus:border-brand-primary outline-none transition-all font-bold appearance-none bg-white text-xs"
+                            >
+                              {TIME_OPTIONS.map(time => (
+                                <option key={time} value={time}>{formatTime12h(time)}</option>
+                              ))}
+                            </select>
+                          </div>
+                          <div className="space-y-1">
+                            <span className="text-[10px] font-bold text-stone-400 uppercase mr-1">إلى</span>
+                            <select 
+                              value={shift.to}
+                              onChange={(e) => updateShift(idx, 'to', e.target.value)}
+                              className="w-full px-4 py-3 rounded-xl border border-stone-200 focus:ring-4 focus:ring-brand-primary/10 focus:border-brand-primary outline-none transition-all font-bold appearance-none bg-white text-xs"
+                            >
+                              {TIME_OPTIONS.map(time => (
+                                <option key={time} value={time}>{formatTime12h(time)}</option>
+                              ))}
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 </div>
 
@@ -479,9 +534,13 @@ export default function ChefProfileForm({ profile, onComplete, onCancel }: ChefP
                         <Crosshair size={10} /> تم تحديد الموقع الجغرافي
                       </p>
                     )}
-                    <p className="text-xs font-bold text-brand-primary mt-2 flex items-center justify-center md:justify-start gap-1">
-                      <Clock size={12} /> ساعات العمل: {formatTime12h(workingHours.from)} - {formatTime12h(workingHours.to)}
-                    </p>
+                    <div className="flex flex-wrap gap-2 mt-2 justify-center md:justify-start">
+                      {workingHours.shifts.map((shift, idx) => (
+                        <p key={idx} className="text-xs font-bold text-brand-primary flex items-center gap-1 bg-brand-primary/5 px-2 py-1 rounded-lg">
+                          <Clock size={12} /> {formatTime12h(shift.from)} - {formatTime12h(shift.to)}
+                        </p>
+                      ))}
+                    </div>
                   </div>
                 </div>
                 <div className="bg-white p-6 rounded-2xl border border-stone-100 text-stone-600 leading-relaxed font-medium mb-6">

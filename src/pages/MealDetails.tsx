@@ -27,20 +27,23 @@ export default function MealDetails() {
   const { addToCart } = useCart();
 
   const getTimeSlots = () => {
-    if (!chef?.workingHours) return [];
-    const slots = [];
-    const { from, to } = chef.workingHours;
+    if (!chef?.workingHours?.shifts) return [];
+    const slots: string[] = [];
     
-    // Simple parsing as we only care about HH:mm relative to each other
-    let current = new Date(`2024-01-01T${from}:00`);
-    const end = new Date(`2024-01-01T${to}:00`);
-    
-    while (current < end) {
-      const timeStr = current.toTimeString().slice(0, 5);
-      slots.push(timeStr);
-      current.setMinutes(current.getMinutes() + 60); // 1 hour slots for preorders might be better, or 30 mins
-    }
-    return slots;
+    chef.workingHours.shifts.forEach(shift => {
+      let current = new Date(`2024-01-01T${shift.from}:00`);
+      const end = new Date(`2024-01-01T${shift.to}:00`);
+      
+      while (current < end) {
+        const timeStr = current.toTimeString().slice(0, 5);
+        if (!slots.includes(timeStr)) {
+          slots.push(timeStr);
+        }
+        current.setMinutes(current.getMinutes() + 30);
+      }
+    });
+
+    return slots.sort();
   };
 
   useEffect(() => {
@@ -313,11 +316,17 @@ export default function MealDetails() {
                   </div>
                 </div>
                 
-                {chef?.workingHours && (
-                  <p className="mt-3 text-[10px] text-stone-500 font-bold flex items-center gap-1">
-                    <Clock size={12} /> 
-                    أوقات عمل المطبخ: {formatTime12h(chef.workingHours.from)} إلى {formatTime12h(chef.workingHours.to)}
-                  </p>
+                {chef?.workingHours && chef.workingHours.shifts?.length > 0 && (
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    <p className="text-[10px] text-stone-500 font-bold flex items-center gap-1 w-full mb-1">
+                      <Clock size={12} /> أوقات عمل المطبخ:
+                    </p>
+                    {chef.workingHours.shifts.map((shift, idx) => (
+                      <span key={idx} className="bg-white/50 px-2 py-0.5 rounded-lg border border-brand-peach/50 text-[10px] font-bold text-stone-600">
+                        {formatTime12h(shift.from)} - {formatTime12h(shift.to)}
+                      </span>
+                    ))}
+                  </div>
                 )}
               </div>
             )}
