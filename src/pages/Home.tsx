@@ -1,4 +1,4 @@
-import { motion, useScroll, useTransform } from 'motion/react';
+import { motion, useScroll, useTransform, AnimatePresence } from 'motion/react';
 import { ShoppingBag, Clock, ArrowRight, MessageCircle, Utensils, Heart, Star, ShieldCheck, ChevronLeft, MapPin, Flame, Award, Sparkles, Dices } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import ChefMap from '../components/ChefMap';
@@ -7,6 +7,73 @@ import { useRef, useEffect, useState } from 'react';
 import { CHEF_IMAGE_URL } from '../constants';
 import { useCart } from '../context/CartContext';
 import { toast } from 'sonner';
+
+const homeFoodImages = [
+  'https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&q=80&w=600',
+  'https://images.unsplash.com/photo-1574484284002-952d92456975?auto=format&fit=crop&q=80&w=600',
+  'https://images.unsplash.com/photo-1585937421612-70a008356fbe?auto=format&fit=crop&q=80&w=600',
+  'https://images.unsplash.com/photo-1565557623262-b51c2513a641?auto=format&fit=crop&q=80&w=600',
+  'https://images.unsplash.com/photo-1626200419199-391ae4be7a41?auto=format&fit=crop&q=80&w=600',
+  'https://images.unsplash.com/photo-1511690656952-34342bb7c2f2?auto=format&fit=crop&q=80&w=600',
+  'https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?auto=format&fit=crop&q=80&w=600',
+  'https://images.unsplash.com/photo-1529042410759-befb1204b468?auto=format&fit=crop&q=80&w=600',
+  'https://images.unsplash.com/photo-1594998893017-36147cbcae05?auto=format&fit=crop&q=80&w=600',
+  'https://images.unsplash.com/photo-1579871494447-9811cf80d66c?auto=format&fit=crop&q=80&w=600',
+  'https://images.unsplash.com/photo-1645696301019-35adcc18fc21?auto=format&fit=crop&q=80&w=600',
+  'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&q=80&w=600'
+];
+
+function FoodCarousel() {
+  return (
+    <motion.div
+      initial={{ opacity: 0, scale: 0.9 }}
+      whileInView={{ opacity: 1, scale: 1 }}
+      viewport={{ once: true }}
+      className="relative overflow-hidden aspect-square rounded-[40px] flex flex-col justify-center group"
+    >
+      <style>
+        {`
+          @keyframes scroll-left {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+          }
+          @keyframes scroll-right {
+            0% { transform: translateX(-50%); }
+            100% { transform: translateX(0); }
+          }
+          .animate-scroll-left {
+            animation: scroll-left 40s linear infinite;
+          }
+          .animate-scroll-right {
+            animation: scroll-right 40s linear infinite;
+          }
+        `}
+      </style>
+
+      {/* Row 1 - scrolling left */}
+      <div className="flex w-[200%] animate-scroll-left mb-6 md:mb-8">
+        {[...homeFoodImages, ...homeFoodImages].map((img, i) => (
+          <div key={`row1-${i}`} className="w-40 h-40 md:w-80 md:h-80 shrink-0 mx-3 md:mx-4 rounded-[2rem] overflow-hidden shadow-2xl hover:scale-105 transition-transform duration-300">
+            <img src={img} className="w-full h-full object-cover" alt="أكل بيتي" referrerPolicy="no-referrer" />
+          </div>
+        ))}
+      </div>
+
+      {/* Row 2 - scrolling right */}
+      <div className="flex w-[200%] animate-scroll-right">
+        {[...homeFoodImages].reverse().concat([...homeFoodImages].reverse()).map((img, i) => (
+          <div key={`row2-${i}`} className="w-40 h-40 md:w-80 md:h-80 shrink-0 mx-3 md:mx-4 rounded-[2rem] overflow-hidden shadow-2xl hover:scale-105 transition-transform duration-300">
+            <img src={img} className="w-full h-full object-cover" alt="أكل بيتي" referrerPolicy="no-referrer" />
+          </div>
+        ))}
+      </div>
+
+      {/* Subtle fade edges to blend with white background naturally */}
+      <div className="absolute inset-y-0 left-0 w-12 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none"></div>
+      <div className="absolute inset-y-0 right-0 w-12 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none"></div>
+    </motion.div>
+  );
+}
 
 export default function Home() {
   const { addToCart } = useCart();
@@ -31,12 +98,12 @@ export default function Home() {
       <div className="relative z-10 w-full">
 
       {/* Boxed Hero Section on White Background */}
-      <div className="w-full bg-white pt-24 md:pt-32 pb-16">
-        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 md:px-8">
+      <div className="w-full bg-white pt-6 md:pt-10 pb-10">
+        <div className="max-w-[1600px] mx-auto px-1 md:px-4">
           <section 
             className="relative w-full rounded-[32px] md:rounded-[48px] flex items-end justify-center overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.15)] bg-black ring-1 ring-black/5"
             style={{ 
-              minHeight: "min(85vh, 750px)"
+              minHeight: "min(92vh, 900px)"
             }}
           >
             {/* Background Image Container with top-down feast image */}
@@ -161,18 +228,9 @@ export default function Home() {
                 </p>
               </div>
             </motion.div>
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              className="relative rounded-[40px] overflow-hidden shadow-2xl aspect-square bg-gradient-to-br from-brand-primary to-brand-secondary flex items-center justify-center p-12"
-            >
-              <div className="text-white text-center">
-                <Utensils size={120} className="mx-auto mb-6 opacity-20" />
-                <h3 className="text-4xl font-black">طبلية</h3>
-                <p className="text-xl opacity-80">أصل الأكل البيتي الحقيقي</p>
-              </div>
-            </motion.div>
+            
+            {/* Auto Food Carousel */}
+            <FoodCarousel />
           </div>
         </div>
       </section>
