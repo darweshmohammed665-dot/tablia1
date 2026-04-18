@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { MapPin, Phone, CreditCard, CheckCircle2, ArrowRight, ShieldCheck, Info, Coins, Bell, BellOff, UserCircle, MessageSquare, Clock, Plus, Wallet } from 'lucide-react';
+import { MapPin, Phone, CreditCard, CheckCircle2, ArrowRight, ShieldCheck, Info, Coins, Bell, BellOff, UserCircle, MessageSquare, Clock, Plus, Wallet, AlertCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { collection, addDoc, getDoc, doc } from 'firebase/firestore';
 import { db, auth } from '../firebase';
 import { useCart } from '../context/CartContext';
 import { toast } from 'sonner';
+import { formatTime12h } from '../lib/date-utils';
+import { UserProfile } from '../types';
 
 export default function Checkout() {
+  const { cartItems, cartTotal, clearCart } = useCart();
   const [step, setStep] = useState(1);
   const [isSuccess, setIsSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -15,6 +18,9 @@ export default function Checkout() {
   const [deliveryInstruction, setDeliveryInstruction] = useState('call');
   const [deliveryType, setDeliveryType] = useState<'quick' | 'scheduled'>('quick');
   const [scheduledDay, setScheduledDay] = useState('غداً');
+  const [scheduledTime, setScheduledTime] = useState('');
+  const [chef, setChef] = useState<UserProfile | null>(null);
+  const [timeSlots, setTimeSlots] = useState<string[]>([]);
   const [formData, setFormData] = useState({
     address: '',
     area: '',
@@ -46,13 +52,50 @@ export default function Checkout() {
   }, []);
 
   useEffect(() => {
+    const fetchChefData = async () => {
+      if (cartItems.length > 0 && db) {
+        try {
+          const chefDoc = await getDoc(doc(db, 'users', cartItems[0].chefId));
+          if (chefDoc.exists()) {
+            setChef(chefDoc.data() as UserProfile);
+          }
+        } catch (error) {
+          console.error("Error fetching chef data:", error);
+        }
+      }
+    };
+    fetchChefData();
+  }, [cartItems]);
+
+  useEffect(() => {
+    if (chef?.workingHours?.shifts) {
+      const slots: string[] = [];
+      chef.workingHours.shifts.forEach(shift => {
+        let current = new Date(`2024-01-01T${shift.from}:00`);
+        const end = new Date(`2024-01-01T${shift.to}:00`);
+        
+        while (current < end) {
+          const timeStr = current.toTimeString().slice(0, 5);
+          if (!slots.includes(timeStr)) {
+            slots.push(timeStr);
+          }
+          current.setMinutes(current.getMinutes() + 30);
+        }
+      });
+      const sortedSlots = slots.sort();
+      setTimeSlots(sortedSlots);
+      if (sortedSlots.length > 0 && !scheduledTime) {
+        setScheduledTime(sortedSlots[0]);
+      }
+    }
+  }, [chef, scheduledTime]);
+
+  useEffect(() => {
     if (step === 3 && countdown > 0) {
       const timer = setTimeout(() => setCountdown(countdown - 1), 1000);
       return () => clearTimeout(timer);
     }
   }, [step, countdown]);
-
-  const { cartItems, cartTotal, clearCart } = useCart();
 
   const hasPreorder = cartItems.some(item => item.orderType === 'preorder');
   const hasInstant = cartItems.some(item => item.orderType === 'instant');
@@ -118,6 +161,7 @@ export default function Checkout() {
         customerAddress: `${formData.area || ''} - ${formData.address || ''}`,
         deliveryType: deliveryType || 'quick',
         scheduledDay: deliveryType === 'scheduled' ? (scheduledDay || 'غداً') : null,
+        scheduledTime: deliveryType === 'scheduled' ? (scheduledTime || null) : null,
         chefId: cartItems[0]?.chefId || 'unknown',
         chefName: cartItems[0]?.chefName || 'مطبخ طبلية',
         items: cartItems.map(item => ({
@@ -299,7 +343,8 @@ export default function Checkout() {
                         </div>
                         
                         {deliveryType === 'scheduled' && (
-                          <div className="pl-9 pr-4">
+                          <>
+                            <div className="pl-9 pr-4">
                             <label className="block text-xs font-bold text-stone-600 mb-2">اختر يوم التوصيل:</label>
                             <select 
                               value={scheduledDay}
@@ -313,9 +358,33 @@ export default function Checkout() {
                               <option value="الثلاثاء القادم">الثلاثاء القادم</option>
                             </select>
                           </div>
-                        )}
-                      </div>
-                    )}
+
+                          <div className="pl-9 pr-4 mt-4">
+                            <label className="block text-xs font-bold text-stone-600 mb-2">اختر وقت التوصيل (ص/م):</label>
+                            {timeSlots.length > 0 ? (
+                              <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
+                                {timeSlots.map((time) => (
+                                  <button
+                                    key={time}
+                                    type="button"
+                                    onClick={() => setScheduledTime(time)}
+                                    className={`py-2 px-1 rounded-lg border text-[10px] font-bold transition-all ${scheduledTime === time ? 'border-brand-primary bg-brand-primary text-white' : 'border-stone-100 bg-white text-stone-600 hover:border-stone-200'}`}
+                                  >
+                                    {formatTime12h(time)}
+                                  </button>
+                                ))}
+                              </div>
+                            ) : (
+                              <div className="flex items-center gap-2 text-amber-600 bg-amber-50 p-3 rounded-xl border border-amber-100 italic text-[10px]">
+                                <AlertCircle size={14} />
+                                عذراً، لم يحدد الطباخ مواعيد عمل لهذا اليوم.
+                              </div>
+                            )}
+                          </div>
+                        </>
+                      )}
+                    </div>
+                  )}
 
                     {hasPreorder && hasInstant && (
                       <div className="p-4 bg-amber-50 rounded-2xl border border-amber-100 flex items-center gap-3">
@@ -405,8 +474,15 @@ export default function Checkout() {
                       {formData.address ? (formData.address.length > 60 ? formData.address.substring(0, 60) + '...' : formData.address) : 'لم يتم إدخال العنوان'}
                     </p>
                     {deliveryType === 'scheduled' && (
-                      <div className="mt-4 inline-block bg-brand-primary/10 text-brand-primary px-4 py-2 rounded-xl font-bold text-xs md:text-sm">
-                        توصيل مجدول: {scheduledDay}
+                      <div className="mt-4 flex flex-col gap-2">
+                        <div className="inline-block bg-brand-primary/10 text-brand-primary px-4 py-2 rounded-xl font-bold text-xs md:text-sm self-center">
+                          توصيل مجدول: {scheduledDay}
+                        </div>
+                        {scheduledTime && (
+                          <div className="inline-block bg-brand-primary text-white px-4 py-2 rounded-xl font-bold text-xs md:text-sm self-center">
+                            الساعة: {formatTime12h(scheduledTime)}
+                          </div>
+                        )}
                       </div>
                     )}
                   </div>
