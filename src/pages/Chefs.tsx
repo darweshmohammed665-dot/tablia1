@@ -93,12 +93,11 @@ export default function Chefs() {
                 
                 <h3 className="text-2xl font-bold text-brand-accent mb-2">{chef.displayName}</h3>
                 <div className="flex items-center justify-center gap-1 text-brand-primary mb-4">
-                  <Star size={16} className="fill-brand-primary" />
-                  <Star size={16} className="fill-brand-primary" />
-                  <Star size={16} className="fill-brand-primary" />
-                  <Star size={16} className="fill-brand-primary" />
-                  <Star size={16} className="fill-brand-primary" />
-                  <span className="text-stone-400 text-sm mr-2">(4.9)</span>
+                  <Star size={16} className={chef.rating ? 'fill-brand-primary' : 'text-stone-200'} />
+                  <span className="text-stone-400 text-sm mr-2">({chef.rating?.toFixed(1) || '0.0'})</span>
+                  {chef.reviewsCount !== undefined && (
+                    <span className="text-stone-300 text-xs mr-1"> • {chef.reviewsCount} تقييم</span>
+                  )}
                 </div>
                 
                 <p className="text-stone-500 mb-8 line-clamp-2 text-sm flex-grow">

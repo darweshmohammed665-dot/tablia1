@@ -164,6 +164,7 @@ export default function Home() {
         </div>
       </div>
 
+
       {/* Trending Luxury Ticker - Local Hero Design */}
       <div className="relative z-30 w-full bg-brand-secondary border-y border-white/10 shadow-xl py-3 md:py-4 overflow-hidden group">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_rgba(241,29,88,0.03)_0%,_transparent_70%)] pointer-events-none" />
@@ -172,8 +173,8 @@ export default function Home() {
           {[...Array(16)].map((_, i) => (
             <div key={i} className="flex items-center gap-10 md:gap-14 mx-5 md:mx-8">
               <div className="flex items-center gap-3">
-                <div className="bg-brand-primary text-white text-[10px] px-2 py-0.5 rounded-full font-black animate-pulse">NO. 1</div>
-                <span className="text-white text-sm md:text-xl font-black tracking-tight select-none">طبلية رقم 1 في طنطا 🏆</span>
+                <div className="bg-brand-primary text-white text-[10px] px-2 py-0.5 rounded-full font-black animate-pulse">جديد</div>
+                <span className="text-white text-sm md:text-xl font-black tracking-tight select-none">أشهى أكل بيتي في طنطا 🍲</span>
               </div>
               
               <span className="text-white/20 select-none">•</span>
@@ -263,8 +264,8 @@ export default function Home() {
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-16">
             {[
-              { step: "1", title: "اختار وجبتك", desc: "تصفح مئات الوجبات البيتي من مطابخ قريبة منك.", icon: Utensils },
-              { step: "2", title: "اطلب", desc: "حدد الوجبات اللي محتاجها للأسبوع كله في طلب واحد.", icon: Clock },
+              { step: "1", title: "اختار وجبتك", desc: "تصفح أشهى الوجبات البيتي من مطابخ قريبة منك.", icon: Utensils },
+              { step: "2", title: "اطلب", desc: "حدد الوجبات اللي محتاجها بسهولة في طلب واحد.", icon: Clock },
               { step: "3", title: "استمتع بالأكل", desc: "وجباتك هتوصلك طازجة، سخن واستمتع بطعم البيت.", icon: Heart }
             ].map((item, idx) => (
               <div key={idx} className="relative">

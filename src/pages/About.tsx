@@ -1,151 +1,266 @@
-import { motion, useScroll, useTransform } from 'motion/react';
-import { Heart, ShieldCheck, Utensils, Users, MapPin, Star, Flame } from 'lucide-react';
+import { motion, useScroll, useTransform, AnimatePresence } from 'motion/react';
+import { Heart, ShieldCheck, Utensils, Users, MapPin, Star, Flame, Award, Sparkles, ChefHat, ShoppingBag, Coffee, ChevronRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { CHEF_IMAGE_URL } from '../constants';
+import { useRef } from 'react';
+
+const foodImages = [
+  'https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&q=80&w=800',
+  'https://images.unsplash.com/photo-1574484284002-952d92456975?auto=format&fit=crop&q=80&w=800',
+  'https://images.unsplash.com/photo-1585937421612-70a008356fbe?auto=format&fit=crop&q=80&w=800',
+  'https://images.unsplash.com/photo-1565557623262-b51c2513a641?auto=format&fit=crop&q=80&w=800',
+  'https://images.unsplash.com/photo-1626200419199-391ae4be7a41?auto=format&fit=crop&q=80&w=800',
+  'https://images.unsplash.com/photo-1511690656952-34342bb7c2f2?auto=format&fit=crop&q=80&w=800',
+  'https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?auto=format&fit=crop&q=80&w=800',
+  'https://images.unsplash.com/photo-1529042410759-befb1204b468?auto=format&fit=crop&q=80&w=800'
+];
+
+function ScrollingFood() {
+  return (
+    <div className="relative w-full overflow-hidden py-10 bg-white">
+      <style>
+        {`
+          @keyframes scroll-x {
+            from { transform: translateX(0); }
+            to { transform: translateX(-50%); }
+          }
+          .animate-scroll-x {
+            animation: scroll-x 40s linear infinite;
+          }
+          .animate-scroll-x-reverse {
+            animation: scroll-x 40s linear infinite reverse;
+          }
+        `}
+      </style>
+      <div className="flex w-[200%] animate-scroll-x gap-4 px-4">
+        {[...foodImages, ...foodImages].map((img, i) => (
+          <div key={i} className="w-[300px] h-[400px] md:w-[400px] md:h-[500px] rounded-[32px] overflow-hidden shadow-2xl flex-shrink-0 group">
+            <img 
+              src={img} 
+              alt="أكل بيتي" 
+              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" 
+              referrerPolicy="no-referrer"
+            />
+          </div>
+        ))}
+      </div>
+      <div className="flex w-[200%] animate-scroll-x-reverse gap-4 px-4 mt-6">
+        {[...foodImages].reverse().concat([...foodImages].reverse()).map((img, i) => (
+          <div key={i} className="w-[300px] h-48 md:w-[500px] md:h-64 rounded-[32px] overflow-hidden shadow-xl flex-shrink-0 group">
+            <img 
+              src={img} 
+              alt="أكل بيتي" 
+              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" 
+              referrerPolicy="no-referrer"
+            />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 export default function About() {
-  const { scrollY } = useScroll();
-  const y = useTransform(scrollY, [0, 500], [0, 150]);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end start"]
+  });
+
+  const heroY = useTransform(scrollYProgress, [0, 0.2], [0, -50]);
+  const opacity = useTransform(scrollYProgress, [0, 0.15], [1, 0]);
 
   return (
-    <div className="bg-brand-cream min-h-screen relative">
-      {/* Background Grain Overlay */}
-      <div className="fixed inset-0 pointer-events-none z-[99] opacity-[0.03] bg-grain"></div>
+    <div ref={containerRef} className="bg-white min-h-screen selection:bg-brand-primary selection:text-white">
       
-      {/* Hero Section - Editorial Style */}
-      <section className="relative min-h-[60vh] flex items-center overflow-hidden bg-brand-secondary">
-        <motion.div 
-          style={{ y }}
-          className="absolute inset-0 z-0 bg-gradient-to-br from-brand-secondary via-brand-primary/30 to-brand-secondary"
-        >
-          <div className="absolute inset-0 bg-gradient-to-b from-brand-secondary/80 via-brand-secondary/40 to-brand-secondary"></div>
-        </motion.div>
+      {/* Dynamic Hero Section */}
+      <section className="relative h-screen flex items-center justify-center overflow-hidden bg-brand-secondary">
+        <div className="absolute inset-0 z-0 overflow-hidden">
+          <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-brand-primary/20 rounded-full blur-[120px] animate-pulse"></div>
+          <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-brand-accent/20 rounded-full blur-[120px] animation-delay-2000"></div>
+          
+          {/* Parallax Background Grid */}
+          <div className="absolute inset-0 opacity-[0.05] bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
+        </div>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full text-right mt-10">
+        <div className="max-w-7xl mx-auto px-4 relative z-10 text-center">
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
+            style={{ y: heroY, opacity }}
+            className="space-y-6"
           >
-            <span className="inline-block px-6 py-2 rounded-full bg-brand-primary/20 border border-brand-primary/30 text-brand-primary text-sm font-black tracking-[0.3em] uppercase mb-8 backdrop-blur-xl">
-              إرث الطهي الأصيل يبدأ من طبلية
-            </span>
+            <motion.span 
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="inline-flex items-center gap-2 px-6 py-2 rounded-full bg-white/10 border border-white/20 text-brand-primary text-sm font-black backdrop-blur-xl mb-4"
+            >
+              <Sparkles size={16} />
+              منصة طبلية - طنطا
+            </motion.span>
             
-            <h1 className="text-5xl md:text-[80px] font-black text-white mb-8 leading-[1] tracking-[-0.02em]">
-              من نحن <br />
-              <span className="text-brand-primary italic font-serif">طبلية طنطا</span>
+            <h1 className="text-6xl md:text-[140px] font-black text-white leading-[0.8] tracking-tighter">
+              <span className="block opacity-80 scale-90 origin-right">نحن نعيد تعريف</span>
+              <motion.span 
+                initial={{ x: 100, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                transition={{ duration: 1, ease: "easeOut" }}
+                className="block text-brand-primary italic font-serif -skew-x-12 drop-shadow-[0_0_40px_rgba(255,165,0,0.4)]"
+              >
+                الطعم الأصلي
+              </motion.span>
             </h1>
             
-            <p className="text-lg md:text-3xl text-white/70 max-w-3xl ml-auto font-medium leading-tight">
-              أول منصة في طنطا للأكل البيتي، مكونات مضمونة، ونضافة، وسعر على قد الإيد.
+            <p className="text-xl md:text-3xl text-white/60 max-w-2xl mx-auto font-medium leading-tight pt-8">
+              بدأنا في طنطا لنسهل وصول أكل البيت "النضيف" لكل واحد نفسه في غدوة تشرف وتفتح النفس.
             </p>
           </motion.div>
         </div>
+
+        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce text-white/30">
+          < ChevronRight className="rotate-90" size={32} />
+        </div>
       </section>
 
-      {/* The Story Section */}
-      <section className="py-32 relative overflow-hidden bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-24 items-center">
-            <div className="lg:col-span-5 order-2 lg:order-1">
-              <motion.div 
-                initial={{ opacity: 0, scale: 0.9 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                className="relative"
-              >
-                <div className="aspect-[4/5] rounded-[60px] overflow-hidden shadow-2xl rotate-[-3deg] hover:rotate-0 transition-transform duration-1000 bg-gradient-to-br from-brand-primary to-brand-secondary flex items-center justify-center p-12">
-                  <Utensils size={100} className="text-white opacity-20" />
+      {/* Modern Story Section */}
+      <section className="py-32 bg-white relative">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+            <motion.div
+              initial={{ opacity: 0, x: 50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              className="space-y-10"
+            >
+              <div className="w-20 h-2 bg-brand-primary rounded-full"></div>
+              <h2 className="text-5xl md:text-7xl font-black text-brand-secondary leading-[0.95]">
+                من أيدي ماهره <br /> لـ طبلية بيتك.. <br /> بضغطة زر
+              </h2>
+              <div className="space-y-6 text-xl text-stone-500 font-medium leading-relaxed">
+                <p>
+                  طبلية مش مجرد وسيط، إحنا ضمان للجودة. في طنطا، وفي كل شارع فيها، فيه مطبخ "سري" ست بيت شاطرة جداً بتعمل عظمة، وإحنا مهمتنا نوصل العظمة دي ليك.
+                </p>
+                <p>
+                  إحنا بنؤمن إن الأكل مش بس طاقة، الأكل ذكرى ومشاعر ونضيف جداً. عشان كدة كل شيف بينضم لينا بيعدي باختبارات "نفس" ونضافة صارمة.
+                </p>
+              </div>
+              
+              <div className="flex gap-4">
+                <div className="flex -space-x-4 space-x-reverse">
+                  {[1, 2, 3, 4].map((i) => (
+                    <div key={i} className="w-12 h-12 rounded-full border-4 border-white bg-stone-200 overflow-hidden shadow-sm">
+                      <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=Chef${i}`} alt="شيف" />
+                    </div>
+                  ))}
                 </div>
-                <div className="absolute -bottom-10 -right-10 w-48 h-48 bg-brand-primary rounded-full flex items-center justify-center text-white p-8 text-center rotate-12 shadow-2xl">
-                  <p className="font-black text-xl leading-tight">طعم ملوش زي في طنطا</p>
+                <div className="text-sm font-black text-stone-900 border-r-2 border-stone-100 pr-4">
+                  <p className="text-brand-primary">طهاة محترفون</p>
+                  <p className="opacity-50 uppercase tracking-wider">حول طنطا</p>
                 </div>
-              </motion.div>
-            </div>
-            
-            <div className="lg:col-span-7 text-right order-1 lg:order-2">
-              <motion.div
-                initial={{ opacity: 0, x: 50 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-              >
-                <h2 className="text-[60px] md:text-[90px] font-black text-brand-secondary mb-10 leading-[0.9] tracking-tighter">
-                  ليه <span className="text-brand-primary">طبلية</span> <br /> هي اللي كسبت؟
-                </h2>
-                <div className="space-y-8">
-                  <p className="text-2xl text-stone-600 leading-relaxed font-medium">
-                    في عصر الأكل السريع والديليفري اللي ملوش طعم، كان لازم حد يتدخل. طبلية مش مجرد أبلكيشن، دي حركة لترجيع "النفس" الحقيقي لموائدنا. إحنا هنا عشان نثبت إن أكل البيت هو اللي بيكسب دايماً.
-                  </p>
-                  <p className="text-2xl text-stone-600 leading-relaxed font-medium">
-                    جمعنا أمهر طهاة طنطا في مكان واحد.. ستات البيوت اللي نفسهم "يوزن بلد" والناس اللي بتفهم في الأكل الصح. النتيجة؟ عظمة في كل طبق.
-                  </p>
-                </div>
-              </motion.div>
-            </div>
+              </div>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              className="relative aspect-square rounded-[40px] overflow-hidden shadow-2xl rotate-2"
+            >
+              <img 
+                src="https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&q=80&w=1000" 
+                className="w-full h-full object-cover" 
+                alt="طهي منزلي" 
+              />
+              <div className="absolute inset-0 bg-brand-primary/10 mix-blend-overlay"></div>
+            </motion.div>
           </div>
         </div>
       </section>
 
-      {/* Quality Standards Section */}
-      <section className="py-[100px] bg-brand-peach/30">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-[56px] font-bold text-brand-secondary mb-4">معايير الجودة بتاعتنا</h2>
-            <p className="text-stone-500 text-xl">نحن نلتزم بأعلى المعايير لضمان تجربة طعام آمنة ومميزة</p>
-          </div>
+      {/* The Moving Food Gallery */}
+      <section className="py-20 bg-stone-50 overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 mb-20 text-center">
+          <h2 className="text-4xl md:text-6xl font-black text-brand-secondary mb-6">عيش التجربة بصرية</h2>
+          <p className="text-stone-500 text-xl font-medium">كل دي وجبات بتطلع من مطابخنا يومياً</p>
+        </div>
+        <ScrollingFood />
+      </section>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-8">
+      {/* Values & Professionalism */}
+      <section className="py-40 bg-white">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
-              { title: "اختيار دقيق للمطابخ", desc: "كل مطبخ بيعدي على مقابلة شخصية ومراجعة نظافة.", icon: Users },
-              { title: "مكونات طازجة يومياً", desc: "المكونات بتتجاب طازجة كل يوم — مفيش مجمد أو قديم.", icon: Utensils },
-              { title: "طهي عند الطلب", desc: "مفيش أكل جاهز — كل أكلة بتتطبخ بعد الطلب لضمان النفس.", icon: Flame },
-              { title: "تغليف محكم ونظيف", desc: "التغليف نظيف ومحكم ومناسب للتوصيل لضمان الجودة.", icon: ShieldCheck },
-              { title: "تقييم مستمر", desc: "تقييم مستمر من العملاء بعد كل طلب لضمان استمرار التميز.", icon: Star }
-            ].map((item, i) => (
-              <div key={i} className="food-card p-[20px] group text-center">
-                <div className="w-16 h-16 bg-brand-primary/10 rounded-2xl flex items-center justify-center text-brand-primary mx-auto mb-6 group-hover:bg-brand-primary group-hover:text-white transition-colors">
-                  <item.icon size={32} />
+              {
+                title: "الحب هو المكون الأساسي",
+                desc: "الأكل البيتي بيتعمل بحب وإخلاص، وده اللي بيميزنا عن أي مطعم دليفري.",
+                icon: Heart,
+                color: "bg-red-50 text-red-500"
+              },
+              {
+                title: "النضافة أولاً وأخيراً",
+                desc: "كل مطبخ بيخضع لرقابة دورية ومعايير نضافة صارمة تليق بصحتك.",
+                icon: ShieldCheck,
+                color: "bg-green-50 text-green-500"
+              },
+              {
+                title: "دعم الست المصرية",
+                desc: "طبلية بتفتح باب رزق لمئات الستات الشاطرة والبيوت اللي بتقدم فن حقيقي.",
+                icon: Award,
+                color: "bg-blue-50 text-blue-500"
+              }
+            ].map((v, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
+                className="p-12 rounded-[40px] border border-stone-100 bg-stone-50/50 hover:bg-white hover:shadow-2xl transition-all duration-500 group"
+              >
+                <div className={`w-16 h-16 ${v.color} rounded-x2l rounded-3xl flex items-center justify-center mb-8 group-hover:scale-110 transition-transform`}>
+                  <v.icon size={32} />
                 </div>
-                <h3 className="text-xl font-bold mb-4 text-brand-secondary">{item.title}</h3>
-                <p className="text-stone-500 text-sm">{item.desc}</p>
-              </div>
+                <h3 className="text-2xl font-black text-brand-secondary mb-6">{v.title}</h3>
+                <p className="text-lg text-stone-500 font-medium leading-relaxed">{v.desc}</p>
+              </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Stats Section */}
-      <section className="py-[100px] bg-brand-secondary text-brand-cream">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-12 text-center">
-            <div>
-              <p className="text-5xl font-bold mb-2">+50</p>
-              <p className="text-brand-peach font-bold text-xl">مطبخ محترف</p>
-            </div>
-            <div>
-              <p className="text-5xl font-bold mb-2">+1000</p>
-              <p className="text-brand-peach font-bold text-xl">عميل مبسوط</p>
-            </div>
-            <div>
-              <p className="text-5xl font-bold mb-2">+200</p>
-              <p className="text-brand-peach font-bold text-xl">أكلة متنوعة</p>
-            </div>
-            <div>
-              <p className="text-5xl font-bold mb-2">100%</p>
-              <p className="text-brand-peach font-bold text-xl">طعم أصلي</p>
-            </div>
+      {/* Elegant Closing CTA */}
+      <section className="py-40 bg-white">
+        <div className="max-w-4xl mx-auto px-4 text-center space-y-10">
+          <div className="w-24 h-24 bg-brand-primary/10 rounded-full flex items-center justify-center mx-auto text-brand-primary shadow-inner">
+            <ChefHat size={48} />
           </div>
-        </div>
-      </section>
-
-      {/* Call to Action */}
-      <section className="py-[100px] bg-brand-cream">
-        <div className="max-w-5xl mx-auto px-4 text-center">
-          <h2 className="text-[56px] font-bold text-brand-secondary mb-8">جاهز تدوق <span className="text-brand-primary italic">العظمة</span>؟</h2>
-          <p className="text-xl text-stone-500 mb-12">انضم لعيلة طبلية النهاردة.. سواء كنت شيف عاوز تفتح مطبخك أو أكيل بيدور على النفس الصح اللي بجد.</p>
-          <div className="flex flex-col sm:flex-row gap-6 justify-center">
-            <Link to="/meals" className="btn-primary py-5 px-12 text-xl shadow-2xl">دوق دلوقتي</Link>
-            <Link to="/join-us" className="btn-secondary py-5 px-12 text-xl">انضم كمطبخ</Link>
+          <h2 className="text-6xl md:text-[100px] font-black text-brand-secondary leading-none flex flex-col items-center">
+            <motion.span 
+              initial={{ y: 20, opacity: 0 }}
+              whileInView={{ y: -15, opacity: 1 }}
+              viewport={{ once: true }}
+              className="text-2xl md:text-5xl opacity-40 mb-2"
+            >
+              كن جزءاً من
+            </motion.span>
+            <motion.span 
+              initial={{ y: -20, opacity: 0 }}
+              whileInView={{ y: 15, opacity: 1 }}
+              viewport={{ once: true }}
+              className="text-brand-primary italic font-serif"
+            >
+              عائلتنا
+            </motion.span>
+            <span className="mt-8 text-4xl md:text-6xl">اليوم</span>
+          </h2>
+          <p className="text-xl text-stone-500 font-medium max-w-2xl mx-auto">
+            سواء كنت تريد تذوق الأفضل، أو تريد تحويل موهبتك في المطبخ لعمل ناجح.. طبلية هي وجهتك.
+          </p>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-6 pt-10">
+            <Link to="/meals" className="btn-primary w-full sm:w-auto px-16 py-6 text-xl shadow-2xl hover:scale-105 transition-transform font-black">
+              اكتشف الأكلات
+            </Link>
+            <Link to="/join-us" className="w-full sm:w-auto px-16 py-6 text-xl text-brand-secondary font-black hover:bg-stone-50 rounded-full transition-colors">
+              انضم كشيف
+            </Link>
           </div>
         </div>
       </section>
