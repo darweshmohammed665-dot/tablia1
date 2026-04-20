@@ -114,14 +114,6 @@ export default function CustomerDashboard({ profile: initialProfile }: CustomerD
     navigate('/');
   };
 
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-brand-cream">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-brand-primary"></div>
-      </div>
-    );
-  }
-
   const activeOrders = orders.filter(o => ['pending', 'preparing', 'out_for_delivery'].includes(o.status));
 
   return (
