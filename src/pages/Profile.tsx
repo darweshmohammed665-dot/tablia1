@@ -1,7 +1,6 @@
 import React from 'react';
 import { Navigate } from 'react-router-dom';
 import { UserProfile } from '../types';
-import ChefDashboard from './ChefDashboard';
 import CustomerDashboard from './CustomerDashboard';
 
 interface ProfileProps {
@@ -10,11 +9,11 @@ interface ProfileProps {
 
 export default function Profile({ profile }: ProfileProps) {
   if (!profile) {
-    return <Navigate to="/login" />;
+    return <Navigate to="/login" replace />;
   }
 
   if (profile.role === 'chef') {
-    return <ChefDashboard profile={profile} />;
+    return <Navigate to="/dashboard" replace />;
   }
 
   return <CustomerDashboard profile={profile} />;

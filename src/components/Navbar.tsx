@@ -50,7 +50,7 @@ export default function Navbar({ user, profile }: NavbarProps) {
                     </span>
                   )}
                 </Link>
-                <Link to="/profile" className="w-8 h-8 rounded-full bg-stone-50 flex items-center justify-center border-2 border-white shadow-sm overflow-hidden">
+                <Link to={profile?.role === 'chef' ? '/dashboard' : '/profile'} className="w-8 h-8 rounded-full bg-stone-50 flex items-center justify-center border-2 border-white shadow-sm overflow-hidden">
                   {profile?.photoURL ? (
                     <img src={profile.photoURL} alt="Profile" className="w-full h-full object-cover" />
                   ) : (
@@ -80,7 +80,7 @@ export default function Navbar({ user, profile }: NavbarProps) {
 
             {user ? (
               <div className="flex items-center gap-4">
-                <Link to="/profile" className="w-8 h-8 rounded-full bg-stone-100 flex items-center justify-center text-stone-600 overflow-hidden border border-stone-200">
+                <Link to={profile?.role === 'chef' ? '/dashboard' : '/profile'} className="w-8 h-8 rounded-full bg-stone-100 flex items-center justify-center text-stone-600 overflow-hidden border border-stone-200">
                   {profile?.photoURL ? (
                     <img src={profile.photoURL} alt="Profile" className="w-full h-full object-cover" />
                   ) : (
@@ -128,7 +128,7 @@ export default function Navbar({ user, profile }: NavbarProps) {
               <hr className="border-stone-100" />
               {user ? (
                 <>
-                  <Link to="/profile" className="block text-lg text-brand-secondary font-bold" onClick={() => setIsOpen(false)}>
+                  <Link to={profile?.role === 'chef' ? '/dashboard' : '/profile'} className="block text-lg text-brand-secondary font-bold" onClick={() => setIsOpen(false)}>
                     {profile?.role === 'chef' ? 'لوحة التحكم' : 'حسابي وطلباتي'}
                   </Link>
                   <button onClick={handleLogout} className="block text-lg text-red-500 font-bold">تسجيل الخروج</button>
