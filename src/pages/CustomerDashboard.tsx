@@ -168,8 +168,8 @@ export default function CustomerDashboard({ profile: initialProfile }: CustomerD
         <div className="bg-white p-2 rounded-[32px] shadow-xl border border-stone-100 flex flex-wrap md:flex-nowrap gap-2 mb-12 w-fit mx-auto md:mx-0">
           {[
             { id: 'overview', label: 'نظرة عامة', icon: ShoppingBag },
-            { id: 'orders', label: 'طلباتي', icon: Package },
-            { id: 'settings', label: 'الإعدادات', icon: Settings },
+            { id: 'orders', label: 'سجل طلباتي', icon: Package },
+            { id: 'profile', label: 'الملف الشخصي', icon: User },
           ].map((tab) => (
             <button
               key={tab.id}
@@ -424,9 +424,9 @@ export default function CustomerDashboard({ profile: initialProfile }: CustomerD
             </motion.div>
           )}
 
-          {activeTab === 'settings' && (
+          {activeTab === 'profile' && (
             <motion.div
-              key="settings"
+              key="profile"
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: 20 }}
