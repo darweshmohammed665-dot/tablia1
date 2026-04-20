@@ -133,8 +133,6 @@ const AnimatedRoutes = ({ profile }: { profile: UserProfile | null }) => {
   );
 };
 
-import firebaseConfig from '../firebase-applet-config.json';
-
 export default function App() {
   const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<UserProfile | null>(null);

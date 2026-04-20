@@ -3,21 +3,30 @@ import { getAuth, GoogleAuthProvider, OAuthProvider } from 'firebase/auth';
 import { getFirestore, doc, getDocFromServer } from 'firebase/firestore';
 import { getDatabase } from 'firebase/database';
 import { getAnalytics } from 'firebase/analytics';
-import firebaseConfig from '../firebase-applet-config.json';
+
+const firebaseConfig = {
+  apiKey: "AIzaSyD6HIikH2V1zNbpQUGG6YvKA2DKTE8apiA",
+  authDomain: "tablia-c0129.firebaseapp.com",
+  projectId: "tablia-c0129",
+  storageBucket: "tablia-c0129.firebasestorage.app",
+  messagingSenderId: "924497528390",
+  appId: "1:924497528390:web:758580a8feda73617fec47",
+  measurementId: "G-KZC2HQ2P8V"
+};
 
 // Initialize Firebase SDK
-const app = firebaseConfig.apiKey ? initializeApp(firebaseConfig) : null;
+const app = initializeApp(firebaseConfig);
 
-export const db = app ? getFirestore(app, firebaseConfig.firestoreDatabaseId) : null;
-export const rtdb = app ? getDatabase(app) : null;
+export const db = getFirestore(app);
+export const rtdb = getDatabase(app);
 
-export const auth = app ? getAuth(app) : null;
-export const analytics = (app && typeof window !== 'undefined') ? getAnalytics(app) : null;
+export const auth = getAuth(app);
+export const analytics = typeof window !== 'undefined' ? getAnalytics(app) : null;
 export const googleProvider = new GoogleAuthProvider();
 export const appleProvider = new OAuthProvider('apple.com');
 
 export type ConnectionStatus = 'loading' | 'connected' | 'error' | 'disconnected';
-let connectionStatus: ConnectionStatus = firebaseConfig.apiKey ? 'loading' : 'disconnected';
+let connectionStatus: ConnectionStatus = 'loading';
 let onStatusChange: ((status: ConnectionStatus) => void) | null = null;
 
 export const getConnectionStatus = () => connectionStatus;
