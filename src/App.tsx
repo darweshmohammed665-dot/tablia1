@@ -97,7 +97,7 @@ const PageWrapper = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-const AnimatedRoutes = ({ profile }: { profile: UserProfile | null }) => {
+const AnimatedRoutes = ({ profile, profileLoading }: { profile: UserProfile | null, profileLoading: boolean }) => {
   const location = useLocation();
   
   return (
@@ -114,7 +114,10 @@ const AnimatedRoutes = ({ profile }: { profile: UserProfile | null }) => {
           <Route path="/login" element={<PageWrapper><Login /></PageWrapper>} />
           <Route path="/register" element={<PageWrapper><Register /></PageWrapper>} />
           <Route path="/orders" element={<PageWrapper><MyOrders /></PageWrapper>} />
-          <Route path="/profile" element={<PageWrapper><Profile profile={profile} /></PageWrapper>} />
+          <Route path="/profile" element={
+            profileLoading ? <PageWrapper><LoadingScreen /></PageWrapper> : 
+            <PageWrapper><Profile profile={profile} /></PageWrapper>
+          } />
           <Route path="/about" element={<PageWrapper><About /></PageWrapper>} />
           <Route path="/faq" element={<PageWrapper><FAQ /></PageWrapper>} />
           <Route path="/driver-tracking" element={<PageWrapper><DriverTracking /></PageWrapper>} />
@@ -124,6 +127,7 @@ const AnimatedRoutes = ({ profile }: { profile: UserProfile | null }) => {
           <Route 
             path="/dashboard" 
             element={
+              profileLoading ? <PageWrapper><LoadingScreen /></PageWrapper> :
               profile?.role === 'chef' ? <PageWrapper><ChefDashboard profile={profile} /></PageWrapper> : <Navigate to="/" />
             } 
           />
@@ -137,6 +141,7 @@ export default function App() {
   const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
+  const [profileLoading, setProfileLoading] = useState(false);
   const [connStatus, setConnStatus] = useState<ConnectionStatus>('loading');
   const [showBanner, setShowBanner] = useState(true);
 
@@ -163,6 +168,7 @@ export default function App() {
       }
 
       if (firebaseUser && db) {
+        setProfileLoading(true);
         const docRef = doc(db, 'users', firebaseUser.uid);
         unsubProfileRef.current = onSnapshot(docRef, (docSnap) => {
           if (docSnap.exists()) {
@@ -170,13 +176,16 @@ export default function App() {
           } else {
             setProfile(null);
           }
+          setProfileLoading(false);
           setLoading(false);
         }, (error) => {
           console.error("Error fetching profile:", error);
+          setProfileLoading(false);
           setLoading(false);
         });
       } else {
         setProfile(null);
+        setProfileLoading(false);
         setLoading(false);
       }
     }) : (() => {
@@ -204,7 +213,7 @@ export default function App() {
           <Toaster position="top-center" richColors />
           <Navbar user={user} profile={profile} />
           <main className="flex-grow">
-            <AnimatedRoutes profile={profile} />
+            <AnimatedRoutes profile={profile} profileLoading={profileLoading} />
           </main>
           <Footer />
         </div>
