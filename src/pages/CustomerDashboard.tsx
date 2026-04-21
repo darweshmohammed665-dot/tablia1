@@ -138,16 +138,20 @@ export default function CustomerDashboard({ profile: initialProfile }: CustomerD
             
             <div className="text-center md:text-right flex-grow">
               <div className="flex flex-col md:flex-row md:items-center gap-4 mb-4">
-                <h1 className="text-4xl md:text-6xl font-black text-white leading-tight">
-                  أهلاً، {profile?.displayName?.split(' ')[0] || 'يا بطل'} 👋
+                <h1 className="text-4xl md:text-5xl font-black text-white leading-tight">
+                  أهلاً بك يا {profile?.displayName?.split(' ')[0] || 'بطل'} 👋
                 </h1>
-                <span className="bg-brand-primary text-white px-4 py-1 rounded-full text-sm font-bold w-fit mx-auto md:mx-0">
-                  عميل ذهبي
-                </span>
               </div>
-              <p className="text-brand-accent/70 text-xl font-medium max-w-2xl">
-                مستعد لطلب أكل بيتي النهاردة؟ عندنا شيفات طنطا مستنيينك.
-              </p>
+              <div className="flex flex-wrap gap-4 text-brand-cream/90 font-medium">
+                  <div className="flex items-center gap-2 bg-white/10 px-4 py-2 rounded-xl backdrop-blur-sm">
+                    <Phone size={18} />
+                    <span>{profile?.phoneNumber || 'لم يتم إدخال رقم هاتف'}</span>
+                  </div>
+                  <div className="flex items-center gap-2 bg-white/10 px-4 py-2 rounded-xl backdrop-blur-sm">
+                    <MapPin size={18} />
+                    <span>{profile?.address || 'لم يتم تحديد عنوان'}</span>
+                  </div>
+              </div>
             </div>
 
             <div className="flex gap-4">

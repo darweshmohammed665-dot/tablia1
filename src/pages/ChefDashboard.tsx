@@ -317,16 +317,18 @@ export default function ChefDashboard({ profile }: ChefDashboardProps) {
 
   if (!isProfileComplete) {
     return (
-      <div className="bg-brand-cream min-h-screen py-[100px] px-4">
-        <div className="max-w-7xl mx-auto">
-          <div className="mb-12 text-center">
-            <div className="w-20 h-20 bg-brand-secondary/10 text-brand-secondary rounded-full flex items-center justify-center mx-auto mb-6">
-              <UserCheck size={40} />
-            </div>
-            <h1 className="text-4xl font-bold text-stone-900 mb-2">أهلاً بك في طبلية</h1>
-            <p className="text-stone-500">قبل أن تبدأ في إضافة وجباتك، نحتاج منك إكمال ملفك الشخصي ليتمكن العملاء من التعرف عليك.</p>
+      <div className="bg-[#FAF9F6] min-h-screen py-16 px-4 flex items-center justify-center">
+        <div className="max-w-xl w-full bg-white rounded-[40px] p-8 md:p-12 shadow-xl border border-stone-100 text-center">
+          <div className="w-24 h-24 bg-brand-primary/10 text-brand-primary rounded-full flex items-center justify-center mx-auto mb-8 shadow-inner">
+            <ChefHat size={48} />
           </div>
-          <ChefProfileForm profile={profile} onComplete={() => setIsProfileComplete(true)} />
+          <h1 className="text-3xl md:text-4xl font-black text-brand-secondary mb-4">أهلاً بك يا شيف في طبلية! 👨‍🍳</h1>
+          <p className="text-stone-600 font-medium text-lg mb-10 leading-relaxed">
+            أنت على بعد خطوة واحدة من بدء رحلتك في جذب العشاق للأكل الأصلي. أكمل بيانات مطبخك الآن لنقوم بتفعيل حسابك واظهاره للعملاء.
+          </p>
+          <div className="bg-stone-50 rounded-3xl p-6 border border-stone-100 text-right">
+             <ChefProfileForm profile={profile} onComplete={() => setIsProfileComplete(true)} />
+          </div>
         </div>
       </div>
     );
