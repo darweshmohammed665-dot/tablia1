@@ -32,11 +32,19 @@ export default function Login() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    const cleanPhone = phoneNumber.trim();
+    const cleanPassword = password.trim();
+    
+    if (!cleanPhone || !cleanPassword) {
+      setError('يرجى إدخال رقم الهاتف وكلمة المرور');
+      return;
+    }
+
     setLoading(true);
     setError('');
     try {
-      const virtualEmail = `${phoneNumber}@tablia.com`;
-      await signInWithEmailAndPassword(auth, virtualEmail, password);
+      const virtualEmail = `${cleanPhone}@tablia.com`;
+      await signInWithEmailAndPassword(auth, virtualEmail, cleanPassword);
       toast.success('تم تسجيل الدخول بنجاح!');
       navigate('/profile');
     } catch (err: any) {

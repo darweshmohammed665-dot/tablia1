@@ -38,20 +38,29 @@ export default function Register() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const virtualEmail = `${phoneNumber}@tablia.com`;
-    console.log('Submitting registration form...', { phoneNumber, role, location });
+    const cleanPhone = phoneNumber.trim();
+    const cleanPassword = password.trim();
+    const cleanName = name.trim();
+
+    if (!cleanPhone || !cleanPassword || !cleanName) {
+      setError('يرجى ملء جميع البيانات المطلوبة');
+      return;
+    }
+
+    const virtualEmail = `${cleanPhone}@tablia.com`;
+    console.log('Submitting registration form...', { cleanPhone, role, location });
     setLoading(true);
     setError('');
     try {
-      const userCredential = await createUserWithEmailAndPassword(auth, virtualEmail, password);
-      await updateProfile(userCredential.user, { displayName: name });
+      const userCredential = await createUserWithEmailAndPassword(auth, virtualEmail, cleanPassword);
+      await updateProfile(userCredential.user, { displayName: cleanName });
       
       if (db) {
         await setDoc(doc(db, 'users', userCredential.user.uid), {
           uid: userCredential.user.uid,
           email: virtualEmail,
-          displayName: name,
-          phoneNumber,
+          displayName: cleanName,
+          phoneNumber: cleanPhone,
           location,
           role,
           createdAt: Date.now(),
