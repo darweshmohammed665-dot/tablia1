@@ -79,11 +79,14 @@ export default function Meals() {
 
   const filteredAndSortedMeals = useMemo(() => {
     let result = meals.filter(meal => {
-      const matchesSearch = meal.title.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) || 
-                           meal.chefName.toLowerCase().includes(debouncedSearchTerm.toLowerCase());
+      const title = (meal.title || '').toLowerCase();
+      const chefName = (meal.chefName || '').toLowerCase();
+      const search = debouncedSearchTerm.toLowerCase();
+      
+      const matchesSearch = title.includes(search) || chefName.includes(search);
       const matchesCategory = selectedCategories.length === 0 || selectedCategories.includes(meal.category);
-      const matchesPrice = meal.price >= priceRange[0] && meal.price <= priceRange[1];
-      const matchesRating = meal.rating >= minRating;
+      const matchesPrice = (meal.price || 0) >= priceRange[0] && (meal.price || 0) <= priceRange[1];
+      const matchesRating = (meal.rating || 0) >= minRating;
       const matchesDelivery = (meal.deliveryTime || 45) <= maxDeliveryTime;
       const matchesOrderType = orderTypeFilter === 'all' || meal.orderType === orderTypeFilter;
       

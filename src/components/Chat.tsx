@@ -34,7 +34,11 @@ export default function Chat({ orderId, recipientName, isOpen, onClose }: ChatPr
         const messageList = Object.entries(data).map(([id, msg]: [string, any]) => ({
           id,
           ...msg,
-        })).sort((a, b) => a.timestamp - b.timestamp);
+        })).sort((a, b) => {
+          const t1 = typeof a.timestamp === 'number' ? a.timestamp : Date.now();
+          const t2 = typeof b.timestamp === 'number' ? b.timestamp : Date.now();
+          return t1 - t2;
+        });
         setMessages(messageList);
       }
     });

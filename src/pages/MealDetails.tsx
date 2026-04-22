@@ -9,7 +9,7 @@ import { Star, Clock, ChefHat, ShoppingCart, ArrowRight, ShieldCheck, Bike, Shop
 import { useCart } from '../context/CartContext';
 import { toast } from 'sonner';
 import { FoodPriceDisplay } from '../components/FoodPriceDisplay';
-import { formatTime12h } from '../lib/date-utils';
+import { formatTime12h, formatDateTime12h } from '../lib/date-utils';
 
 export default function MealDetails() {
   const { id } = useParams();
@@ -422,7 +422,7 @@ export default function MealDetails() {
                         <div>
                           <p className="font-bold text-brand-accent">{review.customerName}</p>
                           <p className="text-xs text-stone-400">
-                            {new Date(review.createdAt).toLocaleDateString('ar-EG', { year: 'numeric', month: 'long', day: 'numeric' })}
+                            {formatDateTime12h(review.createdAt)}
                           </p>
                         </div>
                       </div>

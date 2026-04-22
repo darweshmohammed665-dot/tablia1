@@ -36,7 +36,7 @@ export default function Chefs() {
   }, []);
 
   const filteredChefs = chefs.filter(chef => 
-    chef.displayName.toLowerCase().includes(searchTerm.toLowerCase())
+    (chef.displayName || '').toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (

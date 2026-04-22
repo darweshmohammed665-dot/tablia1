@@ -25,8 +25,30 @@ export function formatTime12h(timeStr: string | undefined): string {
  * Formats a Date object or timestamp into a full 12-hour time string (Western digits, Arabic AM/PM).
  * Example: "9:30 ص"
  */
-export function formatDateTime12h(date: Date | number): string {
-  const d = typeof date === 'number' ? new Date(date) : date;
+export function formatDateTime12h(date: any): string {
+  if (!date) return '';
+  
+  let d: Date;
+  if (typeof date === 'number') {
+    d = new Date(date);
+  } else if (date instanceof Date) {
+    d = date;
+  } else if (date && typeof date === 'object' && typeof (date as any).toDate === 'function') {
+    // Handle Firestore Timestamp
+    d = (date as any).toDate();
+  } else if (date && typeof (date as any).seconds === 'number') {
+    // Basic Firestore-like object
+    d = new Date((date as any).seconds * 1000);
+  } else {
+    try {
+      d = new Date(date);
+    } catch (e) {
+      return '';
+    }
+  }
+
+  if (isNaN(d.getTime())) return '';
+
   const hours = d.getHours();
   const minutes = d.getMinutes();
   

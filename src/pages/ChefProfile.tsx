@@ -10,7 +10,7 @@ import ChefProfileForm from '../components/ChefProfileForm';
 import { MealCard } from '../components/MealCard';
 import { useCart } from '../context/CartContext';
 import { toast } from 'sonner';
-import { formatTime12h } from '../lib/date-utils';
+import { formatTime12h, formatDateTime12h } from '../lib/date-utils';
 
 export default function ChefProfile() {
   const { id } = useParams();
@@ -467,7 +467,7 @@ export default function ChefProfile() {
                       </div>
                     </div>
                     <div className="mr-auto text-xs text-stone-400 font-bold">
-                      {new Date(review.createdAt).toLocaleDateString('ar-EG')}
+                      {formatDateTime12h(review.createdAt)}
                     </div>
                   </div>
                   <p className="text-stone-600 leading-relaxed font-medium italic">

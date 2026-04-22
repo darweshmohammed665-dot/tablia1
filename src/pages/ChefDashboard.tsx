@@ -284,10 +284,10 @@ export default function ChefDashboard({ profile }: ChefDashboardProps) {
   };
 
   const stats = [
-    { label: 'إجمالي المبيعات', value: `${orders.reduce((acc, o) => acc + o.total, 0)} ج.م`, icon: DollarSign, color: 'bg-green-50 text-green-600' },
-    { label: 'الطلبات النشطة', value: orders.filter(o => o.status !== 'delivered' && o.status !== 'cancelled').length, icon: Package, color: 'bg-blue-50 text-blue-600' },
-    { label: 'عدد الوجبات', value: meals.length, icon: Utensils, color: 'bg-orange-50 text-orange-600' },
-    { label: 'التقييم العام', value: '4.9', icon: Star, color: 'bg-yellow-50 text-yellow-600' },
+    { label: 'إجمالي المبيعات', value: `${(Array.isArray(orders) ? orders : []).reduce((acc, o) => acc + (o.total || 0), 0)} ج.م`, icon: DollarSign, color: 'bg-green-50 text-green-600' },
+    { label: 'الطلبات النشطة', value: (Array.isArray(orders) ? orders : []).filter(o => o && o.status !== 'delivered' && o.status !== 'cancelled').length, icon: Package, color: 'bg-blue-50 text-blue-600' },
+    { label: 'عدد الوجبات', value: (Array.isArray(meals) ? meals : []).length, icon: Utensils, color: 'bg-orange-50 text-orange-600' },
+    { label: 'التقييم العام', value: (profile && profile.rating ? profile.rating.toFixed(1) : '5.0'), icon: Star, color: 'bg-yellow-50 text-yellow-600' },
   ];
 
   const statusOptions: { value: Order['status'], label: string }[] = [
