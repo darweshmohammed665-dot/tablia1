@@ -197,8 +197,8 @@ export default function ChefDashboard({ profile }: ChefDashboardProps) {
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
-    if (files.length + newMeal.images.length > 6) {
-      toast.error('يمكنك رفع 6 صور كحد أقصى');
+    if (files.length + newMeal.images.length > 5) {
+      toast.error('يمكنك رفع 5 صور كحد أقصى');
       return;
     }
 
@@ -236,7 +236,7 @@ export default function ChefDashboard({ profile }: ChefDashboardProps) {
           const dataUrl = canvas.toDataURL('image/jpeg', 0.8);
           
           setNewMeal(prev => {
-            const newImages = [...prev.images, dataUrl].slice(0, 6);
+            const newImages = [...prev.images, dataUrl].slice(0, 5);
             return {
               ...prev,
               images: newImages,
@@ -887,7 +887,7 @@ export default function ChefDashboard({ profile }: ChefDashboardProps) {
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-stone-700 mb-1">صور الوجبة (حتى 6 صور)</label>
+                <label className="block text-sm font-medium text-stone-700 mb-1">صور الوجبة (حتى 5 صور)</label>
                 <div className="flex flex-wrap gap-2 mb-2">
                   {newMeal.images.map((img, idx) => (
                     <div key={idx} className="relative w-20 h-20 rounded-xl overflow-hidden border border-stone-200">
@@ -901,7 +901,7 @@ export default function ChefDashboard({ profile }: ChefDashboardProps) {
                       </button>
                     </div>
                   ))}
-                  {newMeal.images.length < 6 && (
+                  {newMeal.images.length < 5 && (
                     <label className="w-20 h-20 rounded-xl border-2 border-dashed border-stone-300 flex flex-col items-center justify-center text-stone-400 cursor-pointer hover:bg-stone-50 hover:border-brand-primary transition-colors">
                       <Camera size={24} />
                       <span className="text-[10px] mt-1">إضافة صورة</span>
