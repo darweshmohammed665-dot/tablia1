@@ -4,25 +4,27 @@ import { getFirestore, initializeFirestore, doc, getDocFromServer } from 'fireba
 import { getDatabase } from 'firebase/database';
 import { getAnalytics } from 'firebase/analytics';
 
+// Correct configuration from firebase-applet-config.json
 const firebaseConfig = {
-  apiKey: "AIzaSyD6HIikH2V1zNbpQUGG6YvKA2DKTE8apiA",
-  authDomain: "tablia-c0129.firebaseapp.com",
-  projectId: "tablia-c0129",
-  storageBucket: "tablia-c0129.firebasestorage.app",
-  messagingSenderId: "924497528390",
-  appId: "1:924497528390:web:758580a8feda73617fec47",
-  measurementId: "G-KZC2HQ2P8V"
+  apiKey: "AIzaSyDxTi5jlnT6YyDTZi5m4HQIw8Rsw2RW3L8",
+  authDomain: "tablia1-33645.firebaseapp.com",
+  projectId: "tablia1-33645",
+  storageBucket: "tablia1-33645.firebasestorage.app",
+  messagingSenderId: "97431584399",
+  appId: "1:97431584399:web:ca2dd99c63523b17367afa",
+  measurementId: "G-CYGZNVMK43"
 };
 
 // Initialize Firebase SDK
 const app = initializeApp(firebaseConfig);
 
-// @ts-ignore - experimentalForceLongPolling might not be in all TS definitions but it works to fix WebSocket blocking on 4G
+// Using Long Polling to bypass potential WebSocket blocks on specific networks (like some Egypt ISPs/Wi-Fi)
 export const db = initializeFirestore(app, {
-  experimentalForceLongPolling: true
+  experimentalForceLongPolling: true,
+  useFetchStreams: false
 });
-export const rtdb = getDatabase(app);
 
+export const rtdb = getDatabase(app);
 export const auth = getAuth(app);
 export const analytics = typeof window !== 'undefined' ? getAnalytics(app) : null;
 export const googleProvider = new GoogleAuthProvider();
@@ -40,23 +42,21 @@ export const subscribeToConnectionStatus = (cb: (status: ConnectionStatus) => vo
 };
 
 async function testConnection() {
-  if (!app || !db) {
-    console.warn('Firebase is disconnected. No configuration found.');
-    return;
-  }
+  if (!app || !db) return;
   try {
+    // Attempt to fetch from server to verify connection
     await getDocFromServer(doc(db, 'test', 'connection'));
-    console.log('Firestore connection successful');
     connectionStatus = 'connected';
     onStatusChange?.('connected');
-  } catch (error) {
-    if (error instanceof Error && (error.message.includes('the client is offline') || error.message.includes('Could not reach Cloud Firestore backend') || error.message.includes('Missing or insufficient permissions'))) {
-      console.error(`🔥 FIRESTORE NOT ENABLED: Please go to the Firebase Console (https://console.firebase.google.com/project/${firebaseConfig.projectId}/firestore), click 'Create database', and start in Test Mode.`);
+  } catch (error: any) {
+    console.warn("Connection check:", error.message);
+    // If it's a permission error, it at least reached the server
+    if (error.code === 'permission-denied') {
+      connectionStatus = 'connected';
+      onStatusChange?.('connected');
+    } else {
       connectionStatus = 'error';
       onStatusChange?.('error');
-    } else {
-      console.error("Firestore connection test failed:", error);
-      // We don't set error here unless it's a definitive "not enabled" or "no permission" on the test doc
     }
   }
 }

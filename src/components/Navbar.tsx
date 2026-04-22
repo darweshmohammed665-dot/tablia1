@@ -1,6 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { User } from 'firebase/auth';
-import { ShoppingCart, User as UserIcon, LogOut, Menu, X, Utensils } from 'lucide-react';
+import { ShoppingCart, User as UserIcon, LogOut, Menu, X, Utensils, AlertCircle } from 'lucide-react';
 import { useState } from 'react';
 import { auth } from '../firebase';
 import { UserProfile } from '../types';
@@ -24,6 +24,15 @@ export default function Navbar({ user, profile }: NavbarProps) {
 
   return (
     <nav className="bg-white sticky top-0 z-50 border-b border-stone-100">
+      {/* Offline Banner */}
+      {!navigator.onLine && (
+        <div className="bg-amber-50 border-b border-amber-100 py-1.5 px-4 text-center">
+          <p className="text-amber-800 text-[10px] font-bold flex items-center justify-center gap-1">
+            <AlertCircle size={12} />
+            أنت حالياً غير متصل بالإنترنت. قد لا تعمل بعض المميزات.
+          </p>
+        </div>
+      )}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16 items-center">
           <div className="flex items-center gap-4">
