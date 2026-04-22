@@ -188,10 +188,10 @@ export default function MyOrders() {
                       </span>
                     </div>
                     <h3 className="text-xl font-bold text-brand-secondary">
-                      {order.items.map(item => item.title).join('، ')}
+                      {Array.isArray(order.items) ? order.items.map(item => item.title).join('، ') : 'طلب بدون اسم'}
                     </h3>
                     
-                    {order.items.some(i => i.scheduledTime) && (
+                    {Array.isArray(order.items) && order.items.some(i => i.scheduledTime) && (
                       <div className="flex flex-wrap gap-2 mt-2">
                         {order.items.map((item, idx) => item.scheduledTime && (
                           <span key={idx} className="bg-brand-peach/30 text-brand-secondary px-2 py-0.5 rounded-lg text-[10px] font-bold flex items-center gap-1">

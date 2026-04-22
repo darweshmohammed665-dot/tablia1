@@ -561,12 +561,12 @@ export default function ChefDashboard({ profile }: ChefDashboardProps) {
                       <div>
                         <span className="text-xs font-bold text-stone-400 block mb-1">رقم الطلب: #{order.id.slice(-6)}</span>
                         <h3 className="font-bold text-lg text-stone-900">
-                          {order.items.map(i => i.title).join('، ')}
+                          {Array.isArray(order.items) ? order.items.map(i => i.title).join('، ') : 'طلب بدون اسم'}
                         </h3>
                         <div className="mt-2 space-y-1">
                           <div className="bg-white/50 rounded-xl p-3 mb-3">
                             <p className="text-xs text-stone-400 mb-2 font-bold uppercase tracking-wider">الأصناف المطلوبة:</p>
-                            {order.items.map((item, idx) => (
+                            {Array.isArray(order.items) && order.items.map((item, idx) => (
                               <div key={idx} className="flex justify-between items-start py-2 border-b border-stone-100 last:border-0">
                                 <div className="flex flex-col gap-1">
                                   <span className="text-stone-700 font-bold">{item.quantity}x {item.title}</span>
@@ -577,7 +577,7 @@ export default function ChefDashboard({ profile }: ChefDashboardProps) {
                                     </span>
                                   )}
                                 </div>
-                                <span className="text-stone-500 font-bold">{item.price * item.quantity} ج.م</span>
+                                <span className="text-stone-500 font-bold">{(item.price || 0) * (item.quantity || 0)} ج.م</span>
                               </div>
                             ))}
                           </div>

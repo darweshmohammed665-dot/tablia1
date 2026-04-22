@@ -114,7 +114,7 @@ export default function CustomerDashboard({ profile: initialProfile }: CustomerD
     navigate('/');
   };
 
-  const activeOrders = orders.filter(o => ['pending', 'preparing', 'out_for_delivery'].includes(o.status));
+  const activeOrders = Array.isArray(orders) ? orders.filter(o => o && ['pending', 'preparing', 'out_for_delivery'].includes(o.status)) : [];
 
   return (
     <div className="bg-brand-cream min-h-screen pb-20">
@@ -138,16 +138,19 @@ export default function CustomerDashboard({ profile: initialProfile }: CustomerD
             
             <div className="text-center md:text-right flex-grow">
               <div className="flex flex-col md:flex-row md:items-center gap-4 mb-4">
-                <h1 className="text-4xl md:text-5xl font-black text-white leading-tight">
-                  أهلاً بك يا {profile?.displayName?.split(' ')[0] || 'بطل'} 👋
+                <h1 className="text-4xl md:text-6xl font-black text-white leading-tight">
+                  أهلاً بك يا {profile?.displayName?.trim() ? profile.displayName.split(' ')[0] : 'بطل'} 👋
                 </h1>
+                <span className="bg-brand-primary text-white px-4 py-1 rounded-full text-sm font-bold w-fit mx-auto md:mx-0">
+                  عميل ذهبي
+                </span>
               </div>
-              <div className="flex flex-wrap gap-4 text-brand-cream/90 font-medium">
-                  <div className="flex items-center gap-2 bg-white/10 px-4 py-2 rounded-xl backdrop-blur-sm">
+              <div className="flex flex-wrap gap-4 text-brand-cream/80 font-medium justify-center md:justify-start">
+                  <div className="flex items-center gap-2 bg-white/5 px-4 py-2 rounded-xl backdrop-blur-sm border border-white/5">
                     <Phone size={18} />
-                    <span>{profile?.phoneNumber || 'لم يتم إدخال رقم هاتف'}</span>
+                    <span>{profile?.phoneNumber || 'لم يتم إدخال هاتف'}</span>
                   </div>
-                  <div className="flex items-center gap-2 bg-white/10 px-4 py-2 rounded-xl backdrop-blur-sm">
+                  <div className="flex items-center gap-2 bg-white/5 px-4 py-2 rounded-xl backdrop-blur-sm border border-white/5">
                     <MapPin size={18} />
                     <span>{profile?.address || 'لم يتم تحديد عنوان'}</span>
                   </div>
@@ -206,7 +209,7 @@ export default function CustomerDashboard({ profile: initialProfile }: CustomerD
                   <div className="text-brand-primary mb-6 bg-brand-primary/10 w-14 h-14 rounded-2xl flex items-center justify-center">
                     <ShoppingBag size={32} />
                   </div>
-                  <p className="text-4xl font-black text-brand-secondary mb-2">{orders.length}</p>
+                  <p className="text-4xl font-black text-brand-secondary mb-2">{orders?.length || 0}</p>
                   <p className="text-stone-500 font-bold">إجمالي الطلبات</p>
                 </div>
                 
@@ -216,7 +219,7 @@ export default function CustomerDashboard({ profile: initialProfile }: CustomerD
                     <CreditCard size={32} />
                   </div>
                   <p className="text-4xl font-black text-brand-secondary mb-2">
-                    {orders.filter(o => o.status === 'delivered').reduce((acc, o) => acc + o.total, 0)} <span className="text-sm">ج.م</span>
+                    {Array.isArray(orders) ? orders.filter(o => o.status === 'delivered').reduce((acc, o) => acc + (o.total || 0), 0) : 0} <span className="text-sm">ج.م</span>
                   </p>
                   <p className="text-stone-500 font-bold">إجمالي المدفوعات</p>
                 </div>
@@ -254,10 +257,10 @@ export default function CustomerDashboard({ profile: initialProfile }: CustomerD
                               </span>
                             </div>
                             <h3 className="text-2xl font-black text-brand-secondary mb-4">
-                              {order.items.map(i => i.title).join(' + ')}
+                              {order.items?.map(i => i.title).join(' + ') || 'طلب بدون اسم'}
                             </h3>
 
-                            {order.items.some(i => i.scheduledTime) && (
+                            {Array.isArray(order.items) && order.items.some(i => i.scheduledTime) && (
                               <div className="mb-6 flex flex-wrap gap-2">
                                 {order.items.map((item, idx) => item.scheduledTime && (
                                   <span key={idx} className="bg-brand-peach/30 text-brand-secondary px-3 py-1 rounded-full text-[10px] font-bold flex items-center gap-1">

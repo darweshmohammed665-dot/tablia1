@@ -54,7 +54,9 @@ export default function Navbar({ user, profile }: NavbarProps) {
                   {profile?.photoURL ? (
                     <img src={profile.photoURL} alt="Profile" className="w-full h-full object-cover" />
                   ) : (
-                    <UserIcon size={16} className="text-stone-400" />
+                    <div className="w-full h-full bg-stone-100 flex items-center justify-center">
+                      <UserIcon size={16} className="text-stone-400" />
+                    </div>
                   )}
                 </Link>
               </div>
@@ -84,7 +86,9 @@ export default function Navbar({ user, profile }: NavbarProps) {
                   {profile?.photoURL ? (
                     <img src={profile.photoURL} alt="Profile" className="w-full h-full object-cover" />
                   ) : (
-                    <UserIcon size={16} />
+                    <div className="w-full h-full bg-stone-50 flex items-center justify-center text-stone-400">
+                      <UserIcon size={16} />
+                    </div>
                   )}
                 </Link>
                 <button onClick={handleLogout} className="text-stone-400 hover:text-red-500 transition-colors">
