@@ -1,6 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth, GoogleAuthProvider, OAuthProvider } from 'firebase/auth';
-import { getFirestore, doc, getDocFromServer } from 'firebase/firestore';
+import { getFirestore, initializeFirestore, doc, getDocFromServer } from 'firebase/firestore';
 import { getDatabase } from 'firebase/database';
 import { getAnalytics } from 'firebase/analytics';
 
@@ -17,7 +17,10 @@ const firebaseConfig = {
 // Initialize Firebase SDK
 const app = initializeApp(firebaseConfig);
 
-export const db = getFirestore(app);
+// @ts-ignore - experimentalForceLongPolling might not be in all TS definitions but it works to fix WebSocket blocking on 4G
+export const db = initializeFirestore(app, {
+  experimentalForceLongPolling: true
+});
 export const rtdb = getDatabase(app);
 
 export const auth = getAuth(app);
