@@ -32,6 +32,7 @@ export default function ChefDashboard({ profile }: ChefDashboardProps) {
   const [categoryFilter, setCategoryFilter] = useState('الكل');
   const [isProfileComplete, setIsProfileComplete] = useState(!!(profile.bio && profile.location && profile.photoURL && profile.coordinates));
   const [showProfileEdit, setShowProfileEdit] = useState(false);
+  const [isSubmittingMeal, setIsSubmittingMeal] = useState(false);
   
   // New Meal Form
   const [newMeal, setNewMeal] = useState({
@@ -134,6 +135,12 @@ export default function ChefDashboard({ profile }: ChefDashboardProps) {
     e.preventDefault();
     if (!auth.currentUser) return;
 
+    if (newMeal.images.length === 0) {
+      toast.error('يرجى إضافة صورة واحدة على الأقل');
+      return;
+    }
+
+    setIsSubmittingMeal(true);
     try {
       if (mealToEdit) {
         const path = `meals/${mealToEdit.id}`;
@@ -162,6 +169,8 @@ export default function ChefDashboard({ profile }: ChefDashboardProps) {
       setNewMeal({ title: '', description: '', price: 0, category: MEAL_CATEGORY_NAMES[0], image: '', images: [], orderType: 'instant', featured: false });
     } catch (error) {
       handleFirestoreError(error, OperationType.CREATE, 'meals');
+    } finally {
+      setIsSubmittingMeal(false);
     }
   };
 
@@ -803,7 +812,7 @@ export default function ChefDashboard({ profile }: ChefDashboardProps) {
           <motion.div 
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="bg-white rounded-[2.5rem] p-8 max-w-lg w-full shadow-2xl"
+            className="bg-white rounded-[2.5rem] p-6 text-sm sm:text-base sm:p-8 max-w-lg w-full shadow-2xl max-h-[90vh] overflow-y-auto custom-scrollbar"
           >
             <h2 className="text-2xl font-bold mb-2">{mealToEdit ? 'تعديل الوجبة' : 'إضافة وجبة جديدة'}</h2>
             
@@ -921,16 +930,17 @@ export default function ChefDashboard({ profile }: ChefDashboardProps) {
                 <label htmlFor="featured-meal" className="text-sm font-medium text-stone-700">تمييز هذه الوجبة (ستظهر في أعلى ملفك الشخصي)</label>
               </div>
               <div className="flex gap-4 pt-4">
-                <button type="submit" className="btn-primary flex-grow">
-                  {mealToEdit ? 'حفظ التغييرات' : 'إضافة الوجبة'}
+                <button type="submit" disabled={isSubmittingMeal} className="btn-primary flex-grow disabled:opacity-50">
+                  {isSubmittingMeal ? 'جاري الحفظ...' : (mealToEdit ? 'حفظ التغييرات' : 'إضافة الوجبة')}
                 </button>
                 <button 
                   type="button" 
+                  disabled={isSubmittingMeal}
                   onClick={() => {
                     setShowAddModal(false);
                     setMealToEdit(null);
                   }}
-                  className="px-6 py-3 rounded-full font-medium text-stone-500 hover:bg-stone-100 transition-colors"
+                  className="px-6 py-3 rounded-full font-medium text-stone-500 hover:bg-stone-100 transition-colors disabled:opacity-50"
                 >
                   إلغاء
                 </button>
