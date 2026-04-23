@@ -147,7 +147,7 @@ export default function Login() {
                   <h3 className="text-red-900 font-black text-lg mb-1 italic">عذراً، حدث خطأ تقني</h3>
                   <p className="text-red-600/80 text-sm font-medium leading-relaxed">
                     {error.includes('unauthorized-domain') 
-                      ? 'يبدو أن هذا النطاق غير مصرح له بتسجيل الدخول عبر جوجل. يرجى مراجعة إعدادات Firebase أو استخدام تسجيل الدخول برقم الهاتف.' 
+                      ? `لكي يعمل تسجيل دخول جوجل، يجب إضافة النطاق الخاص بك في إعدادات فايربيز: افتح Firebase Console -> Authentication -> Settings -> Authorized domains -> أضف النطاق التالي: ${window.location.hostname}` 
                       : error}
                   </p>
                 </div>

@@ -77,8 +77,6 @@ import FAQ from './pages/FAQ';
 import DriverTracking from './pages/DriverTracking';
 import JoinUs from './pages/JoinUs';
 
-import BottomNav from './components/BottomNav';
-
 // Components
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
@@ -247,10 +245,9 @@ export default function App() {
         <div className="min-h-screen flex flex-col font-sans" dir="rtl">
           <Toaster position="top-center" richColors />
           <Navbar user={user} profile={profile} />
-          <main className="flex-grow pb-16 md:pb-0">
+          <main className="flex-grow">
             <AnimatedRoutes profile={profile} profileLoading={profileLoading} />
           </main>
-          <BottomNav profile={profile} />
           <Footer />
         </div>
       </CartProvider>

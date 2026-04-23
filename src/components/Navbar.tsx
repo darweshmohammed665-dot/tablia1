@@ -42,6 +42,34 @@ export default function Navbar({ user, profile }: NavbarProps) {
             </Link>
           </div>
 
+          {/* Mobile Actions (Visible only on mobile) */}
+          <div className="flex md:hidden items-center gap-3">
+            <Link to="/cart" className="p-2 text-stone-600 relative">
+              <ShoppingCart size={22} />
+              {cartCount > 0 && (
+                <span className="absolute 0 -right-1 bg-brand-primary text-white text-[10px] w-[18px] h-[18px] flex items-center justify-center rounded-full font-bold shadow-sm">
+                  {cartCount}
+                </span>
+              )}
+            </Link>
+            {user ? (
+              <Link to={profile?.role === 'chef' ? '/dashboard' : '/profile'} className="w-8 h-8 rounded-full bg-stone-100 flex items-center justify-center text-stone-600 overflow-hidden border border-stone-200">
+                {profile?.photoURL ? (
+                  <img src={profile.photoURL} alt="Profile" className="w-full h-full object-cover" />
+                ) : (
+                  <div className="w-full h-full bg-stone-50 flex items-center justify-center text-stone-400">
+                    <UserIcon size={16} />
+                  </div>
+                )}
+              </Link>
+            ) : (
+              <Link to="/login" className="bg-brand-primary text-white px-3 py-1.5 rounded-full font-black text-[10px] shadow-lg shadow-brand-primary/20 whitespace-nowrap">دخول</Link>
+            )}
+            <button className="p-1 text-stone-600" onClick={() => setIsOpen(!isOpen)}>
+              {isOpen ? <X size={26} /> : <Menu size={26} />}
+            </button>
+          </div>
+
           {/* Desktop Nav */}
           <div className="hidden md:flex items-center gap-8">
             <Link to="/meals" className="text-stone-600 hover:text-brand-primary transition-colors font-medium text-sm">الأكلات</Link>
@@ -81,12 +109,14 @@ export default function Navbar({ user, profile }: NavbarProps) {
               </div>
             )}
           </div>
-
-          {/* Mobile Menu Toggle */}
-          <button className="md:hidden p-2 text-stone-600" onClick={() => setIsOpen(!isOpen)}>
-            {isOpen ? <X size={28} /> : <Menu size={28} />}
-          </button>
         </div>
+      </div>
+
+      {/* Mobile Top Links Banner */}
+      <div className="md:hidden flex items-center gap-6 px-4 py-3 bg-stone-50 border-t border-stone-100 overflow-x-auto hide-scrollbar">
+        <Link to="/" className="text-sm font-bold whitespace-nowrap text-stone-600 hover:text-brand-primary">الرئيسية</Link>
+        <Link to="/meals" className="text-sm font-bold whitespace-nowrap text-stone-600 hover:text-brand-primary">الأكلات</Link>
+        <Link to="/chefs" className="text-sm font-bold whitespace-nowrap text-stone-600 hover:text-brand-primary">المطابخ</Link>
       </div>
 
       {/* Mobile Nav */}
