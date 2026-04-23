@@ -507,72 +507,107 @@ export default function ChefProfileForm({ profile, onComplete, onCancel }: ChefP
           {step === 'review' && (
             <motion.div 
               key="review-step"
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              className="space-y-8"
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              className="space-y-10"
             >
               <div className="text-center">
-                <h3 className="text-2xl font-black text-stone-900 mb-2">مراجعة الملف</h3>
-                <p className="text-stone-500">هكذا سيظهر ملفك الشخصي للعملاء</p>
+                <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-brand-primary/10 rounded-full text-brand-primary text-xs font-black uppercase tracking-widest mb-4">
+                   مـراجــعـة الـبـيـانـات
+                </div>
+                <h3 className="text-3xl font-black text-stone-900 mb-2 leading-tight">هكذا سيظهر ملفك للعملاء</h3>
+                <p className="text-stone-400 font-medium italic">تأكد من دقة المعلومات قبل التفعيل النهائي</p>
               </div>
 
-              <div className="bg-stone-50 rounded-[2rem] p-8 border border-stone-100">
-                <div className="flex flex-col md:flex-row gap-6 items-center md:items-start mb-6">
-                  <img 
-                    src={photoURL || DEFAULT_AVATAR} 
-                    alt="Preview" 
-                    className="w-24 h-24 rounded-full object-cover border-4 border-white shadow-md"
-                  />
-                  <div className="text-center md:text-right">
-                    <h4 className="text-xl font-black text-stone-900 mb-1">{profile.displayName}</h4>
-                    <p className="text-brand-primary font-bold flex items-center justify-center md:justify-start gap-1">
-                      <MapPin size={14} /> {location}
-                    </p>
-                    {coordinates && (
-                      <p className="text-[10px] text-stone-400 font-bold flex items-center justify-center md:justify-start gap-1 mt-1">
-                        <Crosshair size={10} /> تم تحديد الموقع الجغرافي
-                      </p>
-                    )}
-                    <div className="flex flex-wrap gap-2 mt-2 justify-center md:justify-start">
-                      {workingHours.shifts.map((shift, idx) => (
-                        <p key={idx} className="text-xs font-bold text-brand-primary flex items-center gap-1 bg-brand-primary/5 px-2 py-1 rounded-lg">
-                          <Clock size={12} /> {formatTime12h(shift.from)} - {formatTime12h(shift.to)}
-                        </p>
-                      ))}
+              {/* High-end Preview Card */}
+              <div className="relative group">
+                <div className="absolute -inset-1 bg-gradient-to-r from-brand-primary/20 via-brand-secondary/20 to-brand-primary/20 rounded-[3rem] blur-xl opacity-50 group-hover:opacity-75 transition-opacity" />
+                <div className="relative bg-white rounded-[2.5rem] p-8 md:p-10 border border-stone-100 shadow-xl overflow-hidden">
+                  
+                  {/* Card Header Background Pattern */}
+                  <div className="absolute top-0 right-0 w-40 h-40 bg-brand-primary/5 rounded-full -mr-20 -mt-20 blur-3xl" />
+                  
+                  <div className="relative flex flex-col md:flex-row gap-8 items-center md:items-start text-center md:text-right">
+                    <div className="relative group/photo">
+                      <div className="absolute -inset-2 bg-brand-primary/20 rounded-full blur-md opacity-0 group-hover/photo:opacity-100 transition-opacity" />
+                      <img 
+                        src={photoURL || DEFAULT_AVATAR} 
+                        alt="Preview" 
+                        className="relative w-32 h-32 rounded-full object-cover border-4 border-white shadow-lg z-10"
+                      />
+                    </div>
+                    
+                    <div className="flex-grow space-y-4">
+                      <div>
+                        <h4 className="text-3xl font-black text-brand-secondary tracking-tighter italic mb-1">{profile.displayName}</h4>
+                        <div className="flex flex-wrap items-center justify-center md:justify-start gap-3">
+                          <span className="flex items-center gap-1.5 text-brand-primary font-bold text-sm bg-brand-primary/5 px-3 py-1 rounded-full border border-brand-primary/10">
+                            <MapPin size={14} /> {location}
+                          </span>
+                          {coordinates && (
+                            <span className="flex items-center gap-1.5 text-green-600 font-bold text-[10px] bg-green-50 px-3 py-1 rounded-full border border-green-100 uppercase tracking-wider">
+                              <Crosshair size={12} /> تم الربط الجغرافي
+                            </span>
+                          )}
+                        </div>
+                      </div>
+
+                      <div className="flex flex-wrap gap-2 justify-center md:justify-start">
+                        {workingHours.shifts.map((shift, idx) => (
+                          <div key={idx} className="flex items-center gap-2 bg-stone-50 px-3 py-1.5 rounded-xl border border-stone-100 text-[10px] font-black text-stone-500">
+                            <Clock size={12} className="text-brand-primary" />
+                            {formatTime12h(shift.from)} - {formatTime12h(shift.to)}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="relative mt-8 group/bio">
+                    <div className="absolute left-0 top-0 w-1 h-full bg-brand-primary/30 rounded-full" />
+                    <div className="bg-stone-50/50 p-6 rounded-3xl border border-stone-100/50 text-stone-600 leading-relaxed font-serif italic text-lg md:text-xl pr-8">
+                      " {bio || 'لم يتم إضافة نبذة شخصية بعد. النبذة الشخصية تزيد من ثقة العملاء بمطبخك.'} "
                     </div>
                   </div>
                 </div>
-                <div className="bg-white p-6 rounded-2xl border border-stone-100 text-stone-600 leading-relaxed font-medium mb-6">
-                  {bio || 'لا توجد نبذة شخصية مضافة'}
-                </div>
               </div>
 
-              <div className="flex flex-col sm:flex-row gap-4 pt-4">
-                <button 
-                  onClick={handleSubmit}
-                  disabled={loading}
-                  className="btn-primary flex-grow py-5 text-xl shadow-xl shadow-brand-primary/20 flex items-center justify-center gap-3"
-                >
-                  {loading ? (
-                    <div className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                  ) : (
-                    <><Save size={24} /> تأكيد وحفظ الملف</>
-                  )}
-                </button>
-                <div className="flex gap-2">
+              <div className="flex flex-col gap-6 pt-4">
+                <div className="flex flex-col sm:flex-row gap-4">
+                  <button 
+                    onClick={handleSubmit}
+                    disabled={loading}
+                    className="flex-grow bg-brand-primary hover:bg-brand-primary/90 text-white py-5 px-10 rounded-[2rem] font-black text-xl shadow-2xl shadow-brand-primary/30 flex items-center justify-center gap-3 transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed group"
+                  >
+                    {loading ? (
+                      <div className="w-6 h-6 border-3 border-white/30 border-t-white rounded-full animate-spin"></div>
+                    ) : (
+                      <>
+                        <Save size={24} className="group-hover:rotate-12 transition-transform" />
+                        تأكيد وحفظ الملف الشخصي
+                      </>
+                    )}
+                  </button>
+                </div>
+                
+                <div className="flex items-center justify-center gap-6">
                   <button 
                     onClick={() => setStep('info')}
-                    className="flex-1 sm:flex-none px-8 py-5 rounded-2xl font-bold text-stone-500 hover:bg-stone-100 transition-colors"
+                    className="flex items-center gap-2 text-stone-400 hover:text-stone-900 font-bold transition-colors group"
                   >
-                    تعديل
+                    <ChevronRight size={18} className="group-hover:-translate-x-1 transition-transform" />
+                    تـعديـل الـبـيـانـات
                   </button>
+                  
+                  <div className="w-px h-4 bg-stone-200" />
+
                   {onCancel && (
                     <button 
                       onClick={onCancel}
-                      className="flex-1 sm:flex-none px-8 py-5 rounded-2xl font-bold text-red-500 hover:bg-red-50 transition-colors"
+                      className="text-red-400 hover:text-red-600 font-bold transition-colors"
                     >
-                      إلغاء
+                      إلـغـاء الأمـر
                     </button>
                   )}
                 </div>

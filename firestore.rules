@@ -64,7 +64,11 @@ service cloud.firestore {
       
       allow create: if isOwner(userId) && isValidUser(incoming());
       allow update: if isOwner(userId) && isValidUser(incoming()) 
-        && incoming().diff(existing()).affectedKeys().hasOnly(['displayName', 'photoURL', 'bio', 'location', 'rating', 'reviewsCount']);
+        && incoming().diff(existing()).affectedKeys().hasOnly([
+          'displayName', 'photoURL', 'bio', 'location', 
+          'rating', 'reviewsCount', 'coordinates', 'workingHours', 
+          'isClosed', 'updatedAt', 'paymentMethods'
+        ]);
     }
 
     // Meals
