@@ -4,7 +4,7 @@ import { signInWithEmailAndPassword, signInWithPopup, RecaptchaVerifier, signInW
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { auth, db, googleProvider, appleProvider } from '../firebase';
 import { motion, AnimatePresence } from 'motion/react';
-import { Mail, Lock, ArrowRight, Chrome, Apple, Phone, ShieldCheck } from 'lucide-react';
+import { Mail, Lock, ArrowRight, Chrome, Apple, Phone, ShieldCheck, AlertCircle } from 'lucide-react';
 import { toast } from 'sonner';
 import { CHEF_IMAGE_URL } from '../constants';
 
@@ -134,12 +134,24 @@ export default function Login() {
 
           {error && (
             <motion.div 
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="bg-red-50 border border-red-100 text-red-600 p-4 rounded-2xl mb-8 text-sm font-medium flex items-center gap-3"
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="bg-white border-2 border-red-50 p-6 rounded-[2.5rem] mb-10 shadow-xl shadow-red-500/5 relative overflow-hidden group"
             >
-              <div className="w-2 h-2 rounded-full bg-red-600 animate-pulse"></div>
-              {error}
+              <div className="absolute top-0 right-0 w-24 h-24 bg-red-50 rounded-full -mr-12 -mt-12 opacity-50 group-hover:scale-125 transition-transform duration-700" />
+              <div className="relative flex items-start gap-4">
+                <div className="bg-red-500 text-white p-3 rounded-2xl shadow-lg shadow-red-500/20 shrink-0">
+                  <AlertCircle size={24} />
+                </div>
+                <div>
+                  <h3 className="text-red-900 font-black text-lg mb-1 italic">عذراً، حدث خطأ تقني</h3>
+                  <p className="text-red-600/80 text-sm font-medium leading-relaxed">
+                    {error.includes('unauthorized-domain') 
+                      ? 'يبدو أن هذا النطاق غير مصرح له بتسجيل الدخول عبر جوجل. يرجى مراجعة إعدادات Firebase أو استخدام تسجيل الدخول برقم الهاتف.' 
+                      : error}
+                  </p>
+                </div>
+              </div>
             </motion.div>
           )}
 

@@ -40,36 +40,6 @@ export default function Navbar({ user, profile }: NavbarProps) {
             <Link to="/" className="flex items-center gap-2">
               <img src="https://i.ibb.co/3y9wLQc5/1775915563891.png" alt="طبلية" className="h-10 w-auto" referrerPolicy="no-referrer" />
             </Link>
-
-            {/* Mobile Actions (Visible only on mobile) */}
-            {!user && (
-              <div className="flex md:hidden items-center gap-2">
-                <Link to="/login" className="text-stone-600 font-black text-xs hover:text-brand-primary transition-colors">دخول</Link>
-                <Link to="/register" className="bg-brand-primary text-white px-3 py-1.5 rounded-full font-black text-[10px] shadow-lg shadow-brand-primary/20 whitespace-nowrap">سجل الآن</Link>
-              </div>
-            )}
-
-            {user && (
-              <div className="flex md:hidden items-center gap-3">
-                <Link to="/cart" className="p-1 text-stone-600 relative">
-                  <ShoppingCart size={20} />
-                  {cartCount > 0 && (
-                    <span className="absolute -top-1 -right-1 bg-brand-primary text-white text-[9px] w-4 h-4 flex items-center justify-center rounded-full font-bold shadow-sm">
-                      {cartCount}
-                    </span>
-                  )}
-                </Link>
-                <Link to={profile?.role === 'chef' ? '/dashboard' : '/profile'} className="w-8 h-8 rounded-full bg-stone-50 flex items-center justify-center border-2 border-white shadow-sm overflow-hidden">
-                  {profile?.photoURL ? (
-                    <img src={profile.photoURL} alt="Profile" className="w-full h-full object-cover" />
-                  ) : (
-                    <div className="w-full h-full bg-stone-100 flex items-center justify-center">
-                      <UserIcon size={16} className="text-stone-400" />
-                    </div>
-                  )}
-                </Link>
-              </div>
-            )}
           </div>
 
           {/* Desktop Nav */}

@@ -77,6 +77,8 @@ import FAQ from './pages/FAQ';
 import DriverTracking from './pages/DriverTracking';
 import JoinUs from './pages/JoinUs';
 
+import BottomNav from './components/BottomNav';
+
 // Components
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
@@ -147,16 +149,16 @@ export default function App() {
 
   const [isOffline, setIsOffline] = useState(false);
 
+  const [isFirstLoad, setIsFirstLoad] = useState(true);
+
   useEffect(() => {
-    // Artificial minimum loading time to show the brand for 1.5 seconds as requested
-    const minLoadingTimer = setTimeout(() => {
-      // We only allow loading to end if the Firebase check is also done
-      setLoading(prev => {
-        // This is a bit tricky since we can't easily check auth state completion inside prev
-        // So we'll use a local variable in the effect
-        return prev; 
-      });
-    }, 1500);
+    // Check if splash has already been shown in this session
+    const hasShownSplash = sessionStorage.getItem('hasShownSplash');
+    
+    if (hasShownSplash) {
+      setLoading(false);
+      setIsFirstLoad(false);
+    }
 
     const unsubConn = subscribeToConnectionStatus(setConnStatus);
     
@@ -180,6 +182,9 @@ export default function App() {
 
     const minTimer = setTimeout(() => {
       minTimeReady = true;
+      if (!sessionStorage.getItem('hasShownSplash')) {
+        sessionStorage.setItem('hasShownSplash', 'true');
+      }
       checkReady();
     }, 1500);
 
@@ -242,9 +247,10 @@ export default function App() {
         <div className="min-h-screen flex flex-col font-sans" dir="rtl">
           <Toaster position="top-center" richColors />
           <Navbar user={user} profile={profile} />
-          <main className="flex-grow">
+          <main className="flex-grow pb-16 md:pb-0">
             <AnimatedRoutes profile={profile} profileLoading={profileLoading} />
           </main>
+          <BottomNav profile={profile} />
           <Footer />
         </div>
       </CartProvider>
