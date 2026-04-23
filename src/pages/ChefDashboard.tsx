@@ -223,43 +223,57 @@ export default function ChefDashboard({ profile }: ChefDashboardProps) {
       const uploadPromises = (files as File[]).map((file: File) => {
         return new Promise<string>((resolve, reject) => {
           if (!file.type.startsWith('image/')) {
-            reject(new Error('يرجى اختيار ملف صورة صالح'));
+            reject(new Error('يرجى اختيار ملف صورة صالح (JPG, PNG, etc.)'));
             return;
           }
 
-          const reader = new FileReader();
-          reader.onload = (event) => {
-            const img = new Image();
-            img.onload = () => {
-              const canvas = document.createElement('canvas');
-              const MAX_WIDTH = 800;
-              const MAX_HEIGHT = 800;
-              let width = img.width;
-              let height = img.height;
+          if (file.size > 5 * 1024 * 1024) { // 5MB limit for meals
+            reject(new Error(`حجم الصورة "${file.name}" كبير جداً. الحد الأقصى 5 ميجابايت.`));
+            return;
+          }
 
-              if (width > height) {
-                if (width > MAX_WIDTH) {
-                  height *= MAX_WIDTH / width;
-                  width = MAX_WIDTH;
-                }
-              } else {
-                if (height > MAX_HEIGHT) {
-                  width *= MAX_HEIGHT / height;
-                  height = MAX_HEIGHT;
-                }
+          const objectUrl = URL.createObjectURL(file);
+          const img = new Image();
+          
+          img.onload = () => {
+            const canvas = document.createElement('canvas');
+            const MAX_WIDTH = 1200; // Increased for better quality
+            const MAX_HEIGHT = 1200;
+            let width = img.width;
+            let height = img.height;
+
+            if (width > height) {
+              if (width > MAX_WIDTH) {
+                height *= MAX_WIDTH / width;
+                width = MAX_WIDTH;
               }
-              canvas.width = width;
-              canvas.height = height;
-              const ctx = canvas.getContext('2d');
-              ctx?.drawImage(img, 0, 0, width, height);
-              const dataUrl = canvas.toDataURL('image/jpeg', 0.7); // Slightly lower quality to save space
+            } else {
+              if (height > MAX_HEIGHT) {
+                width *= MAX_HEIGHT / height;
+                height = MAX_HEIGHT;
+              }
+            }
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+            ctx?.drawImage(img, 0, 0, width, height);
+            
+            try {
+              const dataUrl = canvas.toDataURL('image/jpeg', 0.8);
+              URL.revokeObjectURL(objectUrl);
               resolve(dataUrl);
-            };
-            img.onerror = () => reject(new Error('فشل تحميل الصورة'));
-            img.src = event.target?.result as string;
+            } catch (err) {
+              URL.revokeObjectURL(objectUrl);
+              reject(new Error('فشل معالجة الصورة. يرجى تجربة عرض أصغر.'));
+            }
           };
-          reader.onerror = () => reject(new Error('فشل قراءة الملف'));
-          reader.readAsDataURL(file);
+
+          img.onerror = () => {
+            URL.revokeObjectURL(objectUrl);
+            reject(new Error(`فشل تحميل الملف "${file.name}". قد يكون الملف تالفاً.`));
+          };
+
+          img.src = objectUrl;
         });
       });
 

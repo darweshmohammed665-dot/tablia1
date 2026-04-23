@@ -106,50 +106,49 @@ export default function ChefProfileForm({ profile, onComplete, onCancel }: ChefP
       return;
     }
 
-    const reader = new FileReader();
-    reader.onerror = () => {
-      setImageError('حدث خطأ أثناء قراءة الملف. يرجى المحاولة مرة أخرى.');
-    };
+    const objectUrl = URL.createObjectURL(file);
+    const img = new Image();
+    
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      const MAX_WIDTH = 600; // Increased for better profile detail
+      const MAX_HEIGHT = 600;
+      let width = img.width;
+      let height = img.height;
 
-    reader.onload = (event) => {
-      const img = new Image();
-      img.onload = () => {
-        const canvas = document.createElement('canvas');
-        const MAX_WIDTH = 400;
-        const MAX_HEIGHT = 400;
-        let width = img.width;
-        let height = img.height;
-
-        if (width > height) {
-          if (width > MAX_WIDTH) {
-            height *= MAX_WIDTH / width;
-            width = MAX_WIDTH;
-          }
-        } else {
-          if (height > MAX_HEIGHT) {
-            width *= MAX_HEIGHT / height;
-            height = MAX_HEIGHT;
-          }
+      if (width > height) {
+        if (width > MAX_WIDTH) {
+          height *= MAX_WIDTH / width;
+          width = MAX_WIDTH;
         }
-
-        canvas.width = width;
-        canvas.height = height;
-        const ctx = canvas.getContext('2d');
-        ctx?.drawImage(img, 0, 0, width, height);
-        
-        try {
-          const dataUrl = canvas.toDataURL('image/jpeg', 0.8);
-          setPhotoURL(dataUrl);
-        } catch (err) {
-          setImageError('فشل معالجة الصورة. يرجى تجربة صورة أخرى.');
+      } else {
+        if (height > MAX_HEIGHT) {
+          width *= MAX_HEIGHT / height;
+          height = MAX_HEIGHT;
         }
-      };
-      img.onerror = () => {
-        setImageError('ملف الصورة تالف أو غير مدعوم.');
-      };
-      img.src = event.target?.result as string;
+      }
+
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext('2d');
+      ctx?.drawImage(img, 0, 0, width, height);
+      
+      try {
+        const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
+        setPhotoURL(dataUrl);
+        URL.revokeObjectURL(objectUrl);
+      } catch (err) {
+        setImageError('فشل معالجة الصورة. يرجى تجربة صورة أخرى.');
+        URL.revokeObjectURL(objectUrl);
+      }
     };
-    reader.readAsDataURL(file);
+    
+    img.onerror = () => {
+      setImageError('ملف الصورة تالف أو غير مدعوم.');
+      URL.revokeObjectURL(objectUrl);
+    };
+    
+    img.src = objectUrl;
   };
 
   const handleLocateMe = () => {

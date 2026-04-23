@@ -109,6 +109,72 @@ export default function CustomerDashboard({ profile: initialProfile }: CustomerD
     }
   };
 
+  const [isProcessingImages, setIsProcessingImages] = useState(false);
+  const fileInputRef = React.useRef<HTMLInputElement>(null);
+
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !auth?.currentUser || !db) return;
+
+    if (!file.type.startsWith('image/')) {
+      toast.error('يرجى اختيار ملف صورة صالح');
+      return;
+    }
+
+    if (file.size > 2 * 1024 * 1024) {
+      toast.error('حجم الصورة كبير جداً. الحد الأقصى 2 ميجابايت.');
+      return;
+    }
+
+    setIsProcessingImages(true);
+    const objectUrl = URL.createObjectURL(file);
+    const img = new Image();
+    
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      const MAX_WIDTH = 400;
+      const MAX_HEIGHT = 400;
+      let width = img.width;
+      let height = img.height;
+
+      if (width > height) {
+        if (width > MAX_WIDTH) {
+          height *= MAX_WIDTH / width;
+          width = MAX_WIDTH;
+        }
+      } else {
+        if (height > MAX_HEIGHT) {
+          width *= MAX_HEIGHT / height;
+          height = MAX_HEIGHT;
+        }
+      }
+
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext('2d');
+      ctx?.drawImage(img, 0, 0, width, height);
+      
+      try {
+        const dataUrl = canvas.toDataURL('image/jpeg', 0.8);
+        updateDoc(doc(db, 'users', auth.currentUser.uid), { photoURL: dataUrl });
+        toast.success('تم تحديث الصورة الشخصية بنجاح');
+      } catch (err) {
+        toast.error('فشل معالجة الصورة');
+      } finally {
+        setIsProcessingImages(false);
+        URL.revokeObjectURL(objectUrl);
+      }
+    };
+    
+    img.onerror = () => {
+      toast.error('فشل تحميل الصورة');
+      setIsProcessingImages(false);
+      URL.revokeObjectURL(objectUrl);
+    };
+    
+    img.src = objectUrl;
+  };
+
   const handleLogout = async () => {
     await auth.signOut();
     navigate('/');
@@ -124,16 +190,32 @@ export default function CustomerDashboard({ profile: initialProfile }: CustomerD
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="flex flex-col md:flex-row items-center gap-8">
             <div className="relative group">
-              <div className="w-32 h-32 md:w-40 md:h-40 bg-brand-peach rounded-[40px] border-4 border-white/20 flex items-center justify-center text-brand-secondary overflow-hidden shadow-2xl shrink-0 transition-transform group-hover:scale-105 duration-500">
+              <div className="w-32 h-32 md:w-40 md:h-40 bg-brand-peach rounded-[40px] border-4 border-white/20 flex items-center justify-center text-brand-secondary overflow-hidden shadow-2xl shrink-0 transition-transform group-hover:scale-105 duration-500 relative">
+                {isProcessingImages && (
+                  <div className="absolute inset-0 z-20 bg-black/20 flex items-center justify-center backdrop-blur-sm">
+                    <div className="w-8 h-8 border-4 border-white/30 border-t-white rounded-full animate-spin"></div>
+                  </div>
+                )}
                 {profile?.photoURL ? (
                   <img src={profile.photoURL} alt="Profile" className="w-full h-full object-cover" />
                 ) : (
                   <User size={64} className="opacity-30" />
                 )}
               </div>
-              <button className="absolute -bottom-2 -right-2 bg-brand-primary text-white p-3 rounded-2xl shadow-xl hover:scale-110 transition-transform">
+              <button 
+                onClick={() => fileInputRef.current?.click()}
+                disabled={isProcessingImages}
+                className="absolute -bottom-2 -right-2 bg-brand-primary text-white p-3 rounded-2xl shadow-xl hover:scale-110 transition-transform z-30 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
                 <Camera size={20} />
               </button>
+              <input 
+                type="file"
+                ref={fileInputRef}
+                onChange={handleImageUpload}
+                accept="image/*"
+                className="hidden"
+              />
             </div>
             
             <div className="text-center md:text-right flex-grow">
