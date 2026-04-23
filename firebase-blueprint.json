@@ -77,6 +77,30 @@
         "createdAt": { "type": "number" }
       },
       "required": ["chefId", "customerId", "rating", "comment", "createdAt"]
+    },
+    "Driver": {
+      "title": "Driver",
+      "description": "Represents a delivery person in the system.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "displayName": { "type": "string" },
+        "phoneNumber": { "type": "string" },
+        "vehicleType": { "type": "string" },
+        "isAvailable": { "type": "boolean" },
+        "currentLocation": {
+          "type": "object",
+          "properties": {
+            "lat": { "type": "number" },
+            "lng": { "type": "number" }
+          }
+        },
+        "rating": { "type": "number" },
+        "completedDeliveries": { "type": "number" },
+        "createdAt": { "type": "number" }
+      },
+      "required": ["uid", "email", "displayName"]
     }
   },
   "firestore": {
@@ -95,6 +119,10 @@
     "/reviews/{reviewId}": {
       "schema": "Review",
       "description": "Customer reviews and ratings."
+    },
+    "/drivers/{driverId}": {
+      "schema": "Driver",
+      "description": "Active delivery personnel."
     }
   }
 }

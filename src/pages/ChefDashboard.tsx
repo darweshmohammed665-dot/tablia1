@@ -33,6 +33,7 @@ export default function ChefDashboard({ profile }: ChefDashboardProps) {
   const [isProfileComplete, setIsProfileComplete] = useState(!!(profile.bio && profile.location && profile.photoURL && profile.coordinates));
   const [showProfileEdit, setShowProfileEdit] = useState(false);
   const [isSubmittingMeal, setIsSubmittingMeal] = useState(false);
+  const [isProcessingImages, setIsProcessingImages] = useState(false);
   
   // New Meal Form
   const [newMeal, setNewMeal] = useState({
@@ -135,6 +136,15 @@ export default function ChefDashboard({ profile }: ChefDashboardProps) {
     e.preventDefault();
     if (!auth.currentUser) return;
 
+    // Enhanced Validation
+    if (!newMeal.title.trim()) {
+      toast.error('يرجى إدخال اسم الوجبة');
+      return;
+    }
+    if (newMeal.price <= 0) {
+      toast.error('يرجى إدخال سعر صحيح للوجبة');
+      return;
+    }
     if (newMeal.images.length === 0) {
       toast.error('يرجى إضافة صورة واحدة على الأقل');
       return;
@@ -191,67 +201,84 @@ export default function ChefDashboard({ profile }: ChefDashboardProps) {
 
   const handleShareProfile = () => {
     const url = `${window.location.origin}/chef/${auth.currentUser?.uid}`;
+    // Copy to clipboard
     navigator.clipboard.writeText(url);
-    toast.success('تم نسخ رابط مطبخك بنجاح!');
+    // Opening directly as requested ("I want it to go directly to the website")
+    window.open(url, '_blank');
+    toast.success('تم نسخ الرابط وفتح صفحة مطبخك!');
   };
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
+    if (files.length === 0) return;
+
     if (files.length + newMeal.images.length > 5) {
       toast.error('يمكنك رفع 5 صور كحد أقصى');
       return;
     }
 
-    files.forEach((file: File) => {
-      if (!file.type.startsWith('image/')) {
-        toast.error('يرجى اختيار ملف صورة صالح');
-        return;
-      }
+    setIsProcessingImages(true);
 
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        const img = new Image();
-        img.onload = () => {
-          const canvas = document.createElement('canvas');
-          const MAX_WIDTH = 800;
-          const MAX_HEIGHT = 800;
-          let width = img.width;
-          let height = img.height;
-
-          if (width > height) {
-            if (width > MAX_WIDTH) {
-              height *= MAX_WIDTH / width;
-              width = MAX_WIDTH;
-            }
-          } else {
-            if (height > MAX_HEIGHT) {
-              width *= MAX_HEIGHT / height;
-              height = MAX_HEIGHT;
-            }
+    try {
+      const uploadPromises = (files as File[]).map((file: File) => {
+        return new Promise<string>((resolve, reject) => {
+          if (!file.type.startsWith('image/')) {
+            reject(new Error('يرجى اختيار ملف صورة صالح'));
+            return;
           }
-          canvas.width = width;
-          canvas.height = height;
-          const ctx = canvas.getContext('2d');
-          ctx?.drawImage(img, 0, 0, width, height);
-          const dataUrl = canvas.toDataURL('image/jpeg', 0.8);
-          
-          setNewMeal(prev => {
-            const newImages = [...prev.images, dataUrl].slice(0, 5);
-            return {
-              ...prev,
-              images: newImages,
-              image: newImages[0] || prev.image
+
+          const reader = new FileReader();
+          reader.onload = (event) => {
+            const img = new Image();
+            img.onload = () => {
+              const canvas = document.createElement('canvas');
+              const MAX_WIDTH = 800;
+              const MAX_HEIGHT = 800;
+              let width = img.width;
+              let height = img.height;
+
+              if (width > height) {
+                if (width > MAX_WIDTH) {
+                  height *= MAX_WIDTH / width;
+                  width = MAX_WIDTH;
+                }
+              } else {
+                if (height > MAX_HEIGHT) {
+                  width *= MAX_HEIGHT / height;
+                  height = MAX_HEIGHT;
+                }
+              }
+              canvas.width = width;
+              canvas.height = height;
+              const ctx = canvas.getContext('2d');
+              ctx?.drawImage(img, 0, 0, width, height);
+              const dataUrl = canvas.toDataURL('image/jpeg', 0.7); // Slightly lower quality to save space
+              resolve(dataUrl);
             };
-          });
+            img.onerror = () => reject(new Error('فشل تحميل الصورة'));
+            img.src = event.target?.result as string;
+          };
+          reader.onerror = () => reject(new Error('فشل قراءة الملف'));
+          reader.readAsDataURL(file);
+        });
+      });
+
+      const processedImages = await Promise.all(uploadPromises);
+      
+      setNewMeal(prev => {
+        const updatedImages = [...prev.images, ...processedImages].slice(0, 5);
+        return {
+          ...prev,
+          images: updatedImages,
+          image: updatedImages[0] || prev.image
         };
-        img.src = event.target?.result as string;
-      };
-      reader.readAsDataURL(file);
-    });
-    
-    // Reset input
-    if (e.target) {
-      e.target.value = '';
+      });
+      toast.success(files.length > 1 ? 'تم رفع الصور بنجاح' : 'تم رفع الصورة بنجاح');
+    } catch (error: any) {
+      toast.error(error.message || 'حدث خطأ أثناء رفع الصور');
+    } finally {
+      setIsProcessingImages(false);
+      if (e.target) e.target.value = '';
     }
   };
 
@@ -902,13 +929,20 @@ export default function ChefDashboard({ profile }: ChefDashboardProps) {
                     </div>
                   ))}
                   {newMeal.images.length < 5 && (
-                    <label className="w-20 h-20 rounded-xl border-2 border-dashed border-stone-300 flex flex-col items-center justify-center text-stone-400 cursor-pointer hover:bg-stone-50 hover:border-brand-primary transition-colors">
-                      <Camera size={24} />
-                      <span className="text-[10px] mt-1">إضافة صورة</span>
+                    <label className={`w-20 h-20 rounded-xl border-2 border-dashed flex flex-col items-center justify-center transition-colors cursor-pointer ${isProcessingImages ? 'border-brand-primary bg-brand-cream/20' : 'border-stone-300 text-stone-400 hover:bg-stone-50 hover:border-brand-primary'}`}>
+                      {isProcessingImages ? (
+                        <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-brand-primary"></div>
+                      ) : (
+                        <>
+                          <Camera size={24} />
+                          <span className="text-[10px] mt-1">إضافة صورة</span>
+                        </>
+                      )}
                       <input 
                         type="file" 
                         accept="image/*" 
                         multiple 
+                        disabled={isProcessingImages}
                         onChange={handleImageUpload}
                         className="hidden" 
                       />

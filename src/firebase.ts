@@ -3,25 +3,14 @@ import { getAuth, GoogleAuthProvider, OAuthProvider } from 'firebase/auth';
 import { getFirestore, initializeFirestore, doc, getDocFromServer } from 'firebase/firestore';
 import { getDatabase } from 'firebase/database';
 import { getAnalytics } from 'firebase/analytics';
+import firebaseConfig from '../firebase-applet-config.json';
 
-// Correct configuration from firebase-applet-config.json
-const firebaseConfig = {
-  apiKey: "AIzaSyDxTi5jlnT6YyDTZi5m4HQIw8Rsw2RW3L8",
-  authDomain: "tablia1-33645.firebaseapp.com",
-  projectId: "tablia1-33645",
-  storageBucket: "tablia1-33645.firebasestorage.app",
-  messagingSenderId: "97431584399",
-  appId: "1:97431584399:web:ca2dd99c63523b17367afa",
-  measurementId: "G-CYGZNVMK43"
-};
-
-// Initialize Firebase SDK
+// Initialize Firebase SDK using the config from the dedicated file
 const app = initializeApp(firebaseConfig);
 
-// Using Long Polling to bypass potential WebSocket blocks on specific networks (like some Egypt ISPs/Wi-Fi)
+// Using Long Polling to bypass potential WebSocket blocks on specific networks
 export const db = initializeFirestore(app, {
-  experimentalForceLongPolling: true,
-  useFetchStreams: false
+  experimentalForceLongPolling: true
 });
 
 export const rtdb = getDatabase(app);

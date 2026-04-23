@@ -3,39 +3,107 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     
-    // Helper functions
-    function isAuthenticated() {
+    // 0. Global Safety Net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Phase 3: Primitive Definitions
+    function isSignedIn() {
       return request.auth != null;
     }
     
-    function isOwner(userId) {
-      return isAuthenticated() && request.auth.uid == userId;
+    function isEmailVerified() {
+      return isSignedIn() && request.auth.token.email_verified == true;
     }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    // --- Validation Helpers ---
+
+    function isValidUser(data) {
+      return data.uid == request.auth.uid 
+        && data.email is string 
+        && data.displayName is string 
+        && data.role in ['customer', 'chef', 'driver'];
+    }
+
+    function isValidMeal(data) {
+      return data.chefId == request.auth.uid
+        && data.title is string && data.title.size() <= 100
+        && data.price is number && data.price > 0;
+    }
+
+    function isValidOrder(data) {
+      return data.customerId == request.auth.uid
+        || data.chefId == request.auth.uid
+        || exists(/databases/$(database)/documents/drivers/$(request.auth.uid));
+    }
+
+    // --- Match Blocks ---
 
     // User Profiles
     match /users/{userId} {
-      allow read: if true;
-      allow write: if isOwner(userId);
+      allow read: if isSignedIn();
+      allow create: if isOwner(userId) && isValidUser(incoming());
+      allow update: if isOwner(userId) && isValidUser(incoming()) 
+        && incoming().diff(existing()).affectedKeys().hasOnly(['displayName', 'photoURL', 'bio', 'location']);
     }
 
     // Meals
     match /meals/{mealId} {
       allow read: if true;
-      allow write: if isAuthenticated() && (resource == null || resource.data.chefId == request.auth.uid);
+      allow create: if isEmailVerified() && isValidMeal(incoming());
+      allow update: if isEmailVerified() && existing().chefId == request.auth.uid && isValidMeal(incoming());
+      allow delete: if isSignedIn() && existing().chefId == request.auth.uid;
     }
 
     // Orders
     match /orders/{orderId} {
-      allow read: if isAuthenticated() && (request.auth.uid == resource.data.customerId || request.auth.uid == resource.data.chefId);
-      allow create: if isAuthenticated();
-      allow update: if isAuthenticated() && (request.auth.uid == resource.data.customerId || request.auth.uid == resource.data.chefId);
+      allow read: if isSignedIn() && (
+        resource.data.customerId == request.auth.uid || 
+        resource.data.chefId == request.auth.uid ||
+        exists(/databases/$(database)/documents/drivers/$(request.auth.uid))
+      );
+      allow create: if isEmailVerified() && incoming().customerId == request.auth.uid;
+      allow update: if isEmailVerified() && (
+        (existing().customerId == request.auth.uid && incoming().diff(existing()).affectedKeys().hasOnly(['status'])) ||
+        (existing().chefId == request.auth.uid && incoming().diff(existing()).affectedKeys().hasOnly(['status', 'metadata'])) ||
+        (exists(/databases/$(database)/documents/drivers/$(request.auth.uid)) && incoming().diff(existing()).affectedKeys().hasOnly(['status', 'driverLocation']))
+      );
+    }
+
+    // Drivers
+    match /drivers/{driverId} {
+      allow read: if isSignedIn();
+      allow create, update: if isOwner(driverId) && isEmailVerified();
     }
 
     // Reviews
     match /reviews/{reviewId} {
       allow read: if true;
-      allow create: if isAuthenticated() && request.resource.data.customerId == request.auth.uid;
-      allow update, delete: if isAuthenticated() && resource.data.customerId == request.auth.uid;
+      allow create: if isEmailVerified() && incoming().customerId == request.auth.uid;
+      allow update, delete: if isEmailVerified() && existing().customerId == request.auth.uid;
+    }
+
+    // Public Meta/Test
+    match /test/connection {
+      allow read: if true;
+      allow write: if isSignedIn();
     }
   }
 }

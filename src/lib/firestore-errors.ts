@@ -1,4 +1,5 @@
 import { auth } from '../firebase';
+import { toast } from 'sonner';
 
 export enum OperationType {
   CREATE = 'create',
@@ -29,8 +30,10 @@ export interface FirestoreErrorInfo {
 }
 
 export function handleFirestoreError(error: unknown, operationType: OperationType, path: string | null) {
+  const errorMessage = error instanceof Error ? error.message : String(error);
+  
   const errInfo: FirestoreErrorInfo = {
-    error: error instanceof Error ? error.message : String(error),
+    error: errorMessage,
     authInfo: {
       userId: auth?.currentUser?.uid,
       email: auth?.currentUser?.email,
@@ -47,6 +50,26 @@ export function handleFirestoreError(error: unknown, operationType: OperationTyp
     operationType,
     path
   }
+  
   console.error('Firestore Error: ', JSON.stringify(errInfo));
+
+  // User-friendly error mapping
+  let userMessage = 'حدث خطأ أثناء حفظ البيانات. يرجى المحاولة مرة أخرى.';
+  
+  if (errorMessage.includes('quota exceeded')) {
+    userMessage = 'عذراً، تم تجاوز الحصة اليومية للخدمة. يرجى المحاولة غداً.';
+  } else if (errorMessage.includes('permission-denied')) {
+    userMessage = 'عذراً، ليس لديك الصلاحية لإجراء هذه العملية.';
+  } else if (errorMessage.includes('too-large')) {
+    userMessage = 'عذراً، حجم البيانات (ربما الصور) كبير جداً. يرجى تقليل عدد الصور أو حجمها.';
+  } else if (errorMessage.includes('offline')) {
+    userMessage = 'يبدو أنك غير متصل بالإنترنت. يرجى التحقق من اتصالك.';
+  }
+
+  toast.error(userMessage, {
+    description: `نوع العملية: ${operationType}`,
+    duration: 5000
+  });
+
   throw new Error(JSON.stringify(errInfo));
 }

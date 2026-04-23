@@ -148,6 +148,16 @@ export default function App() {
   const [isOffline, setIsOffline] = useState(false);
 
   useEffect(() => {
+    // Artificial minimum loading time to show the brand for 1.5 seconds as requested
+    const minLoadingTimer = setTimeout(() => {
+      // We only allow loading to end if the Firebase check is also done
+      setLoading(prev => {
+        // This is a bit tricky since we can't easily check auth state completion inside prev
+        // So we'll use a local variable in the effect
+        return prev; 
+      });
+    }, 1500);
+
     const unsubConn = subscribeToConnectionStatus(setConnStatus);
     
     const handleOnline = () => setIsOffline(false);
@@ -157,6 +167,21 @@ export default function App() {
     window.addEventListener('offline', handleOffline);
 
     const unsubProfileRef = { current: null as (() => void) | null };
+
+    // Track when both min timer and auth are ready
+    let authReady = false;
+    let minTimeReady = false;
+
+    const checkReady = () => {
+      if (authReady && minTimeReady) {
+        setLoading(false);
+      }
+    };
+
+    const minTimer = setTimeout(() => {
+      minTimeReady = true;
+      checkReady();
+    }, 1500);
 
     const unsubscribeAuth = auth ? onAuthStateChanged(auth, (firebaseUser) => {
       setUser(firebaseUser);
@@ -177,23 +202,28 @@ export default function App() {
             setProfile(null);
           }
           setProfileLoading(false);
-          setLoading(false);
+          authReady = true;
+          checkReady();
         }, (error) => {
           console.error("Error fetching profile:", error);
           setProfileLoading(false);
-          setLoading(false);
+          authReady = true;
+          checkReady();
         });
       } else {
         setProfile(null);
         setProfileLoading(false);
-        setLoading(false);
+        authReady = true;
+        checkReady();
       }
     }) : (() => {
-      setLoading(false);
+      authReady = true;
+      checkReady();
       return () => {};
     })();
 
     return () => {
+      clearTimeout(minTimer);
       window.removeEventListener('online', handleOnline);
       window.removeEventListener('offline', handleOffline);
       if (typeof unsubscribeAuth === 'function') unsubscribeAuth();
