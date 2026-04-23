@@ -58,10 +58,13 @@ service cloud.firestore {
 
     // User Profiles
     match /users/{userId} {
-      allow read: if isSignedIn();
+      // Allow public read for now to fix listing issues, 
+      // but we should eventually restricted non-chef profiles.
+      allow read: if true;
+      
       allow create: if isOwner(userId) && isValidUser(incoming());
       allow update: if isOwner(userId) && isValidUser(incoming()) 
-        && incoming().diff(existing()).affectedKeys().hasOnly(['displayName', 'photoURL', 'bio', 'location']);
+        && incoming().diff(existing()).affectedKeys().hasOnly(['displayName', 'photoURL', 'bio', 'location', 'rating', 'reviewsCount']);
     }
 
     // Meals

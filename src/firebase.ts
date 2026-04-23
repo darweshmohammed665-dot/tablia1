@@ -9,9 +9,10 @@ import firebaseConfig from '../firebase-applet-config.json';
 const app = initializeApp(firebaseConfig);
 
 // Using Long Polling to bypass potential WebSocket blocks on specific networks
+// Crucial: Passing the firestoreDatabaseId from the config to initialize the correct database instance
 export const db = initializeFirestore(app, {
   experimentalForceLongPolling: true
-});
+}, (firebaseConfig as any).firestoreDatabaseId || '(default)');
 
 export const rtdb = getDatabase(app);
 export const auth = getAuth(app);
