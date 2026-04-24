@@ -82,9 +82,9 @@ export default function CustomerDashboard({ profile: initialProfile }: CustomerD
       const fetchedOrders = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Order));
       // Sort client-side to avoid Firestore index requirement
       fetchedOrders.sort((a, b) => {
-        const timeA = a.createdAt?.toMillis ? a.createdAt.toMillis() : 0;
-        const timeB = b.createdAt?.toMillis ? b.createdAt.toMillis() : 0;
-        return timeB - timeA;
+        const timeA = (a.createdAt as any)?.toMillis ? (a.createdAt as any).toMillis() : (a.createdAt || 0);
+        const timeB = (b.createdAt as any)?.toMillis ? (b.createdAt as any).toMillis() : (b.createdAt || 0);
+        return Number(timeB) - Number(timeA);
       });
       setOrders(fetchedOrders);
       setLoading(false);

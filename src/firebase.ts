@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { getAuth, GoogleAuthProvider, OAuthProvider } from 'firebase/auth';
+import { getAuth, GoogleAuthProvider, OAuthProvider, setPersistence, browserLocalPersistence } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 import { getDatabase } from 'firebase/database';
 import { getAnalytics } from 'firebase/analytics';
@@ -13,6 +13,11 @@ export const db = getFirestore(app, (firebaseConfig as any).firestoreDatabaseId 
 
 export const rtdb = getDatabase(app);
 export const auth = getAuth(app);
+
+// Explicitly set persistence to local
+setPersistence(auth, browserLocalPersistence)
+  .catch((error) => console.error("Error setting persistence:", error));
+
 export const analytics = typeof window !== 'undefined' ? getAnalytics(app) : null;
 export const googleProvider = new GoogleAuthProvider();
 export const appleProvider = new OAuthProvider('apple.com');
