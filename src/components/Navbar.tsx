@@ -36,10 +36,18 @@ export default function Navbar({ user, profile }: NavbarProps) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16 items-center">
           {/* Logo - Always visible */}
-          <div className="flex items-center">
+          <div className="flex items-center gap-4">
             <Link to="/" className="flex items-center gap-2">
               <img src="https://i.ibb.co/3y9wLQc5/1775915563891.png" alt="طبلية" className="h-10 w-auto" referrerPolicy="no-referrer" />
             </Link>
+
+            {/* Mobile Actions (Visible only on mobile) */}
+            {!user && (
+              <div className="flex md:hidden items-center gap-2">
+                <Link to="/login" className="text-stone-600 font-black text-[10px] hover:text-brand-primary transition-colors">دخول</Link>
+                <Link to="/register" className="bg-brand-primary text-white px-3 py-1.5 rounded-full font-black text-[10px] shadow-lg shadow-brand-primary/20 whitespace-nowrap">سجل الآن</Link>
+              </div>
+            )}
           </div>
 
           {/* Desktop Nav */}
@@ -82,13 +90,6 @@ export default function Navbar({ user, profile }: NavbarProps) {
             )}
           </div>
         </div>
-      </div>
-
-      {/* Mobile Top Links Banner */}
-      <div className="md:hidden flex items-center gap-6 px-4 py-3 bg-stone-50 border-t border-stone-100 overflow-x-auto hide-scrollbar">
-        <Link to="/" className="text-sm font-bold whitespace-nowrap text-stone-600 hover:text-brand-primary">الرئيسية</Link>
-        <Link to="/meals" className="text-sm font-bold whitespace-nowrap text-stone-600 hover:text-brand-primary">الأكلات</Link>
-        <Link to="/chefs" className="text-sm font-bold whitespace-nowrap text-stone-600 hover:text-brand-primary">المطابخ</Link>
       </div>
 
       {/* Mobile Nav */}
