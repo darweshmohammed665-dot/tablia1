@@ -11,6 +11,7 @@ import { MealCard } from '../components/MealCard';
 import { useCart } from '../context/CartContext';
 import { toast } from 'sonner';
 import { formatTime12h, formatDateTime12h } from '../lib/date-utils';
+import { isChefCurrentlyOpen } from '../lib/time-utils';
 
 export default function ChefProfile() {
   const { id } = useParams();
@@ -172,7 +173,7 @@ export default function ChefProfile() {
                 <div>
                   <div className="flex items-center justify-center md:justify-start gap-4 mb-2 flex-wrap">
                     <h1 className="text-4xl md:text-5xl font-black text-brand-secondary">{chef.displayName}</h1>
-                    {chef.isClosed && (
+                    {!isChefCurrentlyOpen(chef) && (
                       <div className="bg-red-500 text-white px-4 py-1.5 rounded-full text-xs font-black flex items-center gap-2 shadow-lg animate-pulse">
                         <Power size={14} />
                         مغلق حالياً
@@ -303,7 +304,7 @@ export default function ChefProfile() {
                       deliveryTime: 45,
                       description: meal.description,
                       orderType: meal.orderType,
-                      isClosed: chef.isClosed
+                      isClosed: !isChefCurrentlyOpen(chef)
                     }}
                     index={i}
                   />
@@ -392,7 +393,7 @@ export default function ChefProfile() {
                       deliveryTime: 45,
                       description: meal.description,
                       orderType: meal.orderType,
-                      isClosed: chef.isClosed
+                      isClosed: !isChefCurrentlyOpen(chef)
                     }}
                     index={i}
                   />

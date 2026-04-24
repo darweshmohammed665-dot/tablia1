@@ -7,6 +7,7 @@ import { db, auth } from '../firebase';
 import { useCart } from '../context/CartContext';
 import { toast } from 'sonner';
 import { formatTime12h } from '../lib/date-utils';
+import { isChefCurrentlyOpen } from '../lib/time-utils';
 import { UserProfile } from '../types';
 
 export default function Checkout() {
@@ -136,7 +137,7 @@ export default function Checkout() {
       return;
     }
 
-    if (chef?.isClosed) {
+    if (!isChefCurrentlyOpen(chef)) {
       toast.error('عذراً، المطبخ مغلق حالياً ولا يستقبل طلبات. يرجى إزالة الوجبات من السلة أو المحاولة لاحقاً.');
       return;
     }

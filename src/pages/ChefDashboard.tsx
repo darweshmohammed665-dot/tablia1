@@ -3,6 +3,7 @@ import { collection, query, getDocs, where, addDoc, deleteDoc, doc, onSnapshot, 
 import { db, auth } from '../firebase';
 import { Meal, UserProfile, Order } from '../types';
 import { handleFirestoreError, OperationType } from '../lib/firestore-errors';
+import { isChefCurrentlyOpen } from '../lib/time-utils';
 import { motion, AnimatePresence } from 'motion/react';
 import { Plus, Trash2, Package, DollarSign, Star, Utensils, Settings, Clock, ChevronDown, UserCheck, MapPin, Phone, Map, MessageCircle, Share2, ChefHat, X, Camera, Calendar, Power } from 'lucide-react';
 import OrderStatusTracker from '../components/OrderStatusTracker';
@@ -454,10 +455,19 @@ export default function ChefDashboard({ profile }: ChefDashboardProps) {
             <div className="flex flex-col sm:flex-row gap-3">
               <button 
                 onClick={handleToggleStatus}
-                className={`px-6 py-3 rounded-2xl font-bold transition-all flex items-center justify-center gap-2 border-2 ${profile.isClosed ? 'bg-red-500/10 border-red-500/20 text-red-100 hover:bg-red-500/20' : 'bg-green-500/10 border-green-500/20 text-green-100 hover:bg-green-500/20'}`}
+                className={`flex-grow md:flex-grow-0 px-6 py-3 rounded-2xl font-bold transition-all flex flex-col items-center justify-center gap-1 border-2 ${profile.isClosed ? 'bg-red-500/10 border-red-500/20 text-red-100 hover:bg-red-500/20' : (!isChefCurrentlyOpen(profile) ? 'bg-stone-500/10 border-stone-500/20 text-stone-300 hover:bg-stone-500/20' : 'bg-green-500/10 border-green-500/20 text-green-100 hover:bg-green-500/20')}`}
+                title="تفعيل/تعطيل المطبخ يدوياً"
               >
-                <Power size={20} className={profile.isClosed ? 'text-red-400' : 'text-green-400'} />
-                {profile.isClosed ? 'المطبخ مغلق' : 'المطبخ مفتوح'}
+                <div className="flex items-center gap-2">
+                  <Power size={20} className={profile.isClosed ? 'text-red-400' : (!isChefCurrentlyOpen(profile) ? 'text-stone-400' : 'text-green-400')} />
+                  {profile.isClosed ? 'المطبخ مغلق مؤقتاً' : 'المطبخ في وضع العمل'}
+                </div>
+                {!profile.isClosed && !isChefCurrentlyOpen(profile) && (
+                  <span className="text-[10px] font-normal opacity-80">(مغلق حالياً - خارج ساعات العمل)</span>
+                )}
+                {!profile.isClosed && isChefCurrentlyOpen(profile) && (
+                  <span className="text-[10px] font-normal opacity-80">(مفتوح ويستقبل الطلبات)</span>
+                )}
               </button>
               <button 
                 onClick={() => setShowProfileEdit(true)}

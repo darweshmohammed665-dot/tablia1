@@ -9,6 +9,7 @@ import { Star, Clock, ChefHat, ShoppingCart, ArrowRight, ShieldCheck, Bike, Shop
 import { useCart } from '../context/CartContext';
 import { toast } from 'sonner';
 import { FoodPriceDisplay } from '../components/FoodPriceDisplay';
+import { isChefCurrentlyOpen } from '../lib/time-utils';
 import { formatTime12h, formatDateTime12h } from '../lib/date-utils';
 
 export default function MealDetails() {
@@ -282,7 +283,7 @@ export default function MealDetails() {
                 </button>
               </div>
               
-              {chef?.isClosed && (
+              {!isChefCurrentlyOpen(chef) && (
                 <div className="bg-red-50 text-red-600 p-4 rounded-2xl border border-red-100 flex items-center gap-3 mb-6 shadow-sm animate-pulse">
                   <Power size={24} />
                   <div className="flex flex-col">
@@ -400,12 +401,12 @@ export default function MealDetails() {
                   <div className="flex gap-4 w-full sm:flex-grow">
                     <button 
                       onClick={handleAddToCart}
-                      disabled={chef?.isClosed}
-                      className={`w-full py-4 flex items-center justify-center gap-3 text-lg rounded-full font-bold transition-colors shadow-lg ${chef?.isClosed ? 'bg-stone-200 text-stone-400 cursor-not-allowed' : 'bg-brand-secondary text-white hover:bg-brand-accent'}`}
+                      disabled={!isChefCurrentlyOpen(chef)}
+                      className={`w-full py-4 flex items-center justify-center gap-3 text-lg rounded-full font-bold transition-colors shadow-lg ${!isChefCurrentlyOpen(chef) ? 'bg-stone-200 text-stone-400 cursor-not-allowed' : 'bg-brand-secondary text-white hover:bg-brand-accent'}`}
                     >
-                      <ShoppingBag size={24} /> {chef?.isClosed ? 'المطبخ مغلق' : 'أضف للسلة'}
+                      <ShoppingBag size={24} /> {!isChefCurrentlyOpen(chef) ? 'المطبخ مغلق' : 'أضف للسلة'}
                     </button>
-                    {!chef?.isClosed && (
+                    {isChefCurrentlyOpen(chef) && (
                       <Link 
                         to="/checkout" 
                         onClick={handleAddToCart}
