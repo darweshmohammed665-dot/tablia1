@@ -323,6 +323,25 @@ export default function ChefDashboard({ profile }: ChefDashboardProps) {
     }
   };
 
+  const handleShareMeal = (meal: Meal) => {
+    const url = `${window.location.origin}/meal/${meal.id}`;
+    
+    if (navigator.share) {
+      navigator.share({
+        title: meal.title,
+        text: `شوف وجبتي "${meal.title}" على طبلية!`,
+        url: url,
+      }).catch(console.error);
+    } else {
+      navigator.clipboard.writeText(url);
+      toast.success('تم نسخ رابط الوجبة بنجاح!');
+    }
+    
+    // Also open it as requested for the profile ("directly to the website")
+    // window.open(url, '_blank'); // Maybe don't open by default for meals, just copy or share. 
+    // The user said "take the meal and send it to anyone", so copying is better.
+  };
+
   const handleToggleFeatured = async (meal: Meal) => {
     const path = `meals/${meal.id}`;
     try {
@@ -525,6 +544,13 @@ export default function ChefDashboard({ profile }: ChefDashboardProps) {
                       </div>
                     </div>
                     <div className="flex gap-2 w-full sm:w-auto justify-end">
+                      <button 
+                        onClick={() => handleShareMeal(meal)}
+                        className="p-2 text-stone-400 hover:text-brand-primary transition-colors"
+                        title="مشاركة الوجبة"
+                      >
+                        <Share2 size={20} />
+                      </button>
                       <button 
                         onClick={() => handleToggleFeatured(meal)}
                         className={`p-2 transition-colors ${meal.featured ? 'text-brand-accent' : 'text-stone-400 hover:text-brand-accent'}`}

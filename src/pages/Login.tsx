@@ -145,11 +145,41 @@ export default function Login() {
                 </div>
                 <div>
                   <h3 className="text-red-900 font-black text-lg mb-1 italic">عذراً، حدث خطأ تقني</h3>
-                  <p className="text-red-600/80 text-sm font-medium leading-relaxed">
+                  <div className="text-red-600/80 text-sm font-medium leading-relaxed">
                     {error.includes('unauthorized-domain') 
-                      ? `لكي يعمل تسجيل دخول جوجل، يجب إضافة النطاق الخاص بك في إعدادات فايربيز: افتح Firebase Console -> Authentication -> Settings -> Authorized domains -> أضف النطاق التالي: ${window.location.hostname}` 
+                      ? (
+                        <div className="space-y-3">
+                          <p>لتفعيل دخول جوجل، يجب إضافة هذا النطاق في إعدادات Firebase:</p>
+                          <div className="flex items-center gap-2">
+                            <code className="bg-red-50/50 p-2 rounded-lg font-mono text-[11px] break-all border border-red-100/50 flex-grow">
+                              {window.location.hostname}
+                            </code>
+                            <button 
+                              type="button"
+                              onClick={() => {
+                                navigator.clipboard.writeText(window.location.hostname);
+                                toast.success('تم نسخ النطاق!');
+                              }}
+                              className="bg-red-100 text-red-700 px-3 py-2 rounded-lg text-xs font-bold hover:bg-red-200 transition-colors"
+                            >
+                              نسخ
+                            </button>
+                          </div>
+                          <p className="text-[10px] opacity-70">المسار: Authentication ← Settings ← Authorized domains</p>
+                          <div className="pt-2 flex flex-col gap-2">
+                            <button 
+                              type="button"
+                              onClick={() => window.location.reload()}
+                              className="bg-red-500 text-white px-4 py-2 rounded-xl text-xs font-bold hover:bg-red-600 transition-colors shadow-lg shadow-red-500/20"
+                            >
+                              لقد أضفت النطاق، تحديث الصفحة الآن
+                            </button>
+                            <p className="text-[9px] italic opacity-60">ملاحظة: قد يستغرق تفعيل النطاق الجديد من 5 إلى 10 دقائق في جوجل.</p>
+                          </div>
+                        </div>
+                      ) 
                       : error}
-                  </p>
+                  </div>
                 </div>
               </div>
             </motion.div>

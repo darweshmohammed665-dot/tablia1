@@ -5,7 +5,7 @@ import { db, auth } from '../firebase';
 import { Meal, Review, UserProfile } from '../types';
 import { CHEF_IMAGE_URL } from '../constants';
 import { motion, AnimatePresence } from 'motion/react';
-import { Star, Clock, ChefHat, ShoppingCart, ArrowRight, ShieldCheck, Bike, ShoppingBag, MessageSquare, Send, User, Calendar, Power } from 'lucide-react';
+import { Star, Clock, ChefHat, ShoppingCart, ArrowRight, ShieldCheck, Bike, ShoppingBag, MessageSquare, Send, User, Calendar, Power, Share2 } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { toast } from 'sonner';
 import { FoodPriceDisplay } from '../components/FoodPriceDisplay';
@@ -25,6 +25,26 @@ export default function MealDetails() {
   const [scheduledDate, setScheduledDate] = useState<string>(new Date().toISOString().split('T')[0]);
   const [scheduledTime, setScheduledTime] = useState<string>('');
   const { addToCart } = useCart();
+
+  const handleShare = async () => {
+    if (!meal) return;
+    const url = window.location.href;
+    
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: meal.title,
+          text: `شوف الوجبة دي من مطبخ ${meal.chefName} على طبلية!`,
+          url: url,
+        });
+      } catch (err) {
+        console.log('Error sharing:', err);
+      }
+    } else {
+      navigator.clipboard.writeText(url);
+      toast.success('تم نسخ رابط الوجبة!');
+    }
+  };
 
   const getTimeSlots = () => {
     if (!chef?.workingHours?.shifts) return [];
@@ -247,7 +267,16 @@ export default function MealDetails() {
                   </span>
                 )}
               </div>
-              <h1 className="text-4xl md:text-[56px] font-bold text-brand-accent mb-4 leading-tight">{meal.title}</h1>
+              <div className="flex justify-between items-start gap-4">
+                <h1 className="text-4xl md:text-[56px] font-bold text-brand-accent mb-4 leading-tight flex-grow">{meal.title}</h1>
+                <button 
+                  onClick={handleShare}
+                  className="bg-white p-4 rounded-full shadow-lg text-brand-primary hover:bg-brand-primary hover:text-white transition-all transform hover:scale-110 shrink-0 mt-2"
+                  title="مشاركة الوجبة"
+                >
+                  <Share2 size={24} />
+                </button>
+              </div>
               
               {chef?.isClosed && (
                 <div className="bg-red-50 text-red-600 p-4 rounded-2xl border border-red-100 flex items-center gap-3 mb-6 shadow-sm animate-pulse">

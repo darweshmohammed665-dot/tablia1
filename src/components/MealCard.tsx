@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Star, Clock, ShoppingCart, Plus, Info } from 'lucide-react';
+import { Star, Clock, ShoppingCart, Plus, Info, Share2 } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { toast } from 'sonner';
 import { FoodPriceDisplay } from './FoodPriceDisplay';
@@ -69,6 +69,28 @@ export const MealCard: React.FC<MealCardProps> = ({ meal, index = 0 }) => {
     );
   };
 
+  const handleShare = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    const url = `${window.location.origin}/meal/${meal.id}`;
+    
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: meal.title,
+          text: `شوف الوجبة دي من مطبخ ${meal.chefName} على طبلية!`,
+          url: url,
+        });
+      } catch (err) {
+        console.log('Error sharing:', err);
+      }
+    } else {
+      navigator.clipboard.writeText(url);
+      toast.success('تم نسخ رابط الوجبة!');
+    }
+  };
+
   return (
     <motion.div 
       initial={{ opacity: 0, y: 20 }}
@@ -98,15 +120,24 @@ export const MealCard: React.FC<MealCardProps> = ({ meal, index = 0 }) => {
           </div>
         )}
 
-        {/* Quick Add to Cart Button directly on the image */}
+        {/* Quick Add and Share Buttons directly on the image */}
         {!meal.isClosed && (
-          <button 
-            onClick={handleQuickAdd}
-            className="absolute bottom-4 right-4 bg-brand-primary text-white p-3 rounded-full shadow-lg hover:scale-110 hover:bg-brand-accent transition-all z-10 flex items-center justify-center"
-            title="إضافة فورية للسلة"
-          >
-            <Plus size={24} strokeWidth={3} />
-          </button>
+          <div className="absolute bottom-4 right-4 flex flex-col gap-2 z-10">
+            <button 
+              onClick={handleShare}
+              className="bg-white/90 backdrop-blur-sm text-stone-600 p-3 rounded-full shadow-lg hover:scale-110 hover:bg-white transition-all flex items-center justify-center border border-stone-200"
+              title="مشاركة الوجبة"
+            >
+              <Share2 size={20} />
+            </button>
+            <button 
+              onClick={handleQuickAdd}
+              className="bg-brand-primary text-white p-3 rounded-full shadow-lg hover:scale-110 hover:bg-brand-accent transition-all flex items-center justify-center"
+              title="إضافة فورية للسلة"
+            >
+              <Plus size={24} strokeWidth={3} />
+            </button>
+          </div>
         )}
 
         <div className="absolute bottom-4 left-4 z-10 pointer-events-none transform scale-75 origin-bottom-left">
