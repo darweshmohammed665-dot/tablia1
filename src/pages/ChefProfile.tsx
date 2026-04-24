@@ -55,9 +55,15 @@ export default function ChefProfile() {
       setPopularMeals(sortedForPopular.slice(0, 3));
 
       // Fetch Reviews
-      const reviewsQ = query(collection(db, 'reviews'), where('chefId', '==', id), orderBy('createdAt', 'desc'));
+      const reviewsQ = query(collection(db, 'reviews'), where('chefId', '==', id));
       const reviewsSnap = await getDocs(reviewsQ);
-      setReviews(reviewsSnap.docs.map(doc => ({ id: doc.id, ...doc.data() } as Review)));
+      const fetchedReviews = reviewsSnap.docs.map(doc => ({ id: doc.id, ...doc.data() } as Review));
+      fetchedReviews.sort((a, b) => {
+         const timeA = a.createdAt?.toMillis ? a.createdAt.toMillis() : (a.createdAt || 0);
+         const timeB = b.createdAt?.toMillis ? b.createdAt.toMillis() : (b.createdAt || 0);
+         return Number(timeB) - Number(timeA);
+      });
+      setReviews(fetchedReviews);
     } catch (error) {
       console.error("Error fetching chef profile:", error);
     } finally {
@@ -107,6 +113,26 @@ export default function ChefProfile() {
       toast.error('حدث خطأ أثناء إضافة التقييم');
     } finally {
       setIsSubmittingReview(false);
+    }
+  };
+
+  const handleShare = async () => {
+    if (!chef) return;
+    const url = window.location.href;
+    
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: `مطبخ ${chef.displayName}`,
+          text: `اطلب أكل بيتي أصيل من مطبخ ${chef.displayName} على موقع طبلية!`,
+          url: url,
+        });
+      } catch (err) {
+        console.log('Error sharing:', err);
+      }
+    } else {
+      navigator.clipboard.writeText(url);
+      toast.success('تم نسخ رابط المطبخ!');
     }
   };
 
@@ -190,7 +216,11 @@ export default function ChefProfile() {
                       <Heart size={20} />
                     </button>
                   )}
-                  <button className="p-4 bg-stone-50 text-stone-600 rounded-2xl hover:bg-stone-200 transition-all shadow-sm">
+                  <button 
+                    onClick={handleShare}
+                    className="p-4 bg-stone-50 text-stone-600 rounded-2xl hover:bg-stone-200 transition-all shadow-sm"
+                    title="مشاركة رابط المطبخ"
+                  >
                     <Share2 size={20} />
                   </button>
                 </div>

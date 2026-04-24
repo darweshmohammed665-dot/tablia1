@@ -56,14 +56,16 @@ export function handleFirestoreError(error: unknown, operationType: OperationTyp
   // User-friendly error mapping
   let userMessage = 'حدث خطأ أثناء حفظ البيانات. يرجى المحاولة مرة أخرى.';
   
-  if (errorMessage.includes('quota exceeded')) {
+  if (errorMessage.includes('quota exceeded') || errorMessage.includes('Quota exceeded')) {
     userMessage = 'عذراً، تم تجاوز الحصة اليومية للخدمة. يرجى المحاولة غداً.';
-  } else if (errorMessage.includes('permission-denied')) {
+  } else if (errorMessage.toLowerCase().includes('permission') || errorMessage.toLowerCase().includes('denied')) {
     userMessage = 'عذراً، ليس لديك الصلاحية لإجراء هذه العملية.';
   } else if (errorMessage.includes('too-large')) {
     userMessage = 'عذراً، حجم البيانات (ربما الصور) كبير جداً. يرجى تقليل عدد الصور أو حجمها.';
-  } else if (errorMessage.includes('offline')) {
+  } else if (errorMessage.includes('offline') || errorMessage.includes('network')) {
     userMessage = 'يبدو أنك غير متصل بالإنترنت. يرجى التحقق من اتصالك.';
+  } else if (errorMessage.includes('index') || errorMessage.includes('FAILED_PRECONDITION')) {
+    userMessage = 'عذراً، تحتاج هذه العملية إلى فهرس قاعدة بيانات (Index). جاري حل المشكلة.';
   }
 
   toast.error(userMessage, {

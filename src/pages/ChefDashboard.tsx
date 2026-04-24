@@ -199,13 +199,23 @@ export default function ChefDashboard({ profile }: ChefDashboardProps) {
     setShowAddModal(true);
   };
 
-  const handleShareProfile = () => {
+  const handleShareProfile = async () => {
     const url = `${window.location.origin}/chef/${auth.currentUser?.uid}`;
-    // Copy to clipboard
-    navigator.clipboard.writeText(url);
-    // Opening directly as requested ("I want it to go directly to the website")
-    window.open(url, '_blank');
-    toast.success('تم نسخ الرابط وفتح صفحة مطبخك!');
+    
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: `مطبخ ${profile?.displayName || 'طبلية'}`,
+          text: `اطلب أكل بيتي أصيل من مطبخ ${profile?.displayName || 'طبلية'} على موقع طبلية!`,
+          url: url,
+        });
+      } catch (err) {
+        console.log('Error sharing:', err);
+      }
+    } else {
+      navigator.clipboard.writeText(url);
+      toast.success('تم نسخ رابط مطبخك بنجاح! يمكنك مشاركته مع أي شخص.');
+    }
   };
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -460,8 +470,8 @@ export default function ChefDashboard({ profile }: ChefDashboardProps) {
                 onClick={handleShareProfile}
                 className="bg-white/10 hover:bg-white/20 text-white px-6 py-3 rounded-2xl font-bold transition-all flex items-center justify-center gap-2 backdrop-blur-sm"
               >
-                <MapPin size={20} />
-                رابط مطبخك
+                <Share2 size={20} />
+                مشاركة مطبخك
               </button>
               <button 
                 onClick={() => {

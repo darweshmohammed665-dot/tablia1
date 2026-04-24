@@ -95,8 +95,7 @@ export default function MealDetails() {
     if (id) {
       const q = query(
         collection(db, 'reviews'),
-        where('mealId', '==', id),
-        orderBy('createdAt', 'desc')
+        where('mealId', '==', id)
       );
 
       const unsubscribe = onSnapshot(q, (snapshot) => {
@@ -104,6 +103,11 @@ export default function MealDetails() {
           id: doc.id,
           ...doc.data()
         })) as Review[];
+        reviewsData.sort((a, b) => {
+           const timeA = a.createdAt?.toMillis ? a.createdAt.toMillis() : (a.createdAt || 0);
+           const timeB = b.createdAt?.toMillis ? b.createdAt.toMillis() : (b.createdAt || 0);
+           return Number(timeB) - Number(timeA);
+        });
         setReviews(reviewsData);
       });
 
