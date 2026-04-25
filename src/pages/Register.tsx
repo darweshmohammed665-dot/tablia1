@@ -38,7 +38,10 @@ export default function Register() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const cleanPhone = phoneNumber.trim();
+    // Normalize phone: convert arabic digits to english and remove all whitespaces/dashes
+    const cleanPhone = phoneNumber
+      .replace(/[٠-٩]/g, d => "0123456789"["٠١٢٣٤٥٦٧٨٩".indexOf(d)])
+      .replace(/[\s\-()]/g, '');
     const cleanPassword = password.trim();
     const cleanName = name.trim();
 
@@ -52,6 +55,8 @@ export default function Register() {
     setLoading(true);
     setError('');
     try {
+      const { setPersistence, browserLocalPersistence } = await import('firebase/auth');
+      await setPersistence(auth, browserLocalPersistence);
       const userCredential = await createUserWithEmailAndPassword(auth, virtualEmail, cleanPassword);
       await updateProfile(userCredential.user, { displayName: cleanName });
       

@@ -99,7 +99,7 @@ const PageWrapper = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-const AnimatedRoutes = ({ profile, profileLoading }: { profile: UserProfile | null, profileLoading: boolean }) => {
+const AnimatedRoutes = ({ profile, profileLoading, user }: { profile: UserProfile | null, profileLoading: boolean, user: User | null }) => {
   const location = useLocation();
   
   return (
@@ -113,8 +113,12 @@ const AnimatedRoutes = ({ profile, profileLoading }: { profile: UserProfile | nu
           <Route path="/meal/:id" element={<PageWrapper><MealDetails /></PageWrapper>} />
           <Route path="/cart" element={<PageWrapper><Cart /></PageWrapper>} />
           <Route path="/checkout" element={<PageWrapper><Checkout /></PageWrapper>} />
-          <Route path="/login" element={<PageWrapper><Login /></PageWrapper>} />
-          <Route path="/register" element={<PageWrapper><Register /></PageWrapper>} />
+          <Route path="/login" element={
+            profile ? <Navigate to={profile.role === 'chef' ? '/dashboard' : '/profile'} replace /> : <PageWrapper><Login /></PageWrapper>
+          } />
+          <Route path="/register" element={
+            profile ? <Navigate to={profile.role === 'chef' ? '/dashboard' : '/profile'} replace /> : <PageWrapper><Register /></PageWrapper>
+          } />
           <Route path="/orders" element={<PageWrapper><MyOrders /></PageWrapper>} />
           <Route path="/profile" element={
             profileLoading ? <PageWrapper><LoadingScreen /></PageWrapper> : 
@@ -248,7 +252,7 @@ export default function App() {
           <Toaster position="top-center" richColors />
           <Navbar user={user} profile={profile} />
           <main className="flex-grow pb-20 md:pb-0">
-            <AnimatedRoutes profile={profile} profileLoading={profileLoading} />
+            <AnimatedRoutes profile={profile} profileLoading={profileLoading} user={user} />
           </main>
           <BottomNav profile={profile} />
           <Footer />

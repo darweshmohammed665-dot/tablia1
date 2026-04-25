@@ -32,7 +32,10 @@ export default function Login() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const cleanPhone = phoneNumber.trim();
+    // Normalize phone: convert arabic digits to english and remove all whitespaces/dashes
+    const cleanPhone = phoneNumber
+      .replace(/[٠-٩]/g, d => "0123456789"["٠١٢٣٤٥٦٧٨٩".indexOf(d)])
+      .replace(/[\s\-()]/g, '');
     const cleanPassword = password.trim();
     
     if (!cleanPhone || !cleanPassword) {
@@ -43,14 +46,18 @@ export default function Login() {
     setLoading(true);
     setError('');
     try {
+      const { setPersistence, browserLocalPersistence } = await import('firebase/auth');
+      await setPersistence(auth, browserLocalPersistence);
       const virtualEmail = `${cleanPhone}@tablia.com`;
       await signInWithEmailAndPassword(auth, virtualEmail, cleanPassword);
       toast.success('تم تسجيل الدخول بنجاح!');
       navigate('/profile');
     } catch (err: any) {
       console.error('Login error:', err);
-      if (err.code === 'auth/user-not-found' || err.code === 'auth/wrong-password' || err.code === 'auth/invalid-credential') {
-        setError('خطأ في رقم الهاتف أو كلمة المرور. يرجى المحاولة مرة أخرى.');
+      if (err.code === 'auth/user-not-found' || err.code === 'auth/invalid-credential') {
+        setError('بيانات الدخول غير صحيحة، أو الحساب غير موجود. تأكد من الرقم وكلمة المرور، أو سجل حساب جديد.');
+      } else if (err.code === 'auth/wrong-password') {
+        setError('كلمة المرور غير صحيحة. يرجى المحاولة مرة أخرى.');
       } else if (err.code === 'auth/operation-not-allowed') {
         setError('تسجيل الدخول غير مفعل حالياً. يرجى تفعيله من لوحة تحكم Firebase أو استخدام جوجل.');
       } else if (err.code === 'auth/too-many-requests') {
