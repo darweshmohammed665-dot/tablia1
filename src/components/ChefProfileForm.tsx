@@ -302,20 +302,18 @@ export default function ChefProfileForm({ profile, onComplete, onCancel }: ChefP
                       </button>
                     </div>
                   </div>
-                  <button
-                    type="button"
-                    onClick={() => fileInputRef.current?.click()}
-                    className="absolute bottom-2 right-2 bg-brand-primary text-white p-3 rounded-full shadow-lg hover:scale-110 transition-transform border-4 border-white"
+                  <label
+                    className="absolute bottom-2 right-2 bg-brand-primary text-white p-3 rounded-full shadow-lg hover:scale-110 transition-transform border-4 border-white cursor-pointer overflow-hidden"
                   >
                     <Camera size={20} />
-                  </button>
-                  <input 
-                    type="file" 
-                    ref={fileInputRef}
-                    onChange={handleImageUpload}
-                    accept="image/*"
-                    className="hidden"
-                  />
+                    <input 
+                      type="file" 
+                      ref={fileInputRef}
+                      onChange={handleImageUpload}
+                      accept="image/*"
+                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                    />
+                  </label>
                 </div>
 
                 {imageError && (

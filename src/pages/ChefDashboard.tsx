@@ -989,7 +989,7 @@ export default function ChefDashboard({ profile }: ChefDashboardProps) {
                     </div>
                   ))}
                   {newMeal.images.length < 5 && (
-                    <label className={`w-20 h-20 rounded-xl border-2 border-dashed flex flex-col items-center justify-center transition-colors cursor-pointer ${isProcessingImages ? 'border-brand-primary bg-brand-cream/20' : 'border-stone-300 text-stone-400 hover:bg-stone-50 hover:border-brand-primary'}`}>
+                    <label className={`relative overflow-hidden w-20 h-20 rounded-xl border-2 border-dashed flex flex-col items-center justify-center transition-colors cursor-pointer ${isProcessingImages ? 'border-brand-primary bg-brand-cream/20' : 'border-stone-300 text-stone-400 hover:bg-stone-50 hover:border-brand-primary'}`}>
                       {isProcessingImages ? (
                         <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-brand-primary"></div>
                       ) : (
@@ -1004,7 +1004,7 @@ export default function ChefDashboard({ profile }: ChefDashboardProps) {
                         multiple 
                         disabled={isProcessingImages}
                         onChange={handleImageUpload}
-                        className="hidden" 
+                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" 
                       />
                     </label>
                   )}

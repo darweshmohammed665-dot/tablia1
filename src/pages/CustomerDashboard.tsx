@@ -208,20 +208,19 @@ export default function CustomerDashboard({ profile: initialProfile }: CustomerD
                   <User size={64} className="opacity-30" />
                 )}
               </div>
-              <button 
-                onClick={() => fileInputRef.current?.click()}
-                disabled={isProcessingImages}
-                className="absolute -bottom-2 -right-2 bg-brand-primary text-white p-3 rounded-2xl shadow-xl hover:scale-110 transition-transform z-30 disabled:opacity-50 disabled:cursor-not-allowed"
+              <label 
+                className="absolute -bottom-2 -right-2 bg-brand-primary text-white p-3 rounded-2xl shadow-xl hover:scale-110 transition-transform z-30 cursor-pointer overflow-hidden"
               >
                 <Camera size={20} />
-              </button>
-              <input 
-                type="file"
-                ref={fileInputRef}
-                onChange={handleImageUpload}
-                accept="image/*"
-                className="hidden"
-              />
+                <input 
+                  type="file"
+                  ref={fileInputRef}
+                  onChange={handleImageUpload}
+                  accept="image/*"
+                  disabled={isProcessingImages}
+                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer disabled:cursor-not-allowed"
+                />
+              </label>
             </div>
             
             <div className="text-center md:text-right flex-grow">
