@@ -235,7 +235,7 @@ export default function MealDetails() {
             className="flex flex-col gap-4"
           >
             <div className="relative rounded-[2rem] md:rounded-[3rem] overflow-hidden shadow-2xl h-[300px] md:h-[500px]">
-              <img src={activeImage} alt={meal.title} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+              <img src={activeImage} alt={meal.title} className="w-full h-full object-cover" />
               <div className="absolute top-4 left-4 md:top-6 md:left-6 z-10 pointer-events-none transform scale-90 origin-top-left md:scale-100">
                 <FoodPriceDisplay originalPrice={meal.price} />
               </div>
@@ -248,7 +248,7 @@ export default function MealDetails() {
                     onClick={() => setActiveImage(img)}
                     className={`relative w-20 h-20 md:w-24 md:h-24 rounded-2xl overflow-hidden flex-shrink-0 border-4 transition-all ${activeImage === img ? 'border-brand-primary scale-105' : 'border-transparent opacity-70 hover:opacity-100'}`}
                   >
-                    <img src={img} alt={`${meal.title} ${idx + 1}`} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+                    <img src={img} alt={`${meal.title} ${idx + 1}`} className="w-full h-full object-cover" />
                   </button>
                 ))}
               </div>

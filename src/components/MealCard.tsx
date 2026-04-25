@@ -101,7 +101,7 @@ export const MealCard: React.FC<MealCardProps> = ({ meal, index = 0 }) => {
     >
       <div className="relative h-64 overflow-hidden group/img">
         <Link to={`/meal/${meal.id}`} className="block h-full">
-          <img src={meal.image} alt={meal.title} className="w-full h-full object-cover group-hover/img:scale-110 transition-transform duration-700" referrerPolicy="no-referrer" />
+          <img src={meal.image} alt={meal.title} className="w-full h-full object-cover group-hover/img:scale-110 transition-transform duration-700" />
         </Link>
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover/img:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
         
