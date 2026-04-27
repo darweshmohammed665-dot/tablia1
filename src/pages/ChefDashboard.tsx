@@ -895,22 +895,22 @@ export default function ChefDashboard({ profile }: ChefDashboardProps) {
 
       {/* Add Meal Modal */}
       {showAddModal && (
-        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+        <div className="fixed inset-0 z-[60] flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/50 backdrop-blur-sm sm:px-4 text-right">
           <motion.div 
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="bg-white rounded-[2.5rem] p-6 text-sm sm:text-base sm:p-8 max-w-lg w-full shadow-2xl max-h-[90vh] overflow-y-auto custom-scrollbar"
+            initial={{ opacity: 0, scale: 0.95, y: 50 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            className="bg-white rounded-t-[2.5rem] sm:rounded-[2.5rem] p-6 sm:p-8 max-w-xl w-full shadow-2xl max-h-[90vh] overflow-y-auto custom-scrollbar"
           >
-            <h2 className="text-2xl font-bold mb-2">{mealToEdit ? 'تعديل الوجبة' : 'إضافة وجبة جديدة'}</h2>
+            <h2 className="text-2xl font-bold mb-4">{mealToEdit ? 'تعديل الوجبة' : 'إضافة وجبة جديدة'}</h2>
             
             {profile.workingHours && profile.workingHours.shifts?.length > 0 && (
-              <div className="mb-6 p-3 bg-brand-primary/5 rounded-xl border border-brand-primary/10">
-                <p className="text-[10px] font-bold text-brand-primary uppercase mb-2 flex items-center gap-1">
-                  <Clock size={12} /> للتذكير: فترات عملك الحالية
+              <div className="mb-6 p-4 bg-brand-primary/5 rounded-2xl border border-brand-primary/10">
+                <p className="text-[11px] font-bold text-brand-primary uppercase mb-3 flex items-center gap-1.5">
+                  <Clock size={14} /> للتذكير: فترات عملك الحالية
                 </p>
-                <div className="flex flex-wrap gap-2 text-stone-600 font-bold text-[10px]">
+                <div className="flex flex-wrap gap-2 text-stone-700 font-bold text-xs">
                   {profile.workingHours.shifts.map((shift, idx) => (
-                    <span key={idx} className="bg-white px-2 py-1 rounded-lg shadow-sm">
+                    <span key={idx} className="bg-white px-3 py-1.5 rounded-xl shadow-sm border border-stone-100">
                       {formatTime12h(shift.from)} - {formatTime12h(shift.to)}
                     </span>
                   ))}
@@ -918,43 +918,43 @@ export default function ChefDashboard({ profile }: ChefDashboardProps) {
               </div>
             )}
 
-            <form onSubmit={handleAddMeal} className="space-y-4">
+            <form onSubmit={handleAddMeal} className="space-y-5">
               <div>
-                <label className="block text-sm font-medium text-stone-700 mb-1">اسم الوجبة</label>
+                <label className="block text-sm font-bold text-stone-700 mb-2">اسم الوجبة</label>
                 <input 
                   type="text" 
                   required 
                   value={newMeal.title}
                   onChange={(e) => setNewMeal({...newMeal, title: e.target.value})}
-                  className="w-full px-4 py-3 rounded-xl border border-stone-200 focus:ring-2 focus:ring-brand-primary outline-none"
+                  className="w-full px-5 py-4 rounded-2xl border border-stone-200 focus:ring-4 focus:ring-brand-primary/10 focus:border-brand-primary outline-none transition-all text-sm font-medium"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-stone-700 mb-1">الوصف</label>
+                <label className="block text-sm font-bold text-stone-700 mb-2">الوصف</label>
                 <textarea 
                   required 
                   value={newMeal.description}
                   onChange={(e) => setNewMeal({...newMeal, description: e.target.value})}
-                  className="w-full px-4 py-3 rounded-xl border border-stone-200 focus:ring-2 focus:ring-brand-primary outline-none h-24"
+                  className="w-full px-5 py-4 rounded-2xl border border-stone-200 focus:ring-4 focus:ring-brand-primary/10 focus:border-brand-primary outline-none h-28 resize-none transition-all text-sm font-medium leading-relaxed"
                 ></textarea>
               </div>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 <div>
-                  <label className="block text-sm font-medium text-stone-700 mb-1">السعر (ج.م)</label>
+                  <label className="block text-sm font-bold text-stone-700 mb-2">السعر (ج.م)</label>
                   <input 
                     type="number" 
                     required 
                     value={newMeal.price}
                     onChange={(e) => setNewMeal({...newMeal, price: Number(e.target.value)})}
-                    className="w-full px-4 py-3 rounded-xl border border-stone-200 focus:ring-2 focus:ring-brand-primary outline-none"
+                    className="w-full px-5 py-4 rounded-2xl border border-stone-200 focus:ring-4 focus:ring-brand-primary/10 focus:border-brand-primary outline-none transition-all text-sm font-medium"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-stone-700 mb-1">نوع الطلب</label>
+                  <label className="block text-sm font-bold text-stone-700 mb-2">نوع الطلب</label>
                   <select 
                     value={newMeal.orderType}
                     onChange={(e) => setNewMeal({...newMeal, orderType: e.target.value as 'instant' | 'preorder'})}
-                    className="w-full px-4 py-3 rounded-xl border border-stone-200 focus:ring-2 focus:ring-brand-primary outline-none"
+                    className="w-full px-5 py-4 rounded-2xl border border-stone-200 focus:ring-4 focus:ring-brand-primary/10 focus:border-brand-primary outline-none transition-all text-sm font-medium bg-white appearance-none"
                   >
                     <option value="instant">فوري</option>
                     <option value="preorder">طلب يوم بيومه</option>
@@ -962,11 +962,11 @@ export default function ChefDashboard({ profile }: ChefDashboardProps) {
                 </div>
               </div>
               <div>
-                <label className="block text-sm font-medium text-stone-700 mb-1">القسم</label>
+                <label className="block text-sm font-bold text-stone-700 mb-2">القسم</label>
                 <select 
                   value={newMeal.category}
                   onChange={(e) => setNewMeal({...newMeal, category: e.target.value})}
-                  className="w-full px-4 py-3 rounded-xl border border-stone-200 focus:ring-2 focus:ring-brand-primary outline-none"
+                  className="w-full px-5 py-4 rounded-2xl border border-stone-200 focus:ring-4 focus:ring-brand-primary/10 focus:border-brand-primary outline-none transition-all text-sm font-medium bg-white appearance-none"
                 >
                   {MEAL_CATEGORY_NAMES.map(c => (
                     <option key={c} value={c}>{c}</option>
@@ -974,28 +974,30 @@ export default function ChefDashboard({ profile }: ChefDashboardProps) {
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-stone-700 mb-1">صور الوجبة (حتى 5 صور)</label>
-                <div className="flex flex-wrap gap-2 mb-2">
+                <label className="block text-sm font-bold text-stone-700 mb-2">صور الوجبة (حتى 5 صور)</label>
+                <div className="flex flex-wrap gap-3 mb-2">
                   {newMeal.images.map((img, idx) => (
-                    <div key={idx} className="relative w-20 h-20 rounded-xl overflow-hidden border border-stone-200">
+                    <div key={idx} className="relative w-24 h-24 rounded-2xl overflow-hidden border border-stone-200 shadow-sm group">
                       <img src={img} alt={`Preview ${idx}`} className="w-full h-full object-cover" />
                       <button 
                         type="button"
                         onClick={() => removeImage(idx)}
-                        className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 hover:bg-red-600"
+                        className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
                       >
-                        <X size={12} />
+                        <div className="bg-red-500 text-white rounded-full p-2 shadow-lg">
+                          <X size={16} />
+                        </div>
                       </button>
                     </div>
                   ))}
                   {newMeal.images.length < 5 && (
-                    <label className={`relative overflow-hidden w-20 h-20 rounded-xl border-2 border-dashed flex flex-col items-center justify-center transition-colors cursor-pointer ${isProcessingImages ? 'border-brand-primary bg-brand-cream/20' : 'border-stone-300 text-stone-400 hover:bg-stone-50 hover:border-brand-primary'}`}>
+                    <label className={`relative overflow-hidden w-24 h-24 rounded-2xl border-2 border-dashed flex flex-col items-center justify-center transition-colors cursor-pointer ${isProcessingImages ? 'border-brand-primary bg-brand-cream/20' : 'border-stone-300 text-stone-400 hover:bg-stone-50 hover:border-brand-primary'}`}>
                       {isProcessingImages ? (
                         <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-brand-primary"></div>
                       ) : (
                         <>
-                          <Camera size={24} />
-                          <span className="text-[10px] mt-1">إضافة صورة</span>
+                          <Camera size={28} className="mb-1" />
+                          <span className="text-[10px] font-bold">إضافة صورة</span>
                         </>
                       )}
                       <input 
@@ -1010,21 +1012,21 @@ export default function ChefDashboard({ profile }: ChefDashboardProps) {
                   )}
                 </div>
                 {newMeal.images.length === 0 && (
-                  <p className="text-xs text-red-500">يرجى إضافة صورة واحدة على الأقل</p>
+                  <p className="text-xs font-bold text-red-500 mt-2">يرجى إضافة صورة واحدة على الأقل</p>
                 )}
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-3 bg-stone-50 p-4 rounded-2xl border border-stone-100">
                 <input 
                   type="checkbox" 
                   id="featured-meal"
                   checked={newMeal.featured}
                   onChange={(e) => setNewMeal({...newMeal, featured: e.target.checked})}
-                  className="w-5 h-5 rounded border-stone-200 text-brand-primary focus:ring-brand-primary"
+                  className="w-5 h-5 rounded-md border-stone-300 text-brand-primary focus:ring-brand-primary"
                 />
-                <label htmlFor="featured-meal" className="text-sm font-medium text-stone-700">تمييز هذه الوجبة (ستظهر في أعلى ملفك الشخصي)</label>
+                <label htmlFor="featured-meal" className="text-sm font-bold text-stone-700 cursor-pointer">تمييز هذه الوجبة (ستظهر في أعلى ملفك الشخصي)</label>
               </div>
               <div className="flex gap-4 pt-4">
-                <button type="submit" disabled={isSubmittingMeal} className="btn-primary flex-grow disabled:opacity-50">
+                <button type="submit" disabled={isSubmittingMeal} className="flex-grow bg-brand-primary text-white py-4 rounded-2xl font-black text-lg shadow-lg shadow-brand-primary/30 hover:bg-brand-primary/90 transition-all disabled:opacity-50 disabled:cursor-not-allowed">
                   {isSubmittingMeal ? 'جاري الحفظ...' : (mealToEdit ? 'حفظ التغييرات' : 'إضافة الوجبة')}
                 </button>
                 <button 
@@ -1034,7 +1036,7 @@ export default function ChefDashboard({ profile }: ChefDashboardProps) {
                     setShowAddModal(false);
                     setMealToEdit(null);
                   }}
-                  className="px-6 py-3 rounded-full font-medium text-stone-500 hover:bg-stone-100 transition-colors disabled:opacity-50"
+                  className="px-8 bg-stone-100 text-stone-600 py-4 rounded-2xl font-black text-lg hover:bg-stone-200 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   إلغاء
                 </button>
