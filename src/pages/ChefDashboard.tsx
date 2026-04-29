@@ -991,24 +991,18 @@ export default function ChefDashboard({ profile }: ChefDashboardProps) {
                     </div>
                   ))}
                   {newMeal.images.length < 5 && (
-                    <>
-                      <button
-                        type="button"
-                        disabled={isProcessingImages}
-                        onClick={() => document.getElementById('meal-image-upload')?.click()}
-                        className={`relative overflow-hidden w-24 h-24 rounded-2xl border-2 border-dashed flex flex-col items-center justify-center transition-colors cursor-pointer ${isProcessingImages ? 'border-brand-primary bg-brand-cream/20 opacity-50' : 'border-stone-300 text-stone-400 hover:bg-stone-50 hover:border-brand-primary focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-offset-2'}`}
-                      >
-                        {isProcessingImages ? (
-                          <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-brand-primary"></div>
-                        ) : (
-                          <>
-                            <Camera size={28} className="mb-1 pointer-events-none" />
-                            <span className="text-[10px] font-bold pointer-events-none">إضافة صورة</span>
-                          </>
-                        )}
-                      </button>
+                    <label 
+                      className={`relative overflow-hidden w-24 h-24 rounded-2xl border-2 border-dashed flex flex-col items-center justify-center transition-colors cursor-pointer ${isProcessingImages ? 'border-brand-primary bg-brand-cream/20 opacity-50' : 'border-stone-300 text-stone-400 hover:bg-stone-50 hover:border-brand-primary'}`}
+                    >
+                      {isProcessingImages ? (
+                        <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-brand-primary"></div>
+                      ) : (
+                        <>
+                          <Camera size={28} className="mb-1 pointer-events-none" />
+                          <span className="text-[10px] font-bold pointer-events-none">إضافة صورة</span>
+                        </>
+                      )}
                       <input 
-                        id="meal-image-upload"
                         type="file" 
                         accept="image/*" 
                         multiple 
@@ -1017,9 +1011,9 @@ export default function ChefDashboard({ profile }: ChefDashboardProps) {
                           handleImageUpload(e);
                           e.target.value = '';
                         }}
-                        className="hidden" 
+                        style={{ display: 'none' }}
                       />
-                    </>
+                    </label>
                   )}
                 </div>
                 {newMeal.images.length === 0 && (

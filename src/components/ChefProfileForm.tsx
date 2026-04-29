@@ -285,7 +285,7 @@ export default function ChefProfileForm({ profile, onComplete, onCancel }: ChefP
               </div>
 
               <div className="flex flex-col items-center gap-6">
-                <div className="relative w-48 h-48 group">
+                <label className="relative w-48 h-48 group cursor-pointer block">
                   <div className="w-full h-full rounded-full bg-stone-100 flex items-center justify-center text-stone-300 border-4 border-white shadow-xl overflow-hidden relative">
                     {photoURL ? (
                       <img src={photoURL} alt="Profile Preview" className="w-full h-full object-cover" />
@@ -293,35 +293,27 @@ export default function ChefProfileForm({ profile, onComplete, onCancel }: ChefP
                       <ImageIcon size={64} />
                     )}
                     <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                      <button 
-                        onClick={() => fileInputRef.current?.click()}
-                        className="text-white flex flex-col items-center gap-1 font-bold text-sm"
-                      >
+                      <div className="text-white flex flex-col items-center gap-1 font-bold text-sm">
                         <Camera size={24} />
                         تغيير الصورة
-                      </button>
+                      </div>
                     </div>
                   </div>
-                  <>
-                    <button
-                      type="button"
-                      onClick={() => fileInputRef.current?.click()}
-                      className="absolute bottom-2 right-2 bg-brand-primary text-white p-3 rounded-full shadow-lg hover:scale-110 transition-transform border-4 border-white cursor-pointer overflow-hidden focus:outline-none focus:ring-2 focus:ring-brand-primary"
-                    >
-                      <Camera size={20} className="pointer-events-none" />
-                    </button>
-                    <input 
-                      type="file" 
-                      ref={fileInputRef}
-                      onChange={(e) => {
-                        handleImageUpload(e);
-                        e.target.value = '';
-                      }}
-                      accept="image/*"
-                      className="hidden"
-                    />
-                  </>
-                </div>
+                  
+                  <div className="absolute bottom-2 right-2 bg-brand-primary text-white p-3 rounded-full shadow-lg hover:scale-110 transition-transform border-4 border-white overflow-hidden pointer-events-none">
+                    <Camera size={20} />
+                  </div>
+
+                  <input 
+                    type="file" 
+                    onChange={(e) => {
+                      handleImageUpload(e);
+                      e.target.value = '';
+                    }}
+                    accept="image/*"
+                    style={{ display: 'none' }}
+                  />
+                </label>
 
                 {imageError && (
                   <p className="text-red-500 text-sm font-bold flex items-center gap-2">
