@@ -248,8 +248,8 @@ export default function ChefDashboard({ profile }: ChefDashboardProps) {
           
           img.onload = () => {
             const canvas = document.createElement('canvas');
-            const MAX_WIDTH = 800;
-            const MAX_HEIGHT = 800;
+            const MAX_WIDTH = 600;
+            const MAX_HEIGHT = 600;
             let width = img.width;
             let height = img.height;
 
@@ -270,7 +270,7 @@ export default function ChefDashboard({ profile }: ChefDashboardProps) {
             ctx?.drawImage(img, 0, 0, width, height);
             
             try {
-              const dataUrl = canvas.toDataURL('image/jpeg', 0.7);
+              const dataUrl = canvas.toDataURL('image/jpeg', 0.6);
               URL.revokeObjectURL(objectUrl);
               resolve(dataUrl);
             } catch (err) {
@@ -991,8 +991,8 @@ export default function ChefDashboard({ profile }: ChefDashboardProps) {
                     </div>
                   ))}
                   {newMeal.images.length < 5 && (
-                    <label 
-                      className={`relative overflow-hidden w-24 h-24 rounded-2xl border-2 border-dashed flex flex-col items-center justify-center transition-colors cursor-pointer ${isProcessingImages ? 'border-brand-primary bg-brand-cream/20 opacity-50' : 'border-stone-300 text-stone-400 hover:bg-stone-50 hover:border-brand-primary'}`}
+                    <div 
+                      className={`relative overflow-hidden w-24 h-24 rounded-2xl border-2 border-dashed flex flex-col items-center justify-center transition-colors ${isProcessingImages ? 'border-brand-primary bg-brand-cream/20 opacity-50' : 'border-stone-300 text-stone-400 hover:bg-stone-50 hover:border-brand-primary'}`}
                     >
                       {isProcessingImages ? (
                         <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-brand-primary"></div>
@@ -1011,9 +1011,9 @@ export default function ChefDashboard({ profile }: ChefDashboardProps) {
                           handleImageUpload(e);
                           e.target.value = '';
                         }}
-                        style={{ display: 'none' }}
+                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
                       />
-                    </label>
+                    </div>
                   )}
                 </div>
                 {newMeal.images.length === 0 && (

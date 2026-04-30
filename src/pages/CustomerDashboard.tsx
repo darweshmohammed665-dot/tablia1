@@ -208,7 +208,7 @@ export default function CustomerDashboard({ profile: initialProfile }: CustomerD
                   <User size={64} className="opacity-30" />
                 )}
               </div>
-              <label className="absolute -bottom-2 -right-2 bg-brand-primary text-white p-3 rounded-2xl shadow-xl hover:scale-110 transition-transform z-30 cursor-pointer overflow-hidden focus-within:ring-2 focus-within:ring-brand-primary focus-within:ring-offset-2">
+              <div className="absolute -bottom-2 -right-2 bg-brand-primary text-white p-3 rounded-2xl shadow-xl hover:scale-110 transition-transform z-30 overflow-hidden focus-within:ring-2 focus-within:ring-brand-primary focus-within:ring-offset-2">
                 <Camera size={20} className="pointer-events-none" />
                 <input 
                   type="file"
@@ -218,9 +218,9 @@ export default function CustomerDashboard({ profile: initialProfile }: CustomerD
                   }}
                   accept="image/*"
                   disabled={isProcessingImages}
-                  style={{ display: 'none' }}
+                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                 />
-              </label>
+              </div>
             </div>
             
             <div className="text-center md:text-right flex-grow">

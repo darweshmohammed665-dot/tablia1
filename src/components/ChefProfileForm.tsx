@@ -285,7 +285,7 @@ export default function ChefProfileForm({ profile, onComplete, onCancel }: ChefP
               </div>
 
               <div className="flex flex-col items-center gap-6">
-                <label className="relative w-48 h-48 group cursor-pointer block">
+                <div className="relative w-48 h-48 group block">
                   <div className="w-full h-full rounded-full bg-stone-100 flex items-center justify-center text-stone-300 border-4 border-white shadow-xl overflow-hidden relative">
                     {photoURL ? (
                       <img src={photoURL} alt="Profile Preview" className="w-full h-full object-cover" />
@@ -311,9 +311,9 @@ export default function ChefProfileForm({ profile, onComplete, onCancel }: ChefP
                       e.target.value = '';
                     }}
                     accept="image/*"
-                    style={{ display: 'none' }}
+                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
                   />
-                </label>
+                </div>
 
                 {imageError && (
                   <p className="text-red-500 text-sm font-bold flex items-center gap-2">
