@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Facebook, Instagram, Twitter, Youtube, Heart, Utensils, Phone as WhatsApp } from 'lucide-react';
+import { Facebook, Instagram, Youtube, Heart } from 'lucide-react';
 
 const TikTokIcon = ({ size = 24 }: { size?: number }) => (
   <svg 
@@ -22,7 +22,6 @@ export default function Footer() {
     { Icon: Facebook, href: "https://www.facebook.com/share/18XobVq5sr/" },
     { Icon: Instagram, href: "https://www.instagram.com/tablia_official?utm_source=qr&igsh=d3V1bjlzZzA5bXZ5" },
     { Icon: TikTokIcon, href: "https://www.tiktok.com/@tablia_official?_r=1&_t=ZS-959vIXdCNuu" },
-    { Icon: WhatsApp, href: "https://wa.me/201107507344" }, // Updated WhatsApp
     { Icon: Youtube, href: "https://youtube.com/@tablia-official?si=7L6cxyaxz5gYyP3I" },
   ];
 
