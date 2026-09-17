@@ -152,9 +152,9 @@ export default function Home() {
             transition={{ delay: 0.3 }}
             className="flex flex-col sm:flex-row items-center justify-center gap-4"
           >
-            <a href="https://wa.me/201107507344" target="_blank" rel="noopener noreferrer" className="w-full sm:w-auto bg-brand-primary text-white px-8 py-4 rounded-lg font-bold text-xl hover:bg-brand-primary/90 transition-all flex items-center justify-center gap-3">
+            <Link to="/meals" className="w-full sm:w-auto bg-brand-primary text-white px-8 py-4 rounded-lg font-bold text-xl hover:bg-brand-primary/90 transition-all flex items-center justify-center gap-3">
               <MessageCircle size={24} /> اطلب دلوقتي!
-            </a>
+            </Link>
             <Link to="/meals" className="w-full sm:w-auto bg-white/20 hover:bg-white/30 text-white border border-white/30 px-8 py-4 rounded-lg font-bold text-xl transition-all flex items-center justify-center gap-3">
               اختار أكلتك
             </Link>
@@ -338,13 +338,13 @@ export default function Home() {
             سواء كنت تعبان من المطبخ، بعيد عن أهلك، أو عندك عزومة على آخر دقيقة — طبلية هنا.
           </h2>
           <p className="text-lg md:text-xl mb-10 opacity-90 font-medium">
-            اطلب أكلتك دلوقتي — واتساب / تليفون
+            اطلب أكلتك دلوقتي من خلال الموقع
           </p>
           <div className="flex flex-col md:flex-row items-center justify-center gap-4">
-            <a href="https://wa.me/201107507344" target="_blank" rel="noopener noreferrer" className="bg-white text-brand-primary px-10 py-4 rounded-full font-black text-xl hover:scale-105 transition-transform shadow-xl flex items-center gap-3">
+            <Link to="/meals" className="bg-white text-brand-primary px-10 py-4 rounded-full font-black text-xl hover:scale-105 transition-transform shadow-xl flex items-center gap-3">
               <MessageCircle size={24} />
               اطلب دلوقتي
-            </a>
+            </Link>
             <Link to="/meals" className="bg-transparent border-2 border-white text-white px-10 py-4 rounded-full font-black text-xl hover:bg-white hover:text-brand-primary transition-all">
               تصفح المنيو
             </Link>
